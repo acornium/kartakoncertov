@@ -2,7 +2,12 @@
 
 import { useCallback } from "react"
 import type { Venue, Filters, Genre } from "@/lib/types"
-import { ALL_GENRES, GENRE_LABELS, GENRE_COLORS } from "@/lib/constants"
+import {
+  ALL_GENRES,
+  GENRE_LABELS,
+  GENRE_COLORS,
+  DEFAULT_FILTERS,
+} from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -15,16 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import {
-  CalendarIcon,
-  RotateCcwIcon,
-  XIcon,
-} from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { CalendarIcon, RotateCcwIcon, XIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { format } from "date-fns"
@@ -52,12 +49,10 @@ export function FilterPanel({
 
   const resetFilters = useCallback(() => {
     onFiltersChange({
-      genres: [],
+      ...DEFAULT_FILTERS,
       venueId: undefined,
       dateFrom: undefined,
       dateTo: undefined,
-      priceMin: 0,
-      priceMax: 30000,
     })
   }, [onFiltersChange])
 
@@ -77,7 +72,7 @@ export function FilterPanel({
     filters.dateFrom !== undefined ||
     filters.dateTo !== undefined ||
     filters.priceMin > 0 ||
-    filters.priceMax < 30000
+    filters.priceMax < DEFAULT_FILTERS.priceMax
 
   return (
     <div className="pointer-events-auto flex h-full w-80 flex-col bg-background/90 shadow-2xl backdrop-blur-xl">
@@ -127,7 +122,9 @@ export function FilterPanel({
                   >
                     <CalendarIcon className="h-3 w-3" />
                     {filters.dateFrom
-                      ? format(new Date(filters.dateFrom), "d MMM", { locale: ru })
+                      ? format(new Date(filters.dateFrom), "d MMM", {
+                          locale: ru,
+                        })
                       : "От"}
                   </Button>
                 </PopoverTrigger>
@@ -135,15 +132,11 @@ export function FilterPanel({
                   <Calendar
                     mode="single"
                     selected={
-                      filters.dateFrom
-                        ? new Date(filters.dateFrom)
-                        : undefined
+                      filters.dateFrom ? new Date(filters.dateFrom) : undefined
                     }
                     onSelect={(date) =>
                       updateFilters({
-                        dateFrom: date
-                          ? format(date, "yyyy-MM-dd")
-                          : undefined,
+                        dateFrom: date ? format(date, "yyyy-MM-dd") : undefined,
                       })
                     }
                   />
@@ -161,23 +154,19 @@ export function FilterPanel({
                   >
                     <CalendarIcon className="h-3 w-3" />
                     {filters.dateTo
-                      ? format(new Date(filters.dateTo), "d MMM", { locale: ru })
+                      ? format(new Date(filters.dateTo), "d MMM", {
+                          locale: ru,
+                        })
                       : "До"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={
-                      filters.dateTo
-                        ? new Date(filters.dateTo)
-                        : undefined
-                    }
+                    selected={filters.dateTo ? new Date(filters.dateTo) : undefined}
                     onSelect={(date) =>
                       updateFilters({
-                        dateTo: date
-                          ? format(date, "yyyy-MM-dd")
-                          : undefined,
+                        dateTo: date ? format(date, "yyyy-MM-dd") : undefined,
                       })
                     }
                   />
@@ -250,8 +239,8 @@ export function FilterPanel({
               Цена билета
             </Label>
             <Slider
-              min={0}
-              max={30000}
+              min={DEFAULT_FILTERS.priceMin}
+              max={DEFAULT_FILTERS.priceMax}
               step={500}
               value={[filters.priceMin, filters.priceMax]}
               onValueChange={([min, max]) =>

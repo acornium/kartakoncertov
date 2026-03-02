@@ -63,6 +63,7 @@ export function MoscowMap({
       }}
       style={{ width: "100%", height: "100%" }}
       mapStyle={MAP_CONFIG.style}
+      attributionControl={false}
       onClick={handleMapClick}
       cursor={pickingCoords ? "crosshair" : undefined}
     >

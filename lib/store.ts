@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback, useMemo } from "react"
+import { useState, useCallback, useMemo } from "react"
 import type { Venue, ConcertEvent, Filters } from "./types"
 import { SEED_VENUES, SEED_EVENTS } from "./constants"
 
@@ -36,12 +36,11 @@ function seedIfNeeded() {
 }
 
 export function useVenues() {
-  const [venues, setVenues] = useState<Venue[]>([])
-
-  useEffect(() => {
+  const [venues, setVenues] = useState<Venue[]>(() => {
+    if (typeof window === "undefined") return []
     seedIfNeeded()
-    setVenues(loadFromStorage<Venue[]>(VENUES_KEY, []))
-  }, [])
+    return loadFromStorage<Venue[]>(VENUES_KEY, [])
+  })
 
   const persist = useCallback((updated: Venue[]) => {
     setVenues(updated)
@@ -77,12 +76,11 @@ export function useVenues() {
 }
 
 export function useEvents() {
-  const [events, setEvents] = useState<ConcertEvent[]>([])
-
-  useEffect(() => {
+  const [events, setEvents] = useState<ConcertEvent[]>(() => {
+    if (typeof window === "undefined") return []
     seedIfNeeded()
-    setEvents(loadFromStorage<ConcertEvent[]>(EVENTS_KEY, []))
-  }, [])
+    return loadFromStorage<ConcertEvent[]>(EVENTS_KEY, [])
+  })
 
   const persist = useCallback((updated: ConcertEvent[]) => {
     setEvents(updated)
@@ -133,9 +131,11 @@ export function useFilteredEvents(events: ConcertEvent[], filters: Filters) {
       // Venue filter
       if (filters.venueId && event.venueId !== filters.venueId) return false
 
-      // Price filter
-      if (event.price > filters.priceMax) return false
-      if (event.price < filters.priceMin) return false
+      // Price filter (range intersection)
+      const eventMin = event.price
+      const eventMax = event.priceMax ?? event.price
+      if (eventMax < filters.priceMin) return false
+      if (eventMin > filters.priceMax) return false
 
       return true
     })
