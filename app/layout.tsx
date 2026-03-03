@@ -7,7 +7,7 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Moscow Concerts - Карта концертных площадок Москвы',
+  title: 'Карта концертов - Карта концертных площадок Москвы',
   description: 'Интерактивная карта концертных площадок Москвы. Просматривайте мероприятия, фильтруйте по дате, жанру и цене.',
   generator: 'v0.app',
   icons: {

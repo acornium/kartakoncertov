@@ -39,4 +39,7 @@ export interface Filters {
   venueId?: string
   priceMin: number
   priceMax: number
+
+  // text query to match artist or venue name
+  query?: string
 }

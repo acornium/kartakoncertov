@@ -39,14 +39,14 @@ export default function HomePage() {
   } = useEvents()
 
   // UI state
-  const [showFilters, setShowFilters] = useState(false)
+  const [showFilters, setShowFilters] = useState(true)
   const [showAdmin, setShowAdmin] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
   const [pickingCoords, setPickingCoords] = useState(false)
 
   // Filtered events
-  const filteredEvents = useFilteredEvents(events, filters)
+  const filteredEvents = useFilteredEvents(events, filters, venues)
 
   // Count active filters
   const filterCount =
@@ -56,7 +56,8 @@ export default function HomePage() {
     (filters.priceMin > DEFAULT_FILTERS.priceMin ||
     filters.priceMax < DEFAULT_FILTERS.priceMax
       ? 1
-      : 0)
+      : 0) +
+    (filters.query && filters.query.trim() !== "" ? 1 : 0)
 
   const adminEnabled =
     process.env.NEXT_PUBLIC_ENABLE_ADMIN === "true"
@@ -117,9 +118,9 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Filter panel (right) */}
+      {/* Filter panel (desktop right) */}
       <div
-        className={`pointer-events-none fixed top-0 bottom-0 right-0 z-10 transition-transform duration-300 ${
+        className={`pointer-events-none fixed top-0 bottom-0 right-0 z-10 hidden transition-transform duration-300 md:block ${
           showFilters ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -128,7 +129,29 @@ export default function HomePage() {
             filters={filters}
             onFiltersChange={setFilters}
             venues={venues}
-            onClose={() => setShowFilters(false)}
+            variant="side"
+          />
+        </div>
+      </div>
+
+      {/* Filter panel (mobile bottom) */}
+      <div
+        className={`fixed right-0 bottom-0 left-0 z-10 transition-transform duration-300 md:hidden ${
+          showFilters ? "translate-y-0" : "translate-y-[calc(100%-3.5rem)]"
+        }`}
+      >
+        <div className="pb-3 pointer-events-auto">
+          <FilterPanel
+            filters={filters}
+            onFiltersChange={setFilters}
+            venues={venues}
+            variant="bottom"
+            open={showFilters}
+            peek
+            onPeekOpen={() => setShowFilters(true)}
+            onRequestOpen={() => setShowFilters(true)}
+            onRequestClose={() => setShowFilters(false)}
+            filterCount={filterCount}
           />
         </div>
       </div>

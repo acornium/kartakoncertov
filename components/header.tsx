@@ -38,7 +38,7 @@ export function Header({
           size="sm"
           onClick={onToggleFilters}
           className={cn(
-            "relative gap-1.5 rounded-lg shadow-lg",
+            "relative gap-1.5 rounded-lg shadow-lg hidden sm:inline-flex",
             showFilters
               ? "bg-primary text-primary-foreground"
               : "bg-background/80 text-foreground backdrop-blur-md"

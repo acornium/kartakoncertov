@@ -117,8 +117,14 @@ export function useEvents() {
   return { events, addEvent, updateEvent, deleteEvent }
 }
 
-export function useFilteredEvents(events: ConcertEvent[], filters: Filters) {
+export function useFilteredEvents(
+  events: ConcertEvent[],
+  filters: Filters,
+  venues: Venue[] = []
+) {
   return useMemo(() => {
+    const text = filters.query?.toLowerCase().trim() || ""
+
     return events.filter((event) => {
       // Date filter
       if (filters.dateFrom && event.date < filters.dateFrom) return false
@@ -137,7 +143,15 @@ export function useFilteredEvents(events: ConcertEvent[], filters: Filters) {
       if (eventMax < filters.priceMin) return false
       if (eventMin > filters.priceMax) return false
 
+      // Text query (artist or venue name)
+      if (text) {
+        const artistMatch = event.artist.toLowerCase().includes(text)
+        const venue = venues.find((v) => v.id === event.venueId)
+        const venueMatch = venue?.name.toLowerCase().includes(text)
+        if (!artistMatch && !venueMatch) return false
+      }
+
       return true
     })
-  }, [events, filters])
+  }, [events, filters, venues])
 }

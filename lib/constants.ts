@@ -38,6 +38,7 @@ export const DEFAULT_FILTERS: Filters = {
   genres: [],
   priceMin: 0,
   priceMax: 30000,
+  query: "",
 }
 
 export const SEED_VENUES: Venue[] = [
