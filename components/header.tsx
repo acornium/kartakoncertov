@@ -8,6 +8,7 @@ interface HeaderProps {
   isAdmin: boolean
   showFilters: boolean
   showAdmin: boolean
+  adminEnabled: boolean
   onToggleFilters: () => void
   onToggleAdmin: () => void
   filterCount: number
@@ -17,6 +18,7 @@ export function Header({
   isAdmin,
   showFilters,
   showAdmin,
+  adminEnabled,
   onToggleFilters,
   onToggleAdmin,
   filterCount,
@@ -55,24 +57,26 @@ export function Header({
           )}
         </Button>
 
-        <Button
-          variant={showAdmin ? "default" : "secondary"}
-          size="sm"
-          onClick={onToggleAdmin}
-          className={cn(
-            "gap-1.5 rounded-lg shadow-lg",
-            showAdmin
-              ? "bg-primary text-primary-foreground"
-              : isAdmin
-                ? "bg-primary/20 text-primary backdrop-blur-md"
-                : "bg-background/80 text-foreground backdrop-blur-md"
-          )}
-        >
-          <ShieldIcon className="h-4 w-4" />
-          <span className="hidden sm:inline">
-            {isAdmin ? "Админ" : "Войти"}
-          </span>
-        </Button>
+        {adminEnabled && (
+          <Button
+            variant={showAdmin ? "default" : "secondary"}
+            size="sm"
+            onClick={onToggleAdmin}
+            className={cn(
+              "gap-1.5 rounded-lg shadow-lg",
+              showAdmin
+                ? "bg-primary text-primary-foreground"
+                : isAdmin
+                  ? "bg-primary/20 text-primary backdrop-blur-md"
+                  : "bg-background/80 text-foreground backdrop-blur-md"
+            )}
+          >
+            <ShieldIcon className="h-4 w-4" />
+            <span className="hidden sm:inline">
+              {isAdmin ? "Админ" : "Войти"}
+            </span>
+          </Button>
+        )}
       </div>
     </header>
   )

@@ -10,7 +10,6 @@ import {
 } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import {
@@ -21,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { CalendarIcon, RotateCcwIcon, XIcon } from "lucide-react"
+import { CalendarIcon, RotateCcwIcon, XIcon, CheckIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { format } from "date-fns"
@@ -195,11 +194,7 @@ export function FilterPanel({
                     )}
                   >
                     {isActive && (
-                      <Checkbox
-                        checked
-                        className="h-3 w-3 rounded-sm border-none bg-transparent text-current [&_svg]:h-2.5 [&_svg]:w-2.5"
-                        tabIndex={-1}
-                      />
+                      <CheckIcon className="h-3 w-3" />
                     )}
                     {GENRE_LABELS[genre]}
                   </button>

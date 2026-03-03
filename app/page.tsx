@@ -58,13 +58,17 @@ export default function HomePage() {
       ? 1
       : 0)
 
+  const adminEnabled =
+    process.env.NEXT_PUBLIC_ENABLE_ADMIN === "true"
+
   const handleToggleAdmin = useCallback(() => {
+    if (!adminEnabled) return
     if (isAdmin) {
       setShowAdmin((prev) => !prev)
     } else {
       setShowAdmin(true)
     }
-  }, [isAdmin])
+  }, [adminEnabled, isAdmin])
 
   const handleMapClick = useCallback(
     (coords: { lng: number; lat: number }) => {
@@ -98,6 +102,7 @@ export default function HomePage() {
         isAdmin={isAdmin}
         showFilters={showFilters}
         showAdmin={showAdmin}
+        adminEnabled={adminEnabled}
         onToggleFilters={() => setShowFilters((prev) => !prev)}
         onToggleAdmin={handleToggleAdmin}
         filterCount={filterCount}
@@ -112,10 +117,10 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Filter panel (left) */}
+      {/* Filter panel (right) */}
       <div
-        className={`pointer-events-none fixed top-0 bottom-0 left-0 z-10 transition-transform duration-300 ${
-          showFilters ? "translate-x-0" : "-translate-x-full"
+        className={`pointer-events-none fixed top-0 bottom-0 right-0 z-10 transition-transform duration-300 ${
+          showFilters ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="h-full pt-14">
@@ -129,6 +134,7 @@ export default function HomePage() {
       </div>
 
       {/* Admin panel (right) */}
+      {adminEnabled && (
       <div
         className={`pointer-events-none fixed top-0 right-0 bottom-0 z-10 transition-transform duration-300 ${
           showAdmin ? "translate-x-0" : "translate-x-full"
@@ -163,6 +169,7 @@ export default function HomePage() {
           )}
         </div>
       </div>
+      )}
     </div>
   )
 }
