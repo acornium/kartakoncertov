@@ -33,12 +33,8 @@ export interface ConcertEvent {
 }
 
 export interface Filters {
-  dateFrom?: string
-  dateTo?: string
+  date?: string
   genres: Genre[]
-  venueId?: string
-  priceMin: number
-  priceMax: number
 
   // text query to match artist or venue name
   query?: string

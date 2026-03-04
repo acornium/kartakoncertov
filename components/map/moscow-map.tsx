@@ -18,6 +18,7 @@ interface MoscowMapProps {
   venues: Venue[]
   events: ConcertEvent[]
   filteredEvents: ConcertEvent[]
+  dateFilterActive?: boolean
   onMapClick?: (e: { lng: number; lat: number }) => void
   pickingCoords?: boolean
 }
@@ -26,6 +27,7 @@ export function MoscowMap({
   venues,
   events,
   filteredEvents,
+  dateFilterActive = false,
   onMapClick,
   pickingCoords,
 }: MoscowMapProps) {
@@ -72,7 +74,11 @@ export function MoscowMap({
       {venues.map((venue) => {
         const count = eventCountByVenue[venue.id] || 0
         const hasEvents = venueHasEvents(venue.id)
-        const dimmed = filteredEvents.length > 0 ? !hasEvents : false
+        const dimmed = dateFilterActive
+          ? !hasEvents
+          : filteredEvents.length > 0
+            ? !hasEvents
+            : false
 
         return (
           <Marker
@@ -121,9 +127,12 @@ export function MoscowMap({
         >
           <VenuePopup
             venue={selectedVenue}
-            events={filteredEvents.length > 0
-              ? filteredEvents.filter((e) => e.venueId === selectedVenue.id)
-              : events.filter((e) => e.venueId === selectedVenue.id)
+            events={
+              dateFilterActive
+                ? filteredEvents.filter((e) => e.venueId === selectedVenue.id)
+                : filteredEvents.length > 0
+                  ? filteredEvents.filter((e) => e.venueId === selectedVenue.id)
+                  : events.filter((e) => e.venueId === selectedVenue.id)
             }
           />
         </Popup>

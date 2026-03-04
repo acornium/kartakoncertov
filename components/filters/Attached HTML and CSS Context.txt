@@ -1,0 +1,1387 @@
+Attached HTML and CSS Context
+
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none"><g transform="translate(8.5, 13)"><path class="paused" d="M13.3 15.2 L2.34 1 V12.6" fill="none" stroke="url(#next_logo_paint0_linear_1357_10853)" stroke-width="1.86" mask="url(#next_logo_mask0)" stroke-dasharray="29.6" stroke-dashoffset="29.6"></path><path class="paused" d="M11.825 1.5 V13.1" stroke-width="1.86" stroke="url(#next_logo_paint1_linear_1357_10853)" stroke-dasharray="11.6" stroke-dashoffset="11.6"></path></g><defs><linearGradient id="next_logo_paint0_linear_1357_10853" x1="9.95555" y1="11.1226" x2="15.4778" y2="17.9671" gradientUnits="userSpaceOnUse"><stop stop-color="white"></stop><stop offset="0.604072" stop-color="white" stop-opacity="0"></stop><stop offset="1" stop-color="white" stop-opacity="0"></stop></linearGradient><linearGradient id="next_logo_paint1_linear_1357_10853" x1="11.8222" y1="1.40039" x2="11.791" y2="9.62542" gradientUnits="userSpaceOnUse"><stop stop-color="white"></stop><stop offset="1" stop-color="white" stop-opacity="0"></stop></linearGradient><mask id="next_logo_mask0"><rect width="100%" height="100%" fill="white"></rect><rect width="5" height="1.5" fill="black"></rect></mask></defs></svg>
+
+
+/* Matched Rule from user-agent */
+svg:not(:root), symbol, image, marker, pattern, foreignObject {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+/* Matched Rule from user-agent */
+svg:not(:root) {
+  overflow-clip-margin: content-box;
+}
+
+/* Matched Rule from regular */
+*, *::before, *::after {
+  box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* Matched Rule from regular */
+* {
+  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Matched Rule from regular */
+svg {
+  overflow: hidden;
+  vertical-align: middle;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  vertical-align: middle;
+}
+
+/* Matched Rule from regular */
+svg {
+  flex-shrink: 0;
+  width: var(--size-40);
+  height: var(--size-40);
+  flex-shrink: 0;
+  width: var(--size-40);
+  height: var(--size-40);
+}
+
+/* Inherited from ancestor level 1 (inline) */
+element {
+display: flex;
+}
+
+/* Inherited from ancestor level 1 (user-agent) */
+button {
+  appearance: auto;
+}
+
+/* Inherited from ancestor level 1 (user-agent) */
+input, textarea, select, button {
+  margin-top: 0em;
+  margin-right: 0em;
+  margin-bottom: 0em;
+  margin-left: 0em;
+  text-rendering: auto;
+  color: fieldtext;
+  letter-spacing: normal;
+  word-spacing: normal;
+  line-height: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+}
+
+/* Inherited from ancestor level 1 (user-agent) */
+input[type="button" i], input[type="submit" i], input[type="reset" i], input[type="file" i]::-webkit-file-upload-button, button {
+  text-align: center;
+  cursor: default;
+  padding-block-start: 1px;
+  padding-block-end: 1px;
+  padding-inline-start: 6px;
+  padding-inline-end: 6px;
+  border-top-width: 2px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+  border-top-style: outset;
+  border-right-style: outset;
+  border-bottom-style: outset;
+  border-left-style: outset;
+  border-top-color: buttonborder;
+  border-right-color: buttonborder;
+  border-bottom-color: buttonborder;
+  border-left-color: buttonborder;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  box-sizing: border-box;
+  background-color: buttonface;
+  color: buttontext;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+*, *::before, *::after {
+  box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+* {
+  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+button {
+  border-radius: 0;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: none;
+  appearance: none;
+  -webkit-appearance: none;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: initial;
+  border-right-style: initial;
+  border-bottom-style: initial;
+  border-left-style: initial;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  background-image: none;
+  background-position-x: initial;
+  background-position-y: initial;
+  background-size: initial;
+  background-repeat: initial;
+  background-attachment: initial;
+  background-origin: initial;
+  background-clip: initial;
+  background-color: initial;
+  appearance: none;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+input, button, select, optgroup, textarea {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+button, input {
+  overflow: visible;
+  overflow-x: visible;
+  overflow-y: visible;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+button, select {
+  text-transform: none;
+  text-transform: none;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+button, [type='button'], [type='reset'], [type='submit'] {
+  -webkit-appearance: button;
+  appearance: button;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+[data-next-mark] {
+  width: var(--mark-size);
+  height: var(--mark-size);
+  margin: 0 2px;
+  display: flex;
+  align-items: center;
+  border-radius: var(--rounded-full);
+  transition: background var(--duration-long) var(--timing);
+  width: var(--mark-size);
+  height: var(--mark-size);
+  margin-top: 0px;
+  margin-right: 2px;
+  margin-bottom: 0px;
+  margin-left: 2px;
+  display: flex;
+  align-items: center;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+button:focus {
+  outline: 1px dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-color: -webkit-focus-ring-color;
+  outline-style: auto;
+  outline-width: 5px;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+button:not(:disabled), [type='button']:not(:disabled), [type='reset']:not(:disabled), [type='submit']:not(:disabled) {
+  cursor: pointer;
+  cursor: pointer;
+}
+
+/* Inherited from ancestor level 1 (regular) */
+&:hover {
+  background: var(--color-hover-alpha-subtle);
+}
+
+/* Inherited from ancestor level 1 (regular) */
+button:focus:not(:focus-visible) {
+  outline: none;
+  outline-color: initial;
+  outline-style: none;
+  outline-width: initial;
+}
+
+/* Inherited from ancestor level 2 (user-agent) */
+div {
+  display: block;
+}
+
+/* Inherited from ancestor level 2 (user-agent) */
+address, blockquote, center, div, figure, figcaption, footer, form, header, hr, legend, listing, main, p, plaintext, pre, summary, xmp, article, aside, h1, h2, h3, h4, h5, h6, hgroup, nav, section, search, table, caption, colgroup, col, thead, tbody, tfoot, tr, td, th, dir, dd, dl, dt, menu, ol, ul, li, bdi, output, [dir="ltr" i], [dir="rtl" i], [dir="auto" i] {
+  unicode-bidi: isolate;
+}
+
+/* Inherited from ancestor level 2 (regular) */
+*, *::before, *::after {
+  box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* Inherited from ancestor level 2 (regular) */
+* {
+  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Inherited from ancestor level 2 (regular) */
+> div {
+  display: flex;
+  display: flex;
+}
+
+/* Inherited from ancestor level 3 (inline) */
+element {
+width: 36px;
+}
+
+/* Inherited from ancestor level 3 (user-agent) */
+div {
+  display: block;
+}
+
+/* Inherited from ancestor level 3 (user-agent) */
+address, blockquote, center, div, figure, figcaption, footer, form, header, hr, legend, listing, main, p, plaintext, pre, summary, xmp, article, aside, h1, h2, h3, h4, h5, h6, hgroup, nav, section, search, table, caption, colgroup, col, thead, tbody, tfoot, tr, td, th, dir, dd, dl, dt, menu, ol, ul, li, bdi, output, [dir="ltr" i], [dir="rtl" i], [dir="auto" i] {
+  unicode-bidi: isolate;
+}
+
+/* Inherited from ancestor level 3 (regular) */
+*, *::before, *::after {
+  box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* Inherited from ancestor level 3 (regular) */
+* {
+  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Inherited from ancestor level 3 (regular) */
+[data-next-badge] {
+  width: var(--size);
+  height: var(--size);
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: rgba(0,0,0,0.8);
+  box-shadow: 0 0 0 1px var(--color-outer-border),inset 0 0 0 1px var(--color-inner-border),0px 16px 32px -8px rgba(0,0,0,0.24);
+  backdrop-filter: blur(48px);
+  border-radius: var(--rounded-full);
+  user-select: none;
+  cursor: pointer;
+  scale: 1;
+  overflow: hidden;
+  will-change: scale,box-shadow,width,background;
+  transition: scale var(--duration-short) var(--timing),width var(--duration-long) var(--timing),box-shadow var(--duration-long) var(--timing),background var(--duration-short) ease;
+  width: var(--size);
+  height: var(--size);
+  display: flex;
+  align-items: center;
+  position: relative;
+  background-image: initial;
+  background-position-x: initial;
+  background-position-y: initial;
+  background-size: initial;
+  background-repeat: initial;
+  background-attachment: initial;
+  background-origin: initial;
+  background-clip: initial;
+  background-color: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 0 1px var(--color-outer-border),inset 0 0 0 1px var(--color-inner-border),0px 16px 32px -8px rgba(0,0,0,0.24);
+  backdrop-filter: blur(48px);
+  user-select: none;
+  cursor: pointer;
+  scale: 1;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  will-change: scale, box-shadow, width, background;
+}
+
+/* Inherited from ancestor level 4 (inline) */
+element {
+--size: 36px; --duration-short: 150ms; display: block;
+}
+
+/* Inherited from ancestor level 4 (user-agent) */
+div {
+  display: block;
+}
+
+/* Inherited from ancestor level 4 (user-agent) */
+address, blockquote, center, div, figure, figcaption, footer, form, header, hr, legend, listing, main, p, plaintext, pre, summary, xmp, article, aside, h1, h2, h3, h4, h5, h6, hgroup, nav, section, search, table, caption, colgroup, col, thead, tbody, tfoot, tr, td, th, dir, dd, dl, dt, menu, ol, ul, li, bdi, output, [dir="ltr" i], [dir="rtl" i], [dir="auto" i] {
+  unicode-bidi: isolate;
+}
+
+/* Inherited from ancestor level 4 (regular) */
+*, *::before, *::after {
+  box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* Inherited from ancestor level 4 (regular) */
+* {
+  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Inherited from ancestor level 4 (regular) */
+[data-next-badge-root] {
+  --timing: cubic-bezier(0.23,0.88,0.26,0.92);
+  --duration-long: 250ms;
+  --color-outer-border: #171717;
+  --color-inner-border: hsla(0,0%,100%,0.14);
+  --color-hover-alpha-subtle: hsla(0,0%,100%,0.13);
+  --color-hover-alpha-error: hsla(0,0%,100%,0.2);
+  --color-hover-alpha-error-2: hsla(0,0%,100%,0.25);
+  --mark-size: calc(var(--size) - var(--size-2) * 2);
+  --focus-color: var(--color-blue-800);
+  --focus-ring: 2px solid var(--focus-color);
+  --timing: cubic-bezier(0.23,0.88,0.26,0.92);
+  --duration-long: 250ms;
+  --color-outer-border: #171717;
+  --color-inner-border: hsla(0,0%,100%,0.14);
+  --color-hover-alpha-subtle: hsla(0,0%,100%,0.13);
+  --color-hover-alpha-error: hsla(0,0%,100%,0.2);
+  --color-hover-alpha-error-2: hsla(0,0%,100%,0.25);
+  --mark-size: calc(var(--size) - var(--size-2) * 2);
+  --focus-color: var(--color-blue-800);
+  --focus-ring: 2px solid var(--focus-color);
+}
+
+/* Inherited from ancestor level 5 (user-agent) */
+div {
+  display: block;
+}
+
+/* Inherited from ancestor level 5 (user-agent) */
+address, blockquote, center, div, figure, figcaption, footer, form, header, hr, legend, listing, main, p, plaintext, pre, summary, xmp, article, aside, h1, h2, h3, h4, h5, h6, hgroup, nav, section, search, table, caption, colgroup, col, thead, tbody, tfoot, tr, td, th, dir, dd, dl, dt, menu, ol, ul, li, bdi, output, [dir="ltr" i], [dir="rtl" i], [dir="auto" i] {
+  unicode-bidi: isolate;
+}
+
+/* Inherited from ancestor level 5 (regular) */
+*, *::before, *::after {
+  box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* Inherited from ancestor level 5 (regular) */
+* {
+  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Inherited from ancestor level 6 (inline) */
+element {
+--animate-out-duration-ms: 200ms; --animate-out-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.1); box-shadow: none; bottom: 20px; left: 20px;
+}
+
+/* Inherited from ancestor level 6 (user-agent) */
+div {
+  display: block;
+}
+
+/* Inherited from ancestor level 6 (user-agent) */
+address, blockquote, center, div, figure, figcaption, footer, form, header, hr, legend, listing, main, p, plaintext, pre, summary, xmp, article, aside, h1, h2, h3, h4, h5, h6, hgroup, nav, section, search, table, caption, colgroup, col, thead, tbody, tfoot, tr, td, th, dir, dd, dl, dt, menu, ol, ul, li, bdi, output, [dir="ltr" i], [dir="rtl" i], [dir="auto" i] {
+  unicode-bidi: isolate;
+}
+
+/* Inherited from ancestor level 6 (regular) */
+*, *::before, *::after {
+  box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* Inherited from ancestor level 6 (regular) */
+* {
+  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Inherited from ancestor level 6 (regular) */
+.nextjs-toast {
+  position: fixed;
+  z-index: var(--top-z-index);
+  max-width: 420px;
+  box-shadow: 0px 16px 32px rgba(0, 0, 0, 0.25);
+  position: fixed;
+  z-index: var(--top-z-index);
+  max-width: 420px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 16px 32px;
+}
+
+/* Inherited from ancestor level 6 (regular) */
+[data-nextjs-toast] {
+}
+
+/* Inherited from ancestor level 7 (inline) */
+element {
+--nextjs-dev-tools-scale: 1;
+}
+
+/* Inherited from ancestor level 7 (regular) */
+:host {
+  all: initial;
+  direction: ltr;
+  all: initial;
+  direction: ltr;
+}
+
+/* Inherited from ancestor level 7 (regular) */
+:host {
+  font-family: sans-serif;
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  font-family: sans-serif;
+  line-height: 1.15;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/* Inherited from ancestor level 7 (regular) */
+:host {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-font);
+  text-align: left;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-font);
+  text-align: left;
+}
+
+/* Inherited from ancestor level 7 (regular) */
+:host {
+  position: absolute;
+  --color-font: #757575;
+  --color-backdrop: rgba(250, 250, 250, 0.8);
+  --color-border-shadow: rgba(0, 0, 0, 0.145);
+  --color-title-color: #1f1f1f;
+  --color-stack-notes: #777;
+  --color-accents-1: #808080;
+  --color-accents-2: #222222;
+  --color-accents-3: #404040;
+  --font-stack-monospace: '__nextjs-Geist Mono', 'Geist Mono', 'SFMono-Regular', Consolas,
+    'Liberation Mono', Menlo, Courier, monospace;
+  --font-stack-sans: '__nextjs-Geist', 'Geist', -apple-system, 'Source Sans Pro', sans-serif;
+  font-family: var(--font-stack-sans);
+  font-variant-ligatures: none;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+  --shadow-none: 0 0 #0000;
+  --shadow-small: 0px 2px 2px rgba(0, 0, 0, 0.04);
+  --shadow-menu: 0px 1px 1px rgba(0, 0, 0, 0.02), 0px 4px 8px -4px rgba(0, 0, 0, 0.04),
+    0px 16px 24px -8px rgba(0, 0, 0, 0.06);
+  --focus-color: var(--color-blue-800);
+  --focus-ring: 2px solid var(--focus-color);
+  --timing-swift: cubic-bezier(0.23, 0.88, 0.26, 0.92);
+  --timing-overlay: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  --timing-bounce: linear(0 0%, 0.005871 1%, 0.022058 2%, 0.046612 3%, 0.077823 4%, 0.114199 5%, 0.154441 6%, 0.197431 7.000000000000001%, 0.242208 8%, 0.287959 9%, 0.333995 10%, 0.379743 11%, 0.424732 12%, 0.46858 13%, 0.510982 14.000000000000002%, 0.551702 15%, 0.590564 16%, 0.627445 17%, 0.662261 18%, 0.694971 19%, 0.725561 20%, 0.754047 21%, 0.780462 22%, 0.804861 23%, 0.82731 24%, 0.847888 25%, 0.866679 26%, 0.883775 27%, 0.899272 28.000000000000004%, 0.913267 28.999999999999996%, 0.925856 30%, 0.937137 31%, 0.947205 32%, 0.956153 33%, 0.96407 34%, 0.971043 35%, 0.977153 36%, 0.982479 37%, 0.987094 38%, 0.991066 39%, 0.994462 40%, 0.997339 41%, 0.999755 42%, 1.001761 43%, 1.003404 44%, 1.004727 45%, 1.00577 46%, 1.006569 47%, 1.007157 48%, 1.007563 49%, 1.007813 50%, 1.007931 51%, 1.007939 52%, 1.007855 53%, 1.007697 54%, 1.007477 55.00000000000001%, 1.00721 56.00000000000001%, 1.006907 56.99999999999999%, 1.006576 57.99999999999999%, 1.006228 59%, 1.005868 60%, 1.005503 61%, 1.005137 62%, 1.004776 63%, 1.004422 64%, 1.004078 65%, 1.003746 66%, 1.003429 67%, 1.003127 68%, 1.00284 69%, 1.002571 70%, 1.002318 71%, 1.002082 72%, 1.001863 73%, 1.00166 74%, 1.001473 75%, 1.001301 76%, 1.001143 77%, 1.001 78%, 1.000869 79%, 1.000752 80%, 1.000645 81%, 1.00055 82%, 1.000464 83%, 1.000388 84%, 1.000321 85%, 1.000261 86%, 1.000209 87%, 1.000163 88%, 1.000123 89%, 1.000088 90%);
+  --rounded-none: 0px;
+  --rounded-sm: 2px;
+  --rounded-md: 4px;
+  --rounded-md-2: 6px;
+  --rounded-lg: 8px;
+  --rounded-xl: 12px;
+  --rounded-2xl: 16px;
+  --rounded-3xl: 24px;
+  --rounded-4xl: 32px;
+  --rounded-full: 9999px;
+  --nextjs-dev-tools-scale: 1;
+  --size-1: calc(1px / var(--nextjs-dev-tools-scale));
+  --size-2: calc(2px / var(--nextjs-dev-tools-scale));
+  --size-3: calc(3px / var(--nextjs-dev-tools-scale));
+  --size-4: calc(4px / var(--nextjs-dev-tools-scale));
+  --size-5: calc(5px / var(--nextjs-dev-tools-scale));
+  --size-6: calc(6px / var(--nextjs-dev-tools-scale));
+  --size-7: calc(7px / var(--nextjs-dev-tools-scale));
+  --size-8: calc(8px / var(--nextjs-dev-tools-scale));
+  --size-9: calc(9px / var(--nextjs-dev-tools-scale));
+  --size-10: calc(10px / var(--nextjs-dev-tools-scale));
+  --size-11: calc(11px / var(--nextjs-dev-tools-scale));
+  --size-12: calc(12px / var(--nextjs-dev-tools-scale));
+  --size-13: calc(13px / var(--nextjs-dev-tools-scale));
+  --size-14: calc(14px / var(--nextjs-dev-tools-scale));
+  --size-15: calc(15px / var(--nextjs-dev-tools-scale));
+  --size-16: calc(16px / var(--nextjs-dev-tools-scale));
+  --size-17: calc(17px / var(--nextjs-dev-tools-scale));
+  --size-18: calc(18px / var(--nextjs-dev-tools-scale));
+  --size-20: calc(20px / var(--nextjs-dev-tools-scale));
+  --size-22: calc(22px / var(--nextjs-dev-tools-scale));
+  --size-24: calc(24px / var(--nextjs-dev-tools-scale));
+  --size-26: calc(26px / var(--nextjs-dev-tools-scale));
+  --size-28: calc(28px / var(--nextjs-dev-tools-scale));
+  --size-30: calc(30px / var(--nextjs-dev-tools-scale));
+  --size-32: calc(32px / var(--nextjs-dev-tools-scale));
+  --size-34: calc(34px / var(--nextjs-dev-tools-scale));
+  --size-36: calc(36px / var(--nextjs-dev-tools-scale));
+  --size-38: calc(38px / var(--nextjs-dev-tools-scale));
+  --size-40: calc(40px / var(--nextjs-dev-tools-scale));
+  --size-42: calc(42px / var(--nextjs-dev-tools-scale));
+  --size-44: calc(44px / var(--nextjs-dev-tools-scale));
+  --size-46: calc(46px / var(--nextjs-dev-tools-scale));
+  --size-48: calc(48px / var(--nextjs-dev-tools-scale));
+  position: absolute;
+  --color-font: #757575;
+  --color-backdrop: rgba(250, 250, 250, 0.8);
+  --color-border-shadow: rgba(0, 0, 0, 0.145);
+  --color-title-color: #1f1f1f;
+  --color-stack-notes: #777;
+  --color-accents-1: #808080;
+  --color-accents-2: #222222;
+  --color-accents-3: #404040;
+  --font-stack-monospace: '__nextjs-Geist Mono', 'Geist Mono', 'SFMono-Regular', Consolas,
+    'Liberation Mono', Menlo, Courier, monospace;
+  --font-stack-sans: '__nextjs-Geist', 'Geist', -apple-system, 'Source Sans Pro', sans-serif;
+  font-family: var(--font-stack-sans);
+  font-variant-ligatures: none;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+  --shadow-none: 0 0 #0000;
+  --shadow-small: 0px 2px 2px rgba(0, 0, 0, 0.04);
+  --shadow-menu: 0px 1px 1px rgba(0, 0, 0, 0.02), 0px 4px 8px -4px rgba(0, 0, 0, 0.04),
+    0px 16px 24px -8px rgba(0, 0, 0, 0.06);
+  --focus-color: var(--color-blue-800);
+  --focus-ring: 2px solid var(--focus-color);
+  --timing-swift: cubic-bezier(0.23, 0.88, 0.26, 0.92);
+  --timing-overlay: cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  --timing-bounce: linear(0 0%, 0.005871 1%, 0.022058 2%, 0.046612 3%, 0.077823 4%, 0.114199 5%, 0.154441 6%, 0.197431 7.000000000000001%, 0.242208 8%, 0.287959 9%, 0.333995 10%, 0.379743 11%, 0.424732 12%, 0.46858 13%, 0.510982 14.000000000000002%, 0.551702 15%, 0.590564 16%, 0.627445 17%, 0.662261 18%, 0.694971 19%, 0.725561 20%, 0.754047 21%, 0.780462 22%, 0.804861 23%, 0.82731 24%, 0.847888 25%, 0.866679 26%, 0.883775 27%, 0.899272 28.000000000000004%, 0.913267 28.999999999999996%, 0.925856 30%, 0.937137 31%, 0.947205 32%, 0.956153 33%, 0.96407 34%, 0.971043 35%, 0.977153 36%, 0.982479 37%, 0.987094 38%, 0.991066 39%, 0.994462 40%, 0.997339 41%, 0.999755 42%, 1.001761 43%, 1.003404 44%, 1.004727 45%, 1.00577 46%, 1.006569 47%, 1.007157 48%, 1.007563 49%, 1.007813 50%, 1.007931 51%, 1.007939 52%, 1.007855 53%, 1.007697 54%, 1.007477 55.00000000000001%, 1.00721 56.00000000000001%, 1.006907 56.99999999999999%, 1.006576 57.99999999999999%, 1.006228 59%, 1.005868 60%, 1.005503 61%, 1.005137 62%, 1.004776 63%, 1.004422 64%, 1.004078 65%, 1.003746 66%, 1.003429 67%, 1.003127 68%, 1.00284 69%, 1.002571 70%, 1.002318 71%, 1.002082 72%, 1.001863 73%, 1.00166 74%, 1.001473 75%, 1.001301 76%, 1.001143 77%, 1.001 78%, 1.000869 79%, 1.000752 80%, 1.000645 81%, 1.00055 82%, 1.000464 83%, 1.000388 84%, 1.000321 85%, 1.000261 86%, 1.000209 87%, 1.000163 88%, 1.000123 89%, 1.000088 90%);
+  --rounded-none: 0px;
+  --rounded-sm: 2px;
+  --rounded-md: 4px;
+  --rounded-md-2: 6px;
+  --rounded-lg: 8px;
+  --rounded-xl: 12px;
+  --rounded-2xl: 16px;
+  --rounded-3xl: 24px;
+  --rounded-4xl: 32px;
+  --rounded-full: 9999px;
+  --nextjs-dev-tools-scale: 1;
+  --size-1: calc(1px / var(--nextjs-dev-tools-scale));
+  --size-2: calc(2px / var(--nextjs-dev-tools-scale));
+  --size-3: calc(3px / var(--nextjs-dev-tools-scale));
+  --size-4: calc(4px / var(--nextjs-dev-tools-scale));
+  --size-5: calc(5px / var(--nextjs-dev-tools-scale));
+  --size-6: calc(6px / var(--nextjs-dev-tools-scale));
+  --size-7: calc(7px / var(--nextjs-dev-tools-scale));
+  --size-8: calc(8px / var(--nextjs-dev-tools-scale));
+  --size-9: calc(9px / var(--nextjs-dev-tools-scale));
+  --size-10: calc(10px / var(--nextjs-dev-tools-scale));
+  --size-11: calc(11px / var(--nextjs-dev-tools-scale));
+  --size-12: calc(12px / var(--nextjs-dev-tools-scale));
+  --size-13: calc(13px / var(--nextjs-dev-tools-scale));
+  --size-14: calc(14px / var(--nextjs-dev-tools-scale));
+  --size-15: calc(15px / var(--nextjs-dev-tools-scale));
+  --size-16: calc(16px / var(--nextjs-dev-tools-scale));
+  --size-17: calc(17px / var(--nextjs-dev-tools-scale));
+  --size-18: calc(18px / var(--nextjs-dev-tools-scale));
+  --size-20: calc(20px / var(--nextjs-dev-tools-scale));
+  --size-22: calc(22px / var(--nextjs-dev-tools-scale));
+  --size-24: calc(24px / var(--nextjs-dev-tools-scale));
+  --size-26: calc(26px / var(--nextjs-dev-tools-scale));
+  --size-28: calc(28px / var(--nextjs-dev-tools-scale));
+  --size-30: calc(30px / var(--nextjs-dev-tools-scale));
+  --size-32: calc(32px / var(--nextjs-dev-tools-scale));
+  --size-34: calc(34px / var(--nextjs-dev-tools-scale));
+  --size-36: calc(36px / var(--nextjs-dev-tools-scale));
+  --size-38: calc(38px / var(--nextjs-dev-tools-scale));
+  --size-40: calc(40px / var(--nextjs-dev-tools-scale));
+  --size-42: calc(42px / var(--nextjs-dev-tools-scale));
+  --size-44: calc(44px / var(--nextjs-dev-tools-scale));
+  --size-46: calc(46px / var(--nextjs-dev-tools-scale));
+  --size-48: calc(48px / var(--nextjs-dev-tools-scale));
+}
+
+/* Inherited from ancestor level 7 (regular) */
+:host {
+  --color-ansi-cyan: var(--color-syntax-keyword);
+  --color-ansi-yellow: var(--color-syntax-function);
+  --color-ansi-magenta: var(--color-syntax-keyword);
+  --color-ansi-green: var(--color-syntax-string);
+  --color-ansi-bright-black: var(--color-syntax-comment);
+  --color-ansi-selection: var(--color-gray-alpha-300);
+  --color-ansi-bg: var(--color-background-200);
+  --color-ansi-fg: var(--color-gray-1000);
+  --color-ansi-white: var(--color-gray-700);
+  --color-ansi-black: var(--color-gray-200);
+  --color-ansi-blue: var(--color-blue-700);
+  --color-ansi-red: var(--color-red-700);
+  --color-ansi-bright-white: var(--color-gray-1000);
+  --color-ansi-bright-blue: var(--color-blue-800);
+  --color-ansi-bright-cyan: var(--color-blue-800);
+  --color-ansi-bright-green: var(--color-green-800);
+  --color-ansi-bright-magenta: var(--color-blue-800);
+  --color-ansi-bright-red: var(--color-red-800);
+  --color-ansi-bright-yellow: var(--color-amber-900);
+  --color-background-100: #ffffff;
+  --color-background-200: #fafafa;
+  --color-syntax-comment: #545454;
+  --color-syntax-constant: #171717;
+  --color-syntax-function: #0054ad;
+  --color-syntax-keyword: #a51850;
+  --color-syntax-link: #066056;
+  --color-syntax-parameter: #8f3e00;
+  --color-syntax-punctuation: #171717;
+  --color-syntax-string: #036157;
+  --color-syntax-string-expression: #066056;
+  --color-gray-100: #f2f2f2;
+  --color-gray-200: #ebebeb;
+  --color-gray-300: #e6e6e6;
+  --color-gray-400: #eaeaea;
+  --color-gray-500: #c9c9c9;
+  --color-gray-600: #a8a8a8;
+  --color-gray-700: #8f8f8f;
+  --color-gray-800: #7d7d7d;
+  --color-gray-900: #666666;
+  --color-gray-1000: #171717;
+  --color-gray-alpha-100: rgba(0, 0, 0, 0.05);
+  --color-gray-alpha-200: rgba(0, 0, 0, 0.081);
+  --color-gray-alpha-300: rgba(0, 0, 0, 0.1);
+  --color-gray-alpha-400: rgba(0, 0, 0, 0.08);
+  --color-gray-alpha-500: rgba(0, 0, 0, 0.21);
+  --color-gray-alpha-600: rgba(0, 0, 0, 0.34);
+  --color-gray-alpha-700: rgba(0, 0, 0, 0.44);
+  --color-gray-alpha-800: rgba(0, 0, 0, 0.51);
+  --color-gray-alpha-900: rgba(0, 0, 0, 0.605);
+  --color-gray-alpha-1000: rgba(0, 0, 0, 0.91);
+  --color-blue-100: #f0f7ff;
+  --color-blue-200: #edf6ff;
+  --color-blue-300: #e1f0ff;
+  --color-blue-400: #cde7ff;
+  --color-blue-500: #99ceff;
+  --color-blue-600: #52aeff;
+  --color-blue-700: #0070f3;
+  --color-blue-800: #0060d1;
+  --color-blue-900: #0067d6;
+  --color-blue-1000: #0025ad;
+  --color-red-100: #fff0f0;
+  --color-red-200: #ffebeb;
+  --color-red-300: #ffe5e5;
+  --color-red-400: #fdd8d8;
+  --color-red-500: #f8baba;
+  --color-red-600: #f87274;
+  --color-red-700: #e5484d;
+  --color-red-800: #da3036;
+  --color-red-900: #ca2a30;
+  --color-red-1000: #381316;
+  --color-amber-100: #fff6e5;
+  --color-amber-200: #fff4d5;
+  --color-amber-300: #fef0cd;
+  --color-amber-400: #ffddbf;
+  --color-amber-500: #ffc96b;
+  --color-amber-600: #f5b047;
+  --color-amber-700: #ffb224;
+  --color-amber-800: #ff990a;
+  --color-amber-900: #a35200;
+  --color-amber-1000: #4e2009;
+  --color-green-100: #effbef;
+  --color-green-200: #eafaea;
+  --color-green-300: #dcf6dc;
+  --color-green-400: #c8f1c9;
+  --color-green-500: #99e59f;
+  --color-green-600: #6cda76;
+  --color-green-700: #46a758;
+  --color-green-800: #388e4a;
+  --color-green-900: #297c3b;
+  --color-green-1000: #18311e;
+  --color-turbopack-text-red: #ff1e56;
+  --color-turbopack-text-blue: #0096ff;
+  --color-turbopack-border-red: #f0adbe;
+  --color-turbopack-border-blue: #adccea;
+  --color-turbopack-background-red: #fff7f9;
+  --color-turbopack-background-blue: #f6fbff;
+  --color-ansi-cyan: var(--color-syntax-keyword);
+  --color-ansi-yellow: var(--color-syntax-function);
+  --color-ansi-magenta: var(--color-syntax-keyword);
+  --color-ansi-green: var(--color-syntax-string);
+  --color-ansi-bright-black: var(--color-syntax-comment);
+  --color-ansi-selection: var(--color-gray-alpha-300);
+  --color-ansi-bg: var(--color-background-200);
+  --color-ansi-fg: var(--color-gray-1000);
+  --color-ansi-white: var(--color-gray-700);
+  --color-ansi-black: var(--color-gray-200);
+  --color-ansi-blue: var(--color-blue-700);
+  --color-ansi-red: var(--color-red-700);
+  --color-ansi-bright-white: var(--color-gray-1000);
+  --color-ansi-bright-blue: var(--color-blue-800);
+  --color-ansi-bright-cyan: var(--color-blue-800);
+  --color-ansi-bright-green: var(--color-green-800);
+  --color-ansi-bright-magenta: var(--color-blue-800);
+  --color-ansi-bright-red: var(--color-red-800);
+  --color-ansi-bright-yellow: var(--color-amber-900);
+  --color-background-100: #ffffff;
+  --color-background-200: #fafafa;
+  --color-syntax-comment: #545454;
+  --color-syntax-constant: #171717;
+  --color-syntax-function: #0054ad;
+  --color-syntax-keyword: #a51850;
+  --color-syntax-link: #066056;
+  --color-syntax-parameter: #8f3e00;
+  --color-syntax-punctuation: #171717;
+  --color-syntax-string: #036157;
+  --color-syntax-string-expression: #066056;
+  --color-gray-100: #f2f2f2;
+  --color-gray-200: #ebebeb;
+  --color-gray-300: #e6e6e6;
+  --color-gray-400: #eaeaea;
+  --color-gray-500: #c9c9c9;
+  --color-gray-600: #a8a8a8;
+  --color-gray-700: #8f8f8f;
+  --color-gray-800: #7d7d7d;
+  --color-gray-900: #666666;
+  --color-gray-1000: #171717;
+  --color-gray-alpha-100: rgba(0, 0, 0, 0.05);
+  --color-gray-alpha-200: rgba(0, 0, 0, 0.081);
+  --color-gray-alpha-300: rgba(0, 0, 0, 0.1);
+  --color-gray-alpha-400: rgba(0, 0, 0, 0.08);
+  --color-gray-alpha-500: rgba(0, 0, 0, 0.21);
+  --color-gray-alpha-600: rgba(0, 0, 0, 0.34);
+  --color-gray-alpha-700: rgba(0, 0, 0, 0.44);
+  --color-gray-alpha-800: rgba(0, 0, 0, 0.51);
+  --color-gray-alpha-900: rgba(0, 0, 0, 0.605);
+  --color-gray-alpha-1000: rgba(0, 0, 0, 0.91);
+  --color-blue-100: #f0f7ff;
+  --color-blue-200: #edf6ff;
+  --color-blue-300: #e1f0ff;
+  --color-blue-400: #cde7ff;
+  --color-blue-500: #99ceff;
+  --color-blue-600: #52aeff;
+  --color-blue-700: #0070f3;
+  --color-blue-800: #0060d1;
+  --color-blue-900: #0067d6;
+  --color-blue-1000: #0025ad;
+  --color-red-100: #fff0f0;
+  --color-red-200: #ffebeb;
+  --color-red-300: #ffe5e5;
+  --color-red-400: #fdd8d8;
+  --color-red-500: #f8baba;
+  --color-red-600: #f87274;
+  --color-red-700: #e5484d;
+  --color-red-800: #da3036;
+  --color-red-900: #ca2a30;
+  --color-red-1000: #381316;
+  --color-amber-100: #fff6e5;
+  --color-amber-200: #fff4d5;
+  --color-amber-300: #fef0cd;
+  --color-amber-400: #ffddbf;
+  --color-amber-500: #ffc96b;
+  --color-amber-600: #f5b047;
+  --color-amber-700: #ffb224;
+  --color-amber-800: #ff990a;
+  --color-amber-900: #a35200;
+  --color-amber-1000: #4e2009;
+  --color-green-100: #effbef;
+  --color-green-200: #eafaea;
+  --color-green-300: #dcf6dc;
+  --color-green-400: #c8f1c9;
+  --color-green-500: #99e59f;
+  --color-green-600: #6cda76;
+  --color-green-700: #46a758;
+  --color-green-800: #388e4a;
+  --color-green-900: #297c3b;
+  --color-green-1000: #18311e;
+  --color-turbopack-text-red: #ff1e56;
+  --color-turbopack-text-blue: #0096ff;
+  --color-turbopack-border-red: #f0adbe;
+  --color-turbopack-border-blue: #adccea;
+  --color-turbopack-background-red: #fff7f9;
+  --color-turbopack-background-blue: #f6fbff;
+}
+
+/* Inherited from ancestor level 7 (regular) */
+:host {
+  --top-z-index: 2147483647;
+  --top-z-index: 2147483647;
+}
+
+/* Inherited from ancestor level 7 (regular) */
+*, :after, :before, ::backdrop {
+  box-sizing: border-box;
+  border: 0 solid;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+}
+
+/* Inherited from ancestor level 7 (regular) */
+* {
+  border-color: var(--border);
+  outline-color: var(--ring);
+  outline-color: var(--ring);
+}
+
+/* Inherited from ancestor level 7 (regular) */
+* {
+  outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+  outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+}
+
+/* Inherited from ancestor level 8 (inline) */
+element {
+display: block; position: absolute;
+}
+
+/* Inherited from ancestor level 8 (user-agent) */
+base, basefont, datalist, head, link, meta, noembed, noframes, param, rp, script, style, template, title {
+  display: none;
+}
+
+/* Inherited from ancestor level 8 (regular) */
+*, :after, :before, ::backdrop {
+  box-sizing: border-box;
+  border: 0 solid;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+}
+
+/* Inherited from ancestor level 8 (regular) */
+* {
+  border-color: var(--border);
+  outline-color: var(--ring);
+  outline-color: var(--ring);
+}
+
+/* Inherited from ancestor level 8 (regular) */
+* {
+  outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+  outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+}
+
+/* Inherited from ancestor level 9 (user-agent) */
+body {
+  display: block;
+  margin-top: 8px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  margin-left: 8px;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+*, :after, :before, ::backdrop {
+  box-sizing: border-box;
+  border: 0 solid;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+}
+
+/* Inherited from ancestor level 9 (regular) */
+* {
+  border-color: var(--border);
+  outline-color: var(--ring);
+  outline-color: var(--ring);
+}
+
+/* Inherited from ancestor level 9 (regular) */
+* {
+  outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+  outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+}
+
+/* Inherited from ancestor level 9 (regular) */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Inherited from ancestor level 9 (regular) */
+.font-sans {
+  font-family: Geist, Geist Fallback;
+  font-family: Geist, "Geist Fallback";
+}
+
+/* Inherited from ancestor level 9 (regular) */
+.antialiased {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Inherited from ancestor level 10 (user-agent) */
+html {
+  display: block;
+}
+
+/* Inherited from ancestor level 10 (user-agent) */
+:root {
+  view-transition-name: root;
+}
+
+/* Inherited from ancestor level 10 (regular) */
+:root, :host {
+  --color-red-50: #fef2f2;
+  --color-red-300: #ffa3a3;
+  --color-red-400: #ff6568;
+  --color-red-500: #fb2c36;
+  --color-red-600: #e40014;
+  --color-orange-500: #fe6e00;
+  --color-amber-500: #f99c00;
+  --color-lime-600: #62a400;
+  --color-emerald-500: #00bb7f;
+  --color-cyan-500: #00b7d7;
+  --color-pink-500: #f6339a;
+  --color-slate-500: #62748e;
+  --color-zinc-500: #71717b;
+  --color-black: #000;
+  --color-white: #fff;
+  --spacing: .25rem;
+  --container-sm: 24rem;
+  --container-lg: 32rem;
+  --text-xs: .75rem;
+  --text-xs--line-height: calc(1 / .75);
+  --text-sm: .875rem;
+  --text-sm--line-height: calc(1.25 / .875);
+  --text-base: 1rem;
+  --text-base--line-height: calc(1.5 / 1);
+  --text-lg: 1.125rem;
+  --text-lg--line-height: calc(1.75 / 1.125);
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --tracking-tight: -.025em;
+  --tracking-wider: .05em;
+  --tracking-widest: .1em;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --radius-xs: .125rem;
+  --ease-in-out: cubic-bezier(.4, 0, .2, 1);
+  --animate-spin: spin 1s linear infinite;
+  --animate-pulse: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;
+  --blur-sm: 8px;
+  --blur-md: 12px;
+  --blur-xl: 24px;
+  --aspect-video: 16 / 9;
+  --default-transition-duration: .15s;
+  --default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+  --default-font-family: "Geist", "Geist Fallback";
+  --default-mono-font-family: "Geist Mono", "Geist Mono Fallback";
+  --color-border: var(--border);
+  --color-red-50: #fef2f2;
+  --color-red-300: #ffa3a3;
+  --color-red-400: #ff6568;
+  --color-red-500: #fb2c36;
+  --color-red-600: #e40014;
+  --color-orange-500: #fe6e00;
+  --color-amber-500: #f99c00;
+  --color-lime-600: #62a400;
+  --color-emerald-500: #00bb7f;
+  --color-cyan-500: #00b7d7;
+  --color-pink-500: #f6339a;
+  --color-slate-500: #62748e;
+  --color-zinc-500: #71717b;
+  --color-black: #000;
+  --color-white: #fff;
+  --spacing: .25rem;
+  --container-sm: 24rem;
+  --container-lg: 32rem;
+  --text-xs: .75rem;
+  --text-xs--line-height: calc(1 / .75);
+  --text-sm: .875rem;
+  --text-sm--line-height: calc(1.25 / .875);
+  --text-base: 1rem;
+  --text-base--line-height: calc(1.5 / 1);
+  --text-lg: 1.125rem;
+  --text-lg--line-height: calc(1.75 / 1.125);
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --tracking-tight: -.025em;
+  --tracking-wider: .05em;
+  --tracking-widest: .1em;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --radius-xs: .125rem;
+  --ease-in-out: cubic-bezier(.4, 0, .2, 1);
+  --animate-spin: spin 1s linear infinite;
+  --animate-pulse: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;
+  --blur-sm: 8px;
+  --blur-md: 12px;
+  --blur-xl: 24px;
+  --aspect-video: 16 / 9;
+  --default-transition-duration: .15s;
+  --default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+  --default-font-family: "Geist", "Geist Fallback";
+  --default-mono-font-family: "Geist Mono", "Geist Mono Fallback";
+  --color-border: var(--border);
+}
+
+/* Inherited from ancestor level 10 (regular) */
+:root, :host {
+  --color-red-50: lab(96.5005% 4.18511 1.52329);
+  --color-red-300: lab(76.5514% 36.4219 15.5335);
+  --color-red-400: lab(63.7053% 60.7449 31.3109);
+  --color-red-500: lab(55.4814% 75.0732 48.8528);
+  --color-red-600: lab(48.4493% 77.4328 61.5452);
+  --color-orange-500: lab(64.272% 57.1788 90.3583);
+  --color-amber-500: lab(72.7183% 31.8672 97.9407);
+  --color-lime-600: lab(61.1055% -41.0235 73.1483);
+  --color-emerald-500: lab(66.9756% -58.27 19.5419);
+  --color-cyan-500: lab(67.805% -35.3952 -30.2018);
+  --color-pink-500: lab(56.9303% 76.8162 -8.07021);
+  --color-slate-500: lab(48.0876% -2.03595 -16.5814);
+  --color-zinc-500: lab(47.8878% 1.65477 -5.77283);
+  --color-red-50: lab(96.5005% 4.18511 1.52329);
+  --color-red-300: lab(76.5514% 36.4219 15.5335);
+  --color-red-400: lab(63.7053% 60.7449 31.3109);
+  --color-red-500: lab(55.4814% 75.0732 48.8528);
+  --color-red-600: lab(48.4493% 77.4328 61.5452);
+  --color-orange-500: lab(64.272% 57.1788 90.3583);
+  --color-amber-500: lab(72.7183% 31.8672 97.9407);
+  --color-lime-600: lab(61.1055% -41.0235 73.1483);
+  --color-emerald-500: lab(66.9756% -58.27 19.5419);
+  --color-cyan-500: lab(67.805% -35.3952 -30.2018);
+  --color-pink-500: lab(56.9303% 76.8162 -8.07021);
+  --color-slate-500: lab(48.0876% -2.03595 -16.5814);
+  --color-zinc-500: lab(47.8878% 1.65477 -5.77283);
+}
+
+/* Inherited from ancestor level 10 (regular) */
+*, :after, :before, ::backdrop {
+  box-sizing: border-box;
+  border: 0 solid;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-top-color: initial;
+  border-right-color: initial;
+  border-bottom-color: initial;
+  border-left-color: initial;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+}
+
+/* Inherited from ancestor level 10 (regular) */
+* {
+  border-color: var(--border);
+  outline-color: var(--ring);
+  outline-color: var(--ring);
+}
+
+/* Inherited from ancestor level 10 (regular) */
+* {
+  outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+  outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+}
+
+/* Inherited from ancestor level 10 (regular) */
+html, :host {
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  line-height: 1.5;
+  font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+  font-feature-settings: var(--default-font-feature-settings, normal);
+  font-variation-settings: var(--default-font-variation-settings, normal);
+  -webkit-tap-highlight-color: transparent;
+  text-size-adjust: 100%;
+  tab-size: 4;
+  line-height: 1.5;
+  font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+  font-feature-settings: var(--default-font-feature-settings, normal);
+  font-variation-settings: var(--default-font-variation-settings, normal);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Inherited from ancestor level 10 (regular) */
+:root {
+  --background: #060709;
+  --foreground: #eee;
+  --card: #0d1013;
+  --card-foreground: #eee;
+  --popover: #0d1013;
+  --popover-foreground: #eee;
+  --primary: #00b7b8;
+  --primary-foreground: #060709;
+  --secondary: #181b1f;
+  --secondary-foreground: #dedede;
+  --muted: #181b1f;
+  --muted-foreground: #8f8f8f;
+  --accent: #1d2229;
+  --accent-foreground: #eee;
+  --destructive: #d40c1a;
+  --destructive-foreground: #eee;
+  --border: #26292e;
+  --input: #181b1f;
+  --ring: #00b7b8;
+  --chart-1: #00b7b8;
+  --chart-2: #00ad4b;
+  --chart-3: #c85b32;
+  --chart-4: #dfa11a;
+  --chart-5: #be47b8;
+  --radius: .5rem;
+  --sidebar: #0a0b0d;
+  --sidebar-foreground: #eee;
+  --sidebar-primary: #00b7b8;
+  --sidebar-primary-foreground: #060709;
+  --sidebar-accent: #181b1f;
+  --sidebar-accent-foreground: #eee;
+  --sidebar-border: #26292e;
+  --sidebar-ring: #00b7b8;
+  --background: #060709;
+  --foreground: #eee;
+  --card: #0d1013;
+  --card-foreground: #eee;
+  --popover: #0d1013;
+  --popover-foreground: #eee;
+  --primary: #00b7b8;
+  --primary-foreground: #060709;
+  --secondary: #181b1f;
+  --secondary-foreground: #dedede;
+  --muted: #181b1f;
+  --muted-foreground: #8f8f8f;
+  --accent: #1d2229;
+  --accent-foreground: #eee;
+  --destructive: #d40c1a;
+  --destructive-foreground: #eee;
+  --border: #26292e;
+  --input: #181b1f;
+  --ring: #00b7b8;
+  --chart-1: #00b7b8;
+  --chart-2: #00ad4b;
+  --chart-3: #c85b32;
+  --chart-4: #dfa11a;
+  --chart-5: #be47b8;
+  --radius: .5rem;
+  --sidebar: #0a0b0d;
+  --sidebar-foreground: #eee;
+  --sidebar-primary: #00b7b8;
+  --sidebar-primary-foreground: #060709;
+  --sidebar-accent: #181b1f;
+  --sidebar-accent-foreground: #eee;
+  --sidebar-border: #26292e;
+  --sidebar-ring: #00b7b8;
+}
+
+/* Inherited from ancestor level 10 (regular) */
+:root {
+  --background: lab(1.97728% -.085026 -.779876);
+  --foreground: lab(94.2% 0 0);
+  --card: lab(4.41723% -.218034 -2.15809);
+  --card-foreground: lab(94.2% 0 0);
+  --popover: lab(4.41723% -.218034 -2.15809);
+  --popover-foreground: lab(94.2% 0 0);
+  --primary: lab(67.0852% -58.9992 -17.435);
+  --primary-foreground: lab(1.97728% -.085026 -.779876);
+  --secondary: lab(9.48197% -.411496 -3.68196);
+  --secondary-foreground: lab(88.4% 0 .0000119209);
+  --muted: lab(9.48197% -.411496 -3.68196);
+  --muted-foreground: lab(59.4% 0 0);
+  --accent: lab(12.9391% -.548743 -5.49436);
+  --accent-foreground: lab(94.2% 0 0);
+  --destructive: lab(45.5806% 69.4641 51.3946);
+  --destructive-foreground: lab(94.2% 0 0);
+  --border: lab(16.4436% -.4417 -3.69567);
+  --input: lab(9.48197% -.411496 -3.68196);
+  --ring: lab(67.0852% -58.9992 -17.435);
+  --chart-1: lab(67.0852% -58.9992 -17.435);
+  --chart-2: lab(61.8561% -61.1702 41.3033);
+  --chart-3: lab(52.4235% 42.6908 44.3537);
+  --chart-4: lab(71.006% 16.0769 70.1908);
+  --chart-5: lab(50.5537% 58.3311 -36.0291);
+  --sidebar: lab(3.03919% -.117414 -1.03128);
+  --sidebar-foreground: lab(94.2% 0 0);
+  --sidebar-primary: lab(67.0852% -58.9992 -17.435);
+  --sidebar-primary-foreground: lab(1.97728% -.085026 -.779876);
+  --sidebar-accent: lab(9.48197% -.411496 -3.68196);
+  --sidebar-accent-foreground: lab(94.2% 0 0);
+  --sidebar-border: lab(16.4436% -.4417 -3.69567);
+  --sidebar-ring: lab(67.0852% -58.9992 -17.435);
+  --background: lab(1.97728% -.085026 -.779876);
+  --foreground: lab(94.2% 0 0);
+  --card: lab(4.41723% -.218034 -2.15809);
+  --card-foreground: lab(94.2% 0 0);
+  --popover: lab(4.41723% -.218034 -2.15809);
+  --popover-foreground: lab(94.2% 0 0);
+  --primary: lab(67.0852% -58.9992 -17.435);
+  --primary-foreground: lab(1.97728% -.085026 -.779876);
+  --secondary: lab(9.48197% -.411496 -3.68196);
+  --secondary-foreground: lab(88.4% 0 .0000119209);
+  --muted: lab(9.48197% -.411496 -3.68196);
+  --muted-foreground: lab(59.4% 0 0);
+  --accent: lab(12.9391% -.548743 -5.49436);
+  --accent-foreground: lab(94.2% 0 0);
+  --destructive: lab(45.5806% 69.4641 51.3946);
+  --destructive-foreground: lab(94.2% 0 0);
+  --border: lab(16.4436% -.4417 -3.69567);
+  --input: lab(9.48197% -.411496 -3.68196);
+  --ring: lab(67.0852% -58.9992 -17.435);
+  --chart-1: lab(67.0852% -58.9992 -17.435);
+  --chart-2: lab(61.8561% -61.1702 41.3033);
+  --chart-3: lab(52.4235% 42.6908 44.3537);
+  --chart-4: lab(71.006% 16.0769 70.1908);
+  --chart-5: lab(50.5537% 58.3311 -36.0291);
+  --sidebar: lab(3.03919% -.117414 -1.03128);
+  --sidebar-foreground: lab(94.2% 0 0);
+  --sidebar-primary: lab(67.0852% -58.9992 -17.435);
+  --sidebar-primary-foreground: lab(1.97728% -.085026 -.779876);
+  --sidebar-accent: lab(9.48197% -.411496 -3.68196);
+  --sidebar-accent-foreground: lab(94.2% 0 0);
+  --sidebar-border: lab(16.4436% -.4417 -3.69567);
+  --sidebar-ring: lab(67.0852% -58.9992 -17.435);
+}

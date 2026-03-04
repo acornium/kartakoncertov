@@ -127,21 +127,11 @@ export function useFilteredEvents(
 
     return events.filter((event) => {
       // Date filter
-      if (filters.dateFrom && event.date < filters.dateFrom) return false
-      if (filters.dateTo && event.date > filters.dateTo) return false
+      if (filters.date && event.date !== filters.date) return false
 
       // Genre filter
       if (filters.genres.length > 0 && !filters.genres.includes(event.genre))
         return false
-
-      // Venue filter
-      if (filters.venueId && event.venueId !== filters.venueId) return false
-
-      // Price filter (range intersection)
-      const eventMin = event.price
-      const eventMax = event.priceMax ?? event.price
-      if (eventMax < filters.priceMin) return false
-      if (eventMin > filters.priceMax) return false
 
       // Text query (artist or venue name)
       if (text) {

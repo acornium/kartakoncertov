@@ -4,7 +4,7 @@ import { useState, useCallback } from "react"
 import dynamic from "next/dynamic"
 import type { Filters } from "@/lib/types"
 import { useVenues, useEvents, useFilteredEvents } from "@/lib/store"
-import { DEFAULT_FILTERS } from "@/lib/constants"
+import { DEFAULT_FILTERS, getTodayISO } from "@/lib/constants"
 import { Header } from "@/components/header"
 import { FilterPanel } from "@/components/filters/filter-panel"
 import { AdminGate } from "@/components/admin/admin-gate"
@@ -24,6 +24,7 @@ const MoscowMap = dynamic(
 )
 
 export default function HomePage() {
+  const todayISO = getTodayISO()
   // Data store
   const {
     venues,
@@ -42,21 +43,20 @@ export default function HomePage() {
   const [showFilters, setShowFilters] = useState(true)
   const [showAdmin, setShowAdmin] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
-  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
+  const [filters, setFilters] = useState<Filters>(() => ({
+    ...DEFAULT_FILTERS,
+    date: todayISO,
+  }))
   const [pickingCoords, setPickingCoords] = useState(false)
 
   // Filtered events
   const filteredEvents = useFilteredEvents(events, filters, venues)
+  const dateFilterActive = Boolean(filters.date)
 
   // Count active filters
   const filterCount =
     (filters.genres.length > 0 ? 1 : 0) +
-    (filters.venueId ? 1 : 0) +
-    (filters.dateFrom || filters.dateTo ? 1 : 0) +
-    (filters.priceMin > DEFAULT_FILTERS.priceMin ||
-    filters.priceMax < DEFAULT_FILTERS.priceMax
-      ? 1
-      : 0) +
+    (filters.date && filters.date !== todayISO ? 1 : 0) +
     (filters.query && filters.query.trim() !== "" ? 1 : 0)
 
   const adminEnabled =
@@ -93,6 +93,7 @@ export default function HomePage() {
           venues={venues}
           events={events}
           filteredEvents={filteredEvents}
+          dateFilterActive={dateFilterActive}
           onMapClick={handleMapClick}
           pickingCoords={pickingCoords}
         />
@@ -128,7 +129,6 @@ export default function HomePage() {
           <FilterPanel
             filters={filters}
             onFiltersChange={setFilters}
-            venues={venues}
             variant="side"
           />
         </div>
@@ -144,7 +144,6 @@ export default function HomePage() {
           <FilterPanel
             filters={filters}
             onFiltersChange={setFilters}
-            venues={venues}
             variant="bottom"
             open={showFilters}
             peek

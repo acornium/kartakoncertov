@@ -1,29 +1,29 @@
 ﻿"use client"
 
-import { useCallback, useRef, useState } from "react"
-import type { Venue, Filters, Genre } from "@/lib/types"
+import { useCallback } from "react"
+import type { Filters, Genre } from "@/lib/types"
 import {
   ALL_GENRES,
   GENRE_LABELS,
   GENRE_COLORS,
   DEFAULT_FILTERS,
+  getTodayISO,
 } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Label } from "@/components/ui/label"
-import { Slider } from "@/components/ui/slider"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { CalendarIcon, RotateCcwIcon, CheckIcon, Search as SearchIcon } from "lucide-react"
+import {
+  CalendarIcon,
+  RotateCcwIcon,
+  CheckIcon,
+  Search as SearchIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { format } from "date-fns"
+import { addDays, differenceInCalendarDays, format } from "date-fns"
 import { ru } from "date-fns/locale"
 
 interface FilterPanelProps {
@@ -36,13 +36,11 @@ interface FilterPanelProps {
   filterCount?: number
   filters: Filters
   onFiltersChange: (filters: Filters) => void
-  venues: Venue[]
 }
 
 export function FilterPanel({
   filters,
   onFiltersChange,
-  venues,
   variant = "side",
   peek = false,
   onPeekOpen,
@@ -51,6 +49,11 @@ export function FilterPanel({
   open = false,
   filterCount = 0,
 }: FilterPanelProps) {
+  const todayISO = getTodayISO()
+  const todayDate = new Date(`${todayISO}T00:00:00`)
+  const maxDaysAhead = 14
+  const maxDate = addDays(todayDate, maxDaysAhead)
+
   const updateFilters = useCallback(
     (partial: Partial<Filters>) => {
       onFiltersChange({ ...filters, ...partial })
@@ -58,17 +61,32 @@ export function FilterPanel({
     [filters, onFiltersChange]
   )
 
+  const selectedDate = filters.date
+    ? new Date(`${filters.date}T00:00:00`)
+    : todayDate
+  const dayOffset = Math.min(
+    maxDaysAhead,
+    Math.max(0, differenceInCalendarDays(selectedDate, todayDate))
+  )
+
+  const shiftDate = useCallback(
+    (delta: number) => {
+      const next = addDays(selectedDate, delta)
+      if (next < todayDate) return
+      if (next > maxDate) return
+      updateFilters({ date: format(next, "yyyy-MM-dd") })
+    },
+    [selectedDate, todayDate, maxDate, updateFilters]
+  )
+
   const resetFilters = useCallback(() => {
     onFiltersChange({
       ...DEFAULT_FILTERS,
-      venueId: undefined,
-      dateFrom: undefined,
-      dateTo: undefined,
+      date: getTodayISO(),
     })
   }, [onFiltersChange])
 
   // dragging support removed since bottom panel is fixed half-screen
-
 
   const toggleGenre = useCallback(
     (genre: Genre) => {
@@ -80,6 +98,7 @@ export function FilterPanel({
     [filters.genres, updateFilters]
   )
 
+
   const containerClass = cn(
     "pointer-events-auto flex flex-col bg-background/90 shadow-2xl backdrop-blur-xl",
     variant === "side"
@@ -89,11 +108,7 @@ export function FilterPanel({
 
   const hasActiveFilters =
     filters.genres.length > 0 ||
-    filters.venueId !== undefined ||
-    filters.dateFrom !== undefined ||
-    filters.dateTo !== undefined ||
-    filters.priceMin > 0 ||
-    filters.priceMax < DEFAULT_FILTERS.priceMax ||
+    (filters.date !== undefined && filters.date !== todayISO) ||
     (filters.query && filters.query.trim() !== "")
 
   return (
@@ -151,72 +166,57 @@ export function FilterPanel({
         <div className="flex flex-col gap-6 p-4">
           {/* Date range */}
           <section className="flex flex-col gap-2">
-            <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-              Дата
-            </Label>
-            <div className="flex gap-2">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className={cn(
-                      "flex-1 justify-start gap-1.5 text-xs",
-                      !filters.dateFrom && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="h-3 w-3" />
-                    {filters.dateFrom
-                      ? format(new Date(filters.dateFrom), "d MMM", {
-                          locale: ru,
+            <div className="flex items-center justify-between gap-3">
+              <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                Дата
+              </Label>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => shiftDate(-1)}
+                  disabled={dayOffset === 0}
+                  aria-label="Предыдущий день"
+                >
+                  <ChevronLeftIcon className="h-4 w-4" />
+                </Button>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="justify-start gap-1.5 text-xs"
+                    >
+                      <CalendarIcon className="h-3 w-3" />
+                      {format(selectedDate, "d MMMM", { locale: ru })}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      disabled={{ before: todayDate, after: maxDate }}
+                      locale={ru}
+                      onSelect={(date) =>
+                        updateFilters({
+                          date: date ? format(date, "yyyy-MM-dd") : undefined,
                         })
-                      : "От"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={
-                      filters.dateFrom ? new Date(filters.dateFrom) : undefined
-                    }
-                    onSelect={(date) =>
-                      updateFilters({
-                        dateFrom: date ? format(date, "yyyy-MM-dd") : undefined,
-                      })
-                    }
-                  />
-                </PopoverContent>
-              </Popover>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className={cn(
-                      "flex-1 justify-start gap-1.5 text-xs",
-                      !filters.dateTo && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="h-3 w-3" />
-                    {filters.dateTo
-                      ? format(new Date(filters.dateTo), "d MMM", {
-                          locale: ru,
-                        })
-                      : "До"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={filters.dateTo ? new Date(filters.dateTo) : undefined}
-                    onSelect={(date) =>
-                      updateFilters({
-                        dateTo: date ? format(date, "yyyy-MM-dd") : undefined,
-                      })
-                    }
-                  />
-                </PopoverContent>
-              </Popover>
+                      }
+                    />
+                  </PopoverContent>
+                </Popover>
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => shiftDate(1)}
+                  disabled={dayOffset === maxDaysAhead}
+                  aria-label="Следующий день"
+                >
+                  <ChevronRightIcon className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </section>
 
@@ -233,7 +233,7 @@ export function FilterPanel({
                     key={genre}
                     onClick={() => toggleGenre(genre)}
                     className={cn(
-                      "flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-all",
+                      "flex h-7 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium transition-all",
                       isActive
                         ? GENRE_COLORS[genre]
                         : "bg-secondary text-secondary-foreground hover:bg-accent"
@@ -247,50 +247,6 @@ export function FilterPanel({
             </div>
           </section>
 
-          {/* Venue filter */}
-          <section className="flex flex-col gap-2">
-            <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-              Площадка
-            </Label>
-            <Select
-              value={filters.venueId || "all"}
-              onValueChange={(v) =>
-                updateFilters({ venueId: v === "all" ? undefined : v })
-              }
-            >
-              <SelectTrigger className="w-full text-xs">
-                <SelectValue placeholder="Все площадки" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Все площадки</SelectItem>
-                {venues.map((venue) => (
-                  <SelectItem key={venue.id} value={venue.id}>
-                    {venue.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </section>
-
-          {/* Price filter */}
-          <section className="flex flex-col gap-3">
-            <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-              Цена билета
-            </Label>
-            <Slider
-              min={DEFAULT_FILTERS.priceMin}
-              max={DEFAULT_FILTERS.priceMax}
-              step={500}
-              value={[filters.priceMin, filters.priceMax]}
-              onValueChange={([min, max]) =>
-                updateFilters({ priceMin: min, priceMax: max })
-              }
-            />
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>{filters.priceMin.toLocaleString("ru-RU")} ₽</span>
-              <span>{filters.priceMax.toLocaleString("ru-RU")} ₽</span>
-            </div>
-          </section>
         </div>
       </ScrollArea>
     </div>
