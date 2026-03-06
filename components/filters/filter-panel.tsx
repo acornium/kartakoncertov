@@ -1,6 +1,6 @@
 ﻿"use client"
 
-import { useCallback } from "react"
+import { useCallback, useRef, useState, useEffect } from "react"
 import type { Filters, Genre } from "@/lib/types"
 import {
   ALL_GENRES,
@@ -98,6 +98,50 @@ export function FilterPanel({
     [filters.genres, updateFilters]
   )
 
+  // Drag logic for chips
+  const chipsContainerRef = useRef<HTMLDivElement>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragOffset, setDragOffset] = useState(0)
+  const dragStartRef = useRef({ x: 0, startOffset: 0 })
+
+  const handleChipsDragStart = useCallback(
+    (e: React.MouseEvent | React.TouchEvent) => {
+      setIsDragging(true)
+      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX
+      dragStartRef.current = { x: clientX, startOffset: dragOffset }
+    },
+    [dragOffset]
+  )
+
+  const handleChipsDragMove = useCallback(
+    (e: MouseEvent | TouchEvent) => {
+      if (!isDragging) return
+      const clientX = "touches" in e ? e.touches[0].clientX : (e as MouseEvent).clientX
+      const delta = clientX - dragStartRef.current.x
+      setDragOffset(dragStartRef.current.startOffset + delta)
+    },
+    [isDragging]
+  )
+
+  const handleChipsDragEnd = useCallback(() => {
+    setIsDragging(false)
+  }, [])
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener("mousemove", handleChipsDragMove)
+      window.addEventListener("mouseup", handleChipsDragEnd)
+      window.addEventListener("touchmove", handleChipsDragMove)
+      window.addEventListener("touchend", handleChipsDragEnd)
+      return () => {
+        window.removeEventListener("mousemove", handleChipsDragMove)
+        window.removeEventListener("mouseup", handleChipsDragEnd)
+        window.removeEventListener("touchmove", handleChipsDragMove)
+        window.removeEventListener("touchend", handleChipsDragEnd)
+      }
+    }
+  }, [isDragging, handleChipsDragMove, handleChipsDragEnd])
+
 
   const containerClass = cn(
     "pointer-events-auto flex flex-col bg-background/90 shadow-2xl backdrop-blur-xl",
@@ -163,92 +207,106 @@ export function FilterPanel({
       )}
 
       <ScrollArea className="flex-1">
-        <div className="flex flex-col gap-6 p-4">
-          {/* Date range */}
-          <section className="flex flex-col gap-2">
-            <div className="flex items-center justify-between gap-3">
-              <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Дата
-              </Label>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={() => shiftDate(-1)}
-                  disabled={dayOffset === 0}
-                  aria-label="Предыдущий день"
-                >
-                  <ChevronLeftIcon className="h-4 w-4" />
-                </Button>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="justify-start gap-1.5 text-xs"
-                    >
-                      <CalendarIcon className="h-3 w-3" />
-                      {format(selectedDate, "d MMMM", { locale: ru })}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={selectedDate}
-                      disabled={{ before: todayDate, after: maxDate }}
-                      locale={ru}
-                      onSelect={(date) =>
-                        updateFilters({
-                          date: date ? format(date, "yyyy-MM-dd") : undefined,
-                        })
-                      }
-                    />
-                  </PopoverContent>
-                </Popover>
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={() => shiftDate(1)}
-                  disabled={dayOffset === maxDaysAhead}
-                  aria-label="Следующий день"
-                >
-                  <ChevronRightIcon className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </section>
-
+        <div className="flex flex-col gap-6 p-4 w-full min-w-0">
           {/* Genre filter */}
-          <section className="flex flex-col gap-2">
+          <section className="flex flex-col gap-2 min-w-0">
             <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Жанр
             </Label>
-            <div className="flex flex-wrap gap-2">
-              {ALL_GENRES.map((genre) => {
-                const isActive = filters.genres.includes(genre)
-                return (
-                  <button
-                    key={genre}
-                    onClick={() => toggleGenre(genre)}
-                    className={cn(
-                      "flex h-7 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium transition-all",
-                      isActive
-                        ? GENRE_COLORS[genre]
-                        : "bg-secondary text-secondary-foreground hover:bg-accent"
-                    )}
-                  >
-                    {isActive && <CheckIcon className="h-3 w-3" />}
-                    {GENRE_LABELS[genre]}
-                  </button>
-                )
-              })}
+            <div
+              ref={chipsContainerRef}
+              className="w-full overflow-hidden cursor-grab active:cursor-grabbing"
+              onMouseDown={handleChipsDragStart}
+              onTouchStart={handleChipsDragStart}
+            >
+              <div
+                className="flex flex-nowrap gap-2 py-1 pr-4 transition-transform"
+                style={{
+                  transform: `translateX(${dragOffset}px)`,
+                  transitionDuration: isDragging ? "0ms" : "200ms"
+                }}
+              >
+                {ALL_GENRES.map((genre) => {
+                  const isActive = filters.genres.includes(genre)
+                  return (
+                    <button
+                      key={genre}
+                      onClick={() => toggleGenre(genre)}
+                      className={cn(
+                        "flex h-7 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium transition-all flex-shrink-0 pointer-events-auto",
+                        isActive
+                          ? GENRE_COLORS[genre]
+                          : "bg-secondary text-secondary-foreground hover:bg-accent"
+                      )}
+                      draggable={false}
+                    >
+                      {isActive && <CheckIcon className="h-3 w-3" />}
+                      {GENRE_LABELS[genre]}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
           </section>
 
         </div>
       </ScrollArea>
+
+      {/* Date range (fixed, outside scroll) */}
+      <section className="border-t border-border bg-background/95 px-4 py-2">
+        <div className="flex items-center justify-between gap-3">
+          <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            Дата
+          </Label>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => shiftDate(-1)}
+              disabled={dayOffset === 0}
+              aria-label="Предыдущий день"
+            >
+              <ChevronLeftIcon className="h-4 w-4" />
+            </Button>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="justify-start gap-1.5 text-xs"
+                >
+                  <CalendarIcon className="h-3 w-3" />
+                  {format(selectedDate, "d MMMM", { locale: ru })}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  disabled={{ before: todayDate, after: maxDate }}
+                  locale={ru}
+                  onSelect={(date) =>
+                    updateFilters({
+                      date: date ? format(date, "yyyy-MM-dd") : undefined,
+                    })
+                  }
+                />
+              </PopoverContent>
+            </Popover>
+            <Button
+              variant="secondary"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => shiftDate(1)}
+              disabled={dayOffset === maxDaysAhead}
+              aria-label="Следующий день"
+            >
+              <ChevronRightIcon className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

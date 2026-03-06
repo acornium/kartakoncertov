@@ -8,8 +8,8 @@ if NOT EXIST "node_modules" (
   echo node_modules found. Skipping install.
 )
 
-echo Starting development server (npm run dev)...
-npm run dev
+echo Starting development server (npm run dev -- --webpack)...
+npm run dev -- --webpack
 
 ENDLOCAL
 pause
