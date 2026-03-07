@@ -1,6 +1,7 @@
 ﻿"use client"
 
-import { useCallback, useRef, useState, useEffect } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { motion, useMotionValue } from "framer-motion"
 import type { Filters, Genre } from "@/lib/types"
 import {
   ALL_GENRES,
@@ -26,6 +27,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { addDays, differenceInCalendarDays, format } from "date-fns"
 import { ru } from "date-fns/locale"
 
+const MAX_DAYS_AHEAD = 14
+
 interface FilterPanelProps {
   variant?: "side" | "bottom"
   peek?: boolean
@@ -50,34 +53,28 @@ export function FilterPanel({
   filterCount = 0,
 }: FilterPanelProps) {
   const todayISO = getTodayISO()
-  const todayDate = new Date(`${todayISO}T00:00:00`)
-  const maxDaysAhead = 14
-  const maxDate = addDays(todayDate, maxDaysAhead)
+  const todayDate = useMemo(() => new Date(`${todayISO}T00:00:00`), [todayISO])
+  const maxDate = useMemo(() => addDays(todayDate, MAX_DAYS_AHEAD), [todayDate])
 
-  const updateFilters = useCallback(
-    (partial: Partial<Filters>) => {
-      onFiltersChange({ ...filters, ...partial })
-    },
-    [filters, onFiltersChange]
+  const updateFilters = (partial: Partial<Filters>) => {
+    onFiltersChange({ ...filters, ...partial })
+  }
+
+  const selectedDate = useMemo(
+    () => (filters.date ? new Date(`${filters.date}T00:00:00`) : todayDate),
+    [filters.date, todayDate]
   )
-
-  const selectedDate = filters.date
-    ? new Date(`${filters.date}T00:00:00`)
-    : todayDate
   const dayOffset = Math.min(
-    maxDaysAhead,
+    MAX_DAYS_AHEAD,
     Math.max(0, differenceInCalendarDays(selectedDate, todayDate))
   )
 
-  const shiftDate = useCallback(
-    (delta: number) => {
-      const next = addDays(selectedDate, delta)
-      if (next < todayDate) return
-      if (next > maxDate) return
-      updateFilters({ date: format(next, "yyyy-MM-dd") })
-    },
-    [selectedDate, todayDate, maxDate, updateFilters]
-  )
+  const shiftDate = (delta: number) => {
+    const next = addDays(selectedDate, delta)
+    if (next < todayDate) return
+    if (next > maxDate) return
+    updateFilters({ date: format(next, "yyyy-MM-dd") })
+  }
 
   const resetFilters = useCallback(() => {
     onFiltersChange({
@@ -86,62 +83,63 @@ export function FilterPanel({
     })
   }, [onFiltersChange])
 
-  // dragging support removed since bottom panel is fixed half-screen
+  const toggleGenre = (genre: Genre) => {
+    const genres = filters.genres.includes(genre)
+      ? filters.genres.filter((g) => g !== genre)
+      : [...filters.genres, genre]
+    updateFilters({ genres })
+  }
 
-  const toggleGenre = useCallback(
-    (genre: Genre) => {
-      const genres = filters.genres.includes(genre)
-        ? filters.genres.filter((g) => g !== genre)
-        : [...filters.genres, genre]
-      updateFilters({ genres })
-    },
-    [filters.genres, updateFilters]
-  )
-
-  // Drag logic for chips
   const chipsContainerRef = useRef<HTMLDivElement>(null)
-  const [isDragging, setIsDragging] = useState(false)
-  const [dragOffset, setDragOffset] = useState(0)
-  const dragStartRef = useRef({ x: 0, startOffset: 0 })
+  const chipsContentRef = useRef<HTMLDivElement>(null)
+  const chipsX = useMotionValue(0)
+  const [chipsDragBounds, setChipsDragBounds] = useState({ left: 0, right: 0 })
 
-  const handleChipsDragStart = useCallback(
-    (e: React.MouseEvent | React.TouchEvent) => {
-      setIsDragging(true)
-      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX
-      dragStartRef.current = { x: clientX, startOffset: dragOffset }
-    },
-    [dragOffset]
-  )
+  const recalcChipsBounds = useCallback(() => {
+    const container = chipsContainerRef.current
+    const content = chipsContentRef.current
+    if (!container || !content) return
 
-  const handleChipsDragMove = useCallback(
-    (e: MouseEvent | TouchEvent) => {
-      if (!isDragging) return
-      const clientX = "touches" in e ? e.touches[0].clientX : (e as MouseEvent).clientX
-      const delta = clientX - dragStartRef.current.x
-      setDragOffset(dragStartRef.current.startOffset + delta)
-    },
-    [isDragging]
-  )
+    const lastChip = content.lastElementChild as HTMLElement | null
+    if (!lastChip) return
 
-  const handleChipsDragEnd = useCallback(() => {
-    setIsDragging(false)
-  }, [])
+    // Use actual screen right edge, not container right edge.
+    const screenRight = window.innerWidth
+    const contentRect = content.getBoundingClientRect()
+    // contentRect.left includes current translateX; remove it to get stable "x=0" geometry.
+    const contentLeftAtZero = contentRect.left - chipsX.get()
+    const lastChipRightAtZero =
+      contentLeftAtZero + lastChip.offsetLeft + lastChip.offsetWidth
+
+    // Right rubber starts only after last chip reaches the screen right edge.
+    const triggerLeft = Math.min(0, screenRight - lastChipRightAtZero)
+    setChipsDragBounds({ left: triggerLeft, right: 0 })
+
+    const clamped = Math.min(0, Math.max(triggerLeft, chipsX.get()))
+    chipsX.set(clamped)
+  }, [chipsX])
 
   useEffect(() => {
-    if (isDragging) {
-      window.addEventListener("mousemove", handleChipsDragMove)
-      window.addEventListener("mouseup", handleChipsDragEnd)
-      window.addEventListener("touchmove", handleChipsDragMove)
-      window.addEventListener("touchend", handleChipsDragEnd)
-      return () => {
-        window.removeEventListener("mousemove", handleChipsDragMove)
-        window.removeEventListener("mouseup", handleChipsDragEnd)
-        window.removeEventListener("touchmove", handleChipsDragMove)
-        window.removeEventListener("touchend", handleChipsDragEnd)
-      }
-    }
-  }, [isDragging, handleChipsDragMove, handleChipsDragEnd])
+    recalcChipsBounds()
+  }, [recalcChipsBounds])
 
+  useEffect(() => {
+    const onResize = () => recalcChipsBounds()
+    window.addEventListener("resize", onResize)
+    return () => window.removeEventListener("resize", onResize)
+  }, [recalcChipsBounds])
+
+  useEffect(() => {
+    const container = chipsContainerRef.current
+    const content = chipsContentRef.current
+    if (!container || !content) return
+
+    const observer = new ResizeObserver(() => recalcChipsBounds())
+    observer.observe(container)
+    observer.observe(content)
+
+    return () => observer.disconnect()
+  }, [recalcChipsBounds])
 
   const containerClass = cn(
     "pointer-events-auto flex flex-col bg-background/90 shadow-2xl backdrop-blur-xl",
@@ -210,30 +208,35 @@ export function FilterPanel({
         <div className="flex flex-col gap-6 p-4 w-full min-w-0">
           {/* Genre filter */}
           <section className="flex flex-col gap-2 min-w-0">
-            <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            {/* <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Жанр
-            </Label>
+            </Label> */}
             <div
               ref={chipsContainerRef}
-              className="w-full overflow-hidden cursor-grab active:cursor-grabbing"
-              onMouseDown={handleChipsDragStart}
-              onTouchStart={handleChipsDragStart}
+              className="w-full overflow-hidden"
+              role="listbox"
+              aria-label="Выбор жанров"
+              aria-multiselectable="true"
             >
-              <div
-                className="flex flex-nowrap gap-2 py-1 pr-4 transition-transform"
-                style={{
-                  transform: `translateX(${dragOffset}px)`,
-                  transitionDuration: isDragging ? "0ms" : "200ms"
-                }}
+              <motion.div
+                ref={chipsContentRef}
+                drag="x"
+                dragConstraints={chipsDragBounds}
+                dragElastic={0.2}
+                dragMomentum={false}
+                style={{ x: chipsX }}
+                className="flex w-max cursor-grab flex-nowrap gap-2 py-1 active:cursor-grabbing"
               >
                 {ALL_GENRES.map((genre) => {
                   const isActive = filters.genres.includes(genre)
                   return (
                     <button
                       key={genre}
+                      role="option"
+                      aria-selected={isActive}
                       onClick={() => toggleGenre(genre)}
                       className={cn(
-                        "flex h-7 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium transition-all flex-shrink-0 pointer-events-auto",
+                        "flex h-7 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium transition-all pointer-events-auto",
                         isActive
                           ? GENRE_COLORS[genre]
                           : "bg-secondary text-secondary-foreground hover:bg-accent"
@@ -245,7 +248,7 @@ export function FilterPanel({
                     </button>
                   )
                 })}
-              </div>
+              </motion.div>
             </div>
           </section>
 
@@ -299,7 +302,7 @@ export function FilterPanel({
               size="icon"
               className="h-8 w-8"
               onClick={() => shiftDate(1)}
-              disabled={dayOffset === maxDaysAhead}
+              disabled={dayOffset === MAX_DAYS_AHEAD}
               aria-label="Следующий день"
             >
               <ChevronRightIcon className="h-4 w-4" />
