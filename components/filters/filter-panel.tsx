@@ -32,6 +32,56 @@ import { EventCard } from "@/components/event-card"
 
 const MAX_DAYS_AHEAD = 14
 
+function formatDatePill(date: Date, today: Date) {
+  const diff = differenceInCalendarDays(date, today)
+  if (diff === 0) return "Сегодня"
+  if (diff === 1) return "Завтра"
+  return format(date, "d MMM", { locale: ru })
+}
+
+function useDragScroller() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const x = useMotionValue(0)
+  const [bounds, setBounds] = useState({ left: 0, right: 0 })
+
+  const recalc = useCallback(() => {
+    const container = containerRef.current
+    const content = contentRef.current
+    if (!container || !content) return
+
+    const lastChild = content.lastElementChild as HTMLElement | null
+    if (!lastChild) return
+
+    const screenRight = window.innerWidth
+    const contentRect = content.getBoundingClientRect()
+    const contentLeftAtZero = contentRect.left - x.get()
+    const lastChildRightAtZero = contentLeftAtZero + lastChild.offsetLeft + lastChild.offsetWidth
+
+    const triggerLeft = Math.min(0, screenRight - lastChildRightAtZero)
+    setBounds({ left: triggerLeft, right: 0 })
+
+    const clamped = Math.min(0, Math.max(triggerLeft, x.get()))
+    x.set(clamped)
+  }, [x])
+
+  useEffect(() => { recalc() }, [recalc])
+  useEffect(() => {
+    const onResize = () => recalc()
+    window.addEventListener("resize", onResize)
+    return () => window.removeEventListener("resize", onResize)
+  }, [recalc])
+  useEffect(() => {
+    if (!containerRef.current || !contentRef.current) return
+    const observer = new ResizeObserver(() => recalc())
+    observer.observe(containerRef.current)
+    observer.observe(contentRef.current)
+    return () => observer.disconnect()
+  }, [recalc])
+
+  return { containerRef, contentRef, x, bounds }
+}
+
 interface FilterPanelProps {
   variant?: "side" | "bottom"
   peek?: boolean
@@ -60,6 +110,9 @@ export function FilterPanel({
   events = [],
   venues = [],
 }: FilterPanelProps) {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+
   const todayISO = getTodayISO()
   const todayDate = useMemo(() => new Date(`${todayISO}T00:00:00`), [todayISO])
   const maxDate = useMemo(() => addDays(todayDate, MAX_DAYS_AHEAD), [todayDate])
@@ -72,17 +125,13 @@ export function FilterPanel({
     () => (filters.date ? new Date(`${filters.date}T00:00:00`) : todayDate),
     [filters.date, todayDate]
   )
-  const dayOffset = Math.min(
-    MAX_DAYS_AHEAD,
-    Math.max(0, differenceInCalendarDays(selectedDate, todayDate))
-  )
-
-  const shiftDate = (delta: number) => {
-    const next = addDays(selectedDate, delta)
-    if (next < todayDate) return
-    if (next > maxDate) return
-    updateFilters({ date: format(next, "yyyy-MM-dd") })
-  }
+  const datesList = useMemo(() => {
+    const days = []
+    for (let i = 0; i <= MAX_DAYS_AHEAD; i++) {
+      days.push(addDays(todayDate, i))
+    }
+    return days
+  }, [todayDate])
 
   const resetFilters = useCallback(() => {
     onFiltersChange({
@@ -98,53 +147,8 @@ export function FilterPanel({
     updateFilters({ genres })
   }
 
-  const chipsContainerRef = useRef<HTMLDivElement>(null)
-  const chipsContentRef = useRef<HTMLDivElement>(null)
-  const chipsX = useMotionValue(0)
-  const [chipsDragBounds, setChipsDragBounds] = useState({ left: 0, right: 0 })
-
-  const recalcChipsBounds = useCallback(() => {
-    const container = chipsContainerRef.current
-    const content = chipsContentRef.current
-    if (!container || !content) return
-
-    const lastChip = content.lastElementChild as HTMLElement | null
-    if (!lastChip) return
-
-    const screenRight = window.innerWidth
-    const contentRect = content.getBoundingClientRect()
-    const contentLeftAtZero = contentRect.left - chipsX.get()
-    const lastChipRightAtZero =
-      contentLeftAtZero + lastChip.offsetLeft + lastChip.offsetWidth
-
-    const triggerLeft = Math.min(0, screenRight - lastChipRightAtZero)
-    setChipsDragBounds({ left: triggerLeft, right: 0 })
-
-    const clamped = Math.min(0, Math.max(triggerLeft, chipsX.get()))
-    chipsX.set(clamped)
-  }, [chipsX])
-
-  useEffect(() => {
-    recalcChipsBounds()
-  }, [recalcChipsBounds])
-
-  useEffect(() => {
-    const onResize = () => recalcChipsBounds()
-    window.addEventListener("resize", onResize)
-    return () => window.removeEventListener("resize", onResize)
-  }, [recalcChipsBounds])
-
-  useEffect(() => {
-    const container = chipsContainerRef.current
-    const content = chipsContentRef.current
-    if (!container || !content) return
-
-    const observer = new ResizeObserver(() => recalcChipsBounds())
-    observer.observe(container)
-    observer.observe(content)
-
-    return () => observer.disconnect()
-  }, [recalcChipsBounds])
+  const datesScroller = useDragScroller()
+  const genresScroller = useDragScroller()
 
   const containerClass = cn(
     "pointer-events-auto flex flex-col bg-background/90 shadow-2xl backdrop-blur-xl",
@@ -221,22 +225,64 @@ export function FilterPanel({
         </>
       )}
 
-      {/* Genre chips — outside ScrollArea so w-max doesn't inflate cards width */}
-      <div className="shrink-0 px-4 pt-3 pb-2 flex flex-col gap-2">
+      {/* Scrollable Filters (Dates & Genres) */}
+      <div className="shrink-0 px-4 pt-3 pb-2 flex flex-col gap-4 border-b border-border/10">
+        
+        {/* Date chips */}
         <div
-          ref={chipsContainerRef}
+          ref={datesScroller.containerRef}
+          className="w-full overflow-hidden"
+          role="listbox"
+          aria-label="Выбор даты"
+        >
+          <motion.div
+            ref={datesScroller.contentRef}
+            drag="x"
+            dragConstraints={datesScroller.bounds}
+            dragElastic={0.2}
+            dragMomentum={false}
+            style={{ x: datesScroller.x }}
+            className="flex w-max cursor-grab flex-nowrap gap-2 py-1 active:cursor-grabbing"
+          >
+            {datesList.map((date) => {
+              const dateStr = format(date, "yyyy-MM-dd")
+              const isActive = filters.date === dateStr
+              return (
+                <button
+                  key={dateStr}
+                  role="option"
+                  aria-selected={isActive}
+                  onClick={() => updateFilters({ date: dateStr })}
+                  className={cn(
+                    "flex flex-col h-8 shrink-0 justify-center rounded-xl px-3 text-xs tracking-tight transition-all pointer-events-auto",
+                    isActive
+                      ? "bg-foreground text-background shadow-md font-semibold"
+                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium"
+                  )}
+                  draggable={false}
+                >
+                  {formatDatePill(date, todayDate)}
+                </button>
+              )
+            })}
+          </motion.div>
+        </div>
+
+        {/* Genre chips */}
+        <div
+          ref={genresScroller.containerRef}
           className="w-full overflow-hidden"
           role="listbox"
           aria-label="Выбор жанров"
           aria-multiselectable="true"
         >
           <motion.div
-            ref={chipsContentRef}
+            ref={genresScroller.contentRef}
             drag="x"
-            dragConstraints={chipsDragBounds}
+            dragConstraints={genresScroller.bounds}
             dragElastic={0.2}
             dragMomentum={false}
-            style={{ x: chipsX }}
+            style={{ x: genresScroller.x }}
             className="flex w-max cursor-grab flex-nowrap gap-2 py-1 active:cursor-grabbing"
           >
             {ALL_GENRES.map((genre) => {
@@ -265,7 +311,7 @@ export function FilterPanel({
 
         {/* Selected venue chip */}
         {selectedVenueName && (
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 mt-[-4px]">
             <span className="flex items-center gap-1 rounded-full bg-primary/15 px-2.5 py-1 text-xs font-medium text-primary">
               <MapPinIcon className="h-3 w-3" />
               {selectedVenueName}
@@ -286,18 +332,18 @@ export function FilterPanel({
         <div className="flex flex-col gap-3 px-4 pb-4">
 
           {/* List header */}
-          <div className="flex items-center justify-between pt-1" suppressHydrationWarning>
+          <div className="flex items-center justify-between pt-1">
             <span className="text-xs font-semibold text-foreground">
               {listTitle}
             </span>
-            {events.length > 0 && (
-              <span className="text-[10px] text-muted-foreground" suppressHydrationWarning>
+            {mounted && events.length > 0 && (
+              <span className="text-[10px] text-muted-foreground">
                 {events.length} {events.length === 1 ? "концерт" : events.length < 5 ? "концерта" : "концертов"}
               </span>
             )}
           </div>
 
-          {events.length === 0 ? (
+          {(!mounted || events.length === 0) ? (
             <div className="flex flex-col items-center gap-1.5 rounded-lg border border-dashed border-border py-6">
               <p className="text-xs text-muted-foreground">Концертов не найдено</p>
             </div>
@@ -318,61 +364,7 @@ export function FilterPanel({
       </ScrollArea>
 
 
-      {/* Date picker (fixed, outside scroll) */}
-      <section className="border-t border-border bg-background/95 px-4 py-2">
-        <div className="flex items-center justify-between gap-3">
-          <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            Дата
-          </Label>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => shiftDate(-1)}
-              disabled={dayOffset === 0}
-              aria-label="Предыдущий день"
-            >
-              <ChevronLeftIcon className="h-4 w-4" />
-            </Button>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="justify-start gap-1.5 text-xs"
-                >
-                  <CalendarIcon className="h-3 w-3" />
-                  {format(selectedDate, "d MMMM", { locale: ru })}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  disabled={{ before: todayDate, after: maxDate }}
-                  locale={ru}
-                  onSelect={(date) =>
-                    updateFilters({
-                      date: date ? format(date, "yyyy-MM-dd") : undefined,
-                    })
-                  }
-                />
-              </PopoverContent>
-            </Popover>
-            <Button
-              variant="secondary"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => shiftDate(1)}
-              disabled={dayOffset === MAX_DAYS_AHEAD}
-              aria-label="Следующий день"
-            >
-              <ChevronRightIcon className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </section>
+
     </div>
   )
 }
