@@ -84,9 +84,16 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+body {
+  @apply bg-background text-foreground;
+}
+}
+
+/* MapLibre: ensure touch gestures are handled by the map, not the browser */
+.maplibregl-map,
+.maplibregl-canvas-container,
+.maplibregl-canvas {
+  touch-action: none;
 }
 
 /* MapLibre popup styling */
