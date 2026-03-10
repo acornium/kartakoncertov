@@ -134,14 +134,6 @@ export function FilterPanel({
     return days
   }, [todayDate])
 
-  const monthsLabel = useMemo(() => {
-    const months = new Set<string>()
-    datesList.forEach(d => {
-      const m = format(d, "LLLL", { locale: ru })
-      months.add(m.charAt(0).toUpperCase() + m.slice(1))
-    })
-    return Array.from(months).join(" — ")
-  }, [datesList])
 
   const resetFilters = useCallback(() => {
     onFiltersChange({
@@ -189,32 +181,7 @@ export function FilterPanel({
 
   return (
     <div className={containerClass}>
-      {/* Compact Layout: Month, Search & Reset in one line */}
-      <div className="shrink-0 px-4 pt-4 pb-2 flex flex-col gap-4 border-b border-border/10">
-        
-        {/* Top Row: Month label + Actions (Reset) */}
-        <div className="flex items-center justify-between min-h-[32px]">
-          <div className="flex items-center justify-between w-full">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/40">
-              {monthsLabel}
-            </span>
-            
-            <div className="flex items-center gap-2">
-              {hasActiveFilters && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={resetFilters}
-                  className="h-7 gap-1.5 px-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/60 hover:text-primary transition-colors"
-                >
-                  <RotateCcwIcon className="h-3 w-3" />
-                  Сброс
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-
+      <div className="shrink-0 px-4 pt-1 pb-2 flex flex-col gap-4 border-b border-border/10">
         {/* Date chips */}
         <div
           ref={datesScroller.containerRef}

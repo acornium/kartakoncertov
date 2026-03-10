@@ -16,6 +16,7 @@ interface HeaderProps {
   filterCount: number
   query: string
   onQueryChange: (query: string) => void
+  monthsLabel?: string
 }
 
 export function Header({
@@ -28,6 +29,7 @@ export function Header({
   filterCount,
   query,
   onQueryChange,
+  monthsLabel,
 }: HeaderProps) {
   const [isSearchActive, setIsSearchActive] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -69,7 +71,7 @@ export function Header({
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -20, opacity: 0 }}
-              className="flex items-center justify-center pointer-events-auto"
+              className="flex items-center pointer-events-auto shrink-0"
             >
               <img 
                 src="/logo.png" 
@@ -107,6 +109,24 @@ export function Header({
                   <XIcon className="h-4 w-4" />
                 </button>
               )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Notch Month Label - Centered */}
+      <div className="absolute left-1/2 top-0 -translate-x-1/2 pointer-events-none">
+        <AnimatePresence>
+          {!isSearchActive && monthsLabel && (
+            <motion.div
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -20, opacity: 0 }}
+              className="px-6 py-1.5 rounded-b-[20px] bg-background shadow-2xl flex items-center justify-center border-x border-b border-border/5"
+            >
+              <span className="text-[10px] font-bold tracking-[0.1em] text-foreground/80">
+                {monthsLabel}
+              </span>
             </motion.div>
           )}
         </AnimatePresence>

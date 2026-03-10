@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useMemo } from "react"
 import dynamic from "next/dynamic"
 import type { Filters } from "@/lib/types"
 import { useVenues, useEvents, useFilteredEvents } from "@/lib/store"
@@ -52,6 +52,20 @@ export default function HomePage() {
   // Filtered events
   const filteredEvents = useFilteredEvents(events, filters, venues)
   const dateFilterActive = Boolean(filters.date)
+
+  // Calculate month label globally
+  const monthsLabel = useMemo(() => {
+    const months = new Set<string>()
+    // Generate dates similar to FilterPanel
+    const today = new Date(`${todayISO}T00:00:00`)
+    for (let i = 0; i <= 14; i++) {
+      const d = new Date(today)
+      d.setDate(d.getDate() + i)
+      const m = new Intl.DateTimeFormat('ru', { month: 'long' }).format(d)
+      months.add(m.charAt(0).toUpperCase() + m.slice(1))
+    }
+    return Array.from(months).join(" — ")
+  }, [todayISO])
 
   // Count active filters
   const filterCount =
@@ -125,6 +139,7 @@ export default function HomePage() {
         filterCount={filterCount}
         query={filters.query || ""}
         onQueryChange={(q) => setFilters((prev) => ({ ...prev, query: q }))}
+        monthsLabel={monthsLabel}
       />
 
       {/* Picking coords banner */}
