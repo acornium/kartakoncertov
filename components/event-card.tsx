@@ -64,9 +64,9 @@ export function EventCard({ event, venueName, compact }: EventCardProps) {
   }
 
   return (
-    <div className="flex flex-col gap-2 rounded-lg border border-border bg-card p-3">
+    <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-3 shadow-sm">
       <div className="flex items-start justify-between gap-2">
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-1">
           <h4 className="text-sm font-semibold text-foreground">
             {event.title}
           </h4>
