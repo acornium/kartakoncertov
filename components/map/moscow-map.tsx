@@ -62,6 +62,11 @@ export function MoscowMap({
         longitude: MAP_CONFIG.center[0],
         latitude: MAP_CONFIG.center[1],
         zoom: MAP_CONFIG.zoom,
+        // Офсет: на мобилках смещаем центр вверх (padding снизу), 
+        // на десктопе — влево (padding справа для боковой панели)
+        padding: typeof window !== 'undefined' && window.innerWidth < 768 
+          ? { top: 0, bottom: 300, left: 0, right: 0 } 
+          : { top: 0, bottom: 0, left: 0, right: 350 }
       }}
       style={{ width: "100%", height: "100%" }}
       mapStyle={MAP_CONFIG.style}

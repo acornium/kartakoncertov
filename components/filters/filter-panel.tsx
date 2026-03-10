@@ -304,6 +304,7 @@ export function FilterPanel({
                   key={event.id}
                   event={event}
                   venueName={venue?.name}
+                  selectedDate={filters.date}
                 />
               )
             })

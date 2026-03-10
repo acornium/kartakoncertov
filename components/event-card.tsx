@@ -10,6 +10,7 @@ interface EventCardProps {
   event: ConcertEvent
   venueName?: string
   compact?: boolean
+  selectedDate?: string
 }
 
 function formatDate(dateStr: string): string {
@@ -28,7 +29,9 @@ function formatPrice(price: number, priceMax?: number): string {
   return `${fmt(price)} ₽`
 }
 
-export function EventCard({ event, venueName, compact }: EventCardProps) {
+export function EventCard({ event, venueName, compact, selectedDate }: EventCardProps) {
+  const isDateRedundant = selectedDate === event.date;
+
   if (compact) {
     return (
       <div className="flex flex-col gap-1 rounded-md border border-border bg-card/50 p-2">
@@ -46,10 +49,12 @@ export function EventCard({ event, venueName, compact }: EventCardProps) {
           </span>
         </div>
         <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
-          <span className="flex items-center gap-0.5">
-            <CalendarIcon className="h-2.5 w-2.5" />
-            {formatDate(event.date)}
-          </span>
+          {!isDateRedundant && (
+            <span className="flex items-center gap-0.5">
+              <CalendarIcon className="h-2.5 w-2.5" />
+              {formatDate(event.date)}
+            </span>
+          )}
           <span className="flex items-center gap-0.5">
             <ClockIcon className="h-2.5 w-2.5" />
             {event.time}
@@ -86,10 +91,12 @@ export function EventCard({ event, venueName, compact }: EventCardProps) {
         </Badge>
       </div>
       <div className="flex items-center gap-4 text-xs text-muted-foreground">
-        <span className="flex items-center gap-1">
-          <CalendarIcon className="h-3 w-3" />
-          {formatDate(event.date)}
-        </span>
+        {!isDateRedundant && (
+          <span className="flex items-center gap-1">
+            <CalendarIcon className="h-3 w-3" />
+            {formatDate(event.date)}
+          </span>
+        )}
         <span className="flex items-center gap-1">
           <ClockIcon className="h-3 w-3" />
           {event.time}

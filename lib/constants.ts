@@ -27,8 +27,8 @@ export const GENRE_COLORS: Record<Genre, string> = {
 }
 
 export const MAP_CONFIG = {
-  center: [37.6173, 55.7558] as [number, number], // Moscow center [lng, lat]
-  zoom: 11,
+  center: [37.6203, 55.7539] as [number, number], // Moscow center (Red Square area)
+  zoom: 11.5,
   style: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
 }
 
