@@ -32,11 +32,12 @@ import { EventCard } from "@/components/event-card"
 
 const MAX_DAYS_AHEAD = 14
 
-function formatDatePill(date: Date, today: Date) {
-  const diff = differenceInCalendarDays(date, today)
-  if (diff === 0) return "Сегодня"
-  if (diff === 1) return "Завтра"
-  return format(date, "d MMM", { locale: ru })
+function formatDatePill(date: Date) {
+  const weekday = format(date, "EEEEEE", { locale: ru })
+  const capitalizedWeekday = weekday.charAt(0).toUpperCase() + weekday.slice(1)
+  const label = format(date, "d")
+  
+  return { label, weekday: capitalizedWeekday }
 }
 
 function useDragScroller() {
@@ -132,6 +133,15 @@ export function FilterPanel({
     }
     return days
   }, [todayDate])
+
+  const monthsLabel = useMemo(() => {
+    const months = new Set<string>()
+    datesList.forEach(d => {
+      const m = format(d, "LLLL", { locale: ru })
+      months.add(m.charAt(0).toUpperCase() + m.slice(1))
+    })
+    return Array.from(months).join(" — ")
+  }, [datesList])
 
   const resetFilters = useCallback(() => {
     onFiltersChange({
@@ -229,12 +239,18 @@ export function FilterPanel({
       <div className="shrink-0 px-4 pt-3 pb-2 flex flex-col gap-4 border-b border-border/10">
         
         {/* Date chips */}
-        <div
-          ref={datesScroller.containerRef}
-          className="w-full overflow-hidden"
-          role="listbox"
-          aria-label="Выбор даты"
-        >
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-between px-0.5">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/40">
+              {monthsLabel}
+            </span>
+          </div>
+          <div
+            ref={datesScroller.containerRef}
+            className="w-full overflow-hidden"
+            role="listbox"
+            aria-label="Выбор даты"
+          >
           <motion.div
             ref={datesScroller.contentRef}
             drag="x"
@@ -247,6 +263,7 @@ export function FilterPanel({
             {datesList.map((date) => {
               const dateStr = format(date, "yyyy-MM-dd")
               const isActive = filters.date === dateStr
+              const { label, weekday } = formatDatePill(date)
               return (
                 <button
                   key={dateStr}
@@ -254,19 +271,28 @@ export function FilterPanel({
                   aria-selected={isActive}
                   onClick={() => updateFilters({ date: dateStr })}
                   className={cn(
-                    "flex flex-col h-8 shrink-0 justify-center rounded-xl px-3 text-xs tracking-tight transition-all pointer-events-auto",
+                    "flex flex-row h-9 gap-1.5 shrink-0 items-center justify-center rounded-xl px-3.5 transition-all pointer-events-auto",
                     isActive
                       ? "bg-foreground text-background shadow-md font-semibold"
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium"
                   )}
                   draggable={false}
                 >
-                  {formatDatePill(date, todayDate)}
+                  <span className="text-[13px] font-semibold leading-none">
+                    {label}
+                  </span>
+                  <span className={cn(
+                    "text-[11px] tracking-tight opacity-50 font-medium leading-none",
+                    isActive && "opacity-80 font-semibold"
+                  )}>
+                    {weekday}
+                  </span>
                 </button>
               )
             })}
           </motion.div>
         </div>
+      </div>
 
         {/* Genre chips */}
         <div
@@ -331,17 +357,7 @@ export function FilterPanel({
       <ScrollArea className="flex-1 min-h-0">
         <div className="flex flex-col gap-3 px-4 pb-4">
 
-          {/* List header */}
-          <div className="flex items-center justify-between pt-1">
-            <span className="text-xs font-semibold text-foreground">
-              {listTitle}
-            </span>
-            {mounted && events.length > 0 && (
-              <span className="text-[10px] text-muted-foreground">
-                {events.length} {events.length === 1 ? "концерт" : events.length < 5 ? "концерта" : "концертов"}
-              </span>
-            )}
-          </div>
+
 
           {(!mounted || events.length === 0) ? (
             <div className="flex flex-col items-center gap-1.5 rounded-lg border border-dashed border-border py-6">

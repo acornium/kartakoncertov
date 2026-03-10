@@ -236,4 +236,16 @@ export const SEED_EVENTS: ConcertEvent[] = [
     priceMax: 5000,
     description: "Ночь тяжёлой музыки",
   },
+  {
+    id: "e9",
+    venueId: "v2",
+    title: "Electronic Night",
+    artist: "Nina Kraviz",
+    genre: "electronic",
+    date: "2026-03-10",
+    time: "22:00",
+    price: 3000,
+    priceMax: 7000,
+    description: "Ночной сет от королевы техно",
+  },
 ]
