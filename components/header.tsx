@@ -71,7 +71,7 @@ export function Header({
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -20, opacity: 0 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
+              transition={{ duration: 0.1, ease: "linear" }}
               className="flex items-center pointer-events-auto shrink-0"
             >
               <img 
@@ -86,7 +86,7 @@ export function Header({
               initial={{ width: 40, opacity: 0 }}
               animate={{ width: "100%", opacity: 1 }}
               exit={{ width: 40, opacity: 0 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
+              transition={{ duration: 0.1, ease: "linear" }}
               className="flex items-center gap-2 rounded-lg bg-background/80 px-3 py-1.5 shadow-lg backdrop-blur-md"
             >
               <SearchIcon className="h-4 w-4 text-primary shrink-0" />
@@ -124,10 +124,10 @@ export function Header({
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -20, opacity: 0 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
+              transition={{ duration: 0.1, ease: "linear" }}
               className="px-6 py-1.5 rounded-b-[20px] bg-background shadow-2xl flex items-center justify-center border-x border-b border-border/5"
             >
-              <span className="text-[10px] font-bold tracking-[0.1em] text-foreground/80">
+              <span className="text-xs font-medium tracking-wide text-foreground/80">
                 {monthsLabel}
               </span>
             </motion.div>

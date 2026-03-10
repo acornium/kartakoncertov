@@ -181,7 +181,7 @@ export function FilterPanel({
 
   return (
     <div className={containerClass}>
-      <div className="shrink-0 px-4 pt-3 pb-3 flex flex-col gap-4 border-b border-border/10">
+      <div className="shrink-0 px-4 pt-3 pb-3 flex flex-col gap-2 border-b border-border/10">
         {/* Date chips */}
         <div
           ref={datesScroller.containerRef}
@@ -212,7 +212,7 @@ export function FilterPanel({
                     "flex flex-row h-9 gap-1.5 shrink-0 items-center justify-center rounded-xl px-3.5 transition-all pointer-events-auto border border-transparent",
                     isActive
                       ? "bg-foreground text-background shadow-md font-semibold"
-                      : "bg-secondary/30 text-secondary-foreground hover:bg-secondary/50 font-medium"
+                      : "bg-secondary/70 text-secondary-foreground hover:bg-secondary/85 font-medium"
                   )}
                   draggable={false}
                 >
@@ -260,7 +260,7 @@ export function FilterPanel({
                     "flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-all pointer-events-auto border border-transparent",
                     isActive
                       ? GENRE_COLORS[genre]
-                      : "bg-secondary/30 text-secondary-foreground hover:bg-accent/50"
+                      : "bg-secondary/70 text-secondary-foreground hover:bg-accent/80"
                   )}
                   draggable={false}
                 >
