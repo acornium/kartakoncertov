@@ -102,7 +102,7 @@ export function MoscowMap({
         // Реактивный офсет: карта сама передвинет центр
         padding={
           typeof window !== 'undefined' && window.innerWidth < 768 
-            ? { top: 0, bottom: showFilters ? 320 : 60, left: 0, right: 0 } 
+            ? { top: 0, bottom: showFilters ? Math.round(window.innerHeight * 0.42) : 60, left: 0, right: 0 } 
             : { top: 0, bottom: 0, left: 0, right: showFilters ? 350 : 0 }
         }
         style={{ width: "100%", height: "100%" }}
@@ -147,25 +147,26 @@ export function MoscowMap({
               }}
             >
               <button
-                className="group relative flex h-9 w-9 items-center justify-center transition-all duration-200"
+                className="group relative flex h-10 w-10 items-center justify-center transition-all duration-300"
                 aria-label={`${venue.name}: ${count} events`}
               >
-                {count > 0 && (
-                  <span className="absolute -top-2 -right-2 z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
-                    {count}
-                  </span>
-                )}
+                {/* Glass Disk */}
                 <span
                   className={cn(
-                    "flex h-9 w-9 items-center justify-center rounded-full shadow-lg transition-all group-hover:scale-110",
+                    "flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 backdrop-blur-md border shadow-xl group-hover:scale-110 group-active:scale-90",
                     isSelected
-                      ? "bg-primary text-primary-foreground ring-2 ring-white ring-offset-1 ring-offset-primary scale-110"
-                      : "bg-primary text-primary-foreground shadow-primary/30"
+                      ? "bg-primary text-primary-foreground border-primary/50 shadow-primary/40 scale-110 ring-4 ring-primary/10"
+                      : "bg-background/80 text-primary border-white/40 shadow-black/10"
                   )}
                 >
-                  <MapPinIcon className="h-4 w-4" />
+                  <MapPinIcon className={cn("h-4 w-4 transition-colors", isSelected ? "text-white" : "text-primary")} />
                 </span>
-                <span className="pointer-events-none absolute top-full mt-1 w-max max-w-28 truncate rounded bg-background/80 px-1.5 py-0.5 text-center text-[10px] font-medium text-foreground backdrop-blur-sm shadow-sm ring-1 ring-black/5">
+
+                {/* Name Label - Floating underneath */}
+                <span className={cn(
+                  "pointer-events-none absolute top-full mt-2 w-max max-w-28 truncate rounded-lg bg-background/60 px-2 py-0.5 text-center text-[10px] font-semibold text-foreground backdrop-blur-sm shadow-sm border border-white/10 transition-opacity",
+                  isSelected ? "opacity-100 ring-1 ring-primary/20" : "opacity-0 group-hover:opacity-100"
+                )}>
                   {venue.name}
                 </span>
               </button>
@@ -181,13 +182,13 @@ export function MoscowMap({
           "right-4",
           // Прячем, если активен поиск
           isSearchActive ? "opacity-0 pointer-events-none scale-95" : "opacity-100",
-          // Мобилки: ровно над шторкой (50vh открытая, 3.5rem "хвостик")
+          // Мобилки: ровно над шторкой (42vh открытая, 3.5rem "хвостик")
           showFilters 
-            ? "bottom-[calc(50vh+12px)]" 
+            ? "bottom-[calc(42vh+12px)]" 
             : "bottom-[calc(3.5rem+12px)]",
           
-          // Десктоп: над верхней гранью сайдбара (56px от верха)
-          "md:bottom-auto md:top-[calc(56px+12px)] md:right-6",
+          // Десктоп: над верхней гранью сайдбара (80px от верха - pt-20)
+          "md:bottom-auto md:top-[calc(80px+12px)] md:right-6",
           showFilters && "md:right-[calc(320px+24px)]"
         )}
       >

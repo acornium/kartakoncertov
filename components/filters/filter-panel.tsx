@@ -156,7 +156,7 @@ export function FilterPanel({
     "pointer-events-auto flex flex-col bg-background/80 shadow-2xl backdrop-blur-md border-border/10",
     variant === "side"
       ? "h-full w-80 border-l"
-      : "h-[50vh] w-full rounded-t-2xl border-t"
+      : "h-[42vh] w-full rounded-t-2xl border-t"
   )
 
   const hasActiveFilters =

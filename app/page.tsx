@@ -162,7 +162,7 @@ export default function HomePage() {
           showFilters ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="h-full pt-14">
+        <div className="h-full pt-20 pb-4 pr-4">
           <FilterPanel
             {...filterPanelProps}
             variant="side"
@@ -197,7 +197,7 @@ export default function HomePage() {
           showAdmin ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="h-full pt-14">
+        <div className="h-full pt-20">
           {isAdmin ? (
             <AdminPanel
               venues={venues}

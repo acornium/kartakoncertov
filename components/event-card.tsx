@@ -60,10 +60,6 @@ export function EventCard({ event, venueName, compact, selectedDate, selectedGen
             </span>
           )}
           <span className="flex items-center gap-0.5">
-            <ClockIcon className="h-2.5 w-2.5" />
-            {event.time}
-          </span>
-          <span className="flex items-center gap-0.5">
             <TicketIcon className="h-2.5 w-2.5" />
             {"от "}{event.price.toLocaleString("ru-RU")} ₽
           </span>
@@ -73,50 +69,47 @@ export function EventCard({ event, venueName, compact, selectedDate, selectedGen
   }
 
   return (
-    <div className="flex flex-col gap-2 rounded-xl border border-border/20 bg-background/60 p-3 shadow-sm backdrop-blur-sm transition-all hover:bg-background/70">
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex flex-col gap-1">
-          <h4 className="text-sm font-semibold text-foreground">
-            {event.title}
-          </h4>
-          <p className="text-xs text-muted-foreground">{event.artist}</p>
-          {venueName && (
-            <p className="text-xs text-muted-foreground/70">{venueName}</p>
-          )}
-        </div>
+    <div className="flex flex-row items-start justify-between gap-3 rounded-xl border border-border/20 bg-background/60 p-3 shadow-sm backdrop-blur-sm transition-all hover:bg-background/70">
+      {/* Left Column: Main Info */}
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <h4 className="truncate text-sm font-semibold text-foreground leading-tight">
+          {event.title}
+        </h4>
+        <p className="truncate text-xs text-muted-foreground">{event.artist}</p>
+        
+        {/* Genre Badge - Compact below info if not redundant */}
         {!isGenreRedundant && (
-          <Badge
-            variant="secondary"
-            className={cn(
-              "shrink-0 text-[10px]",
+          <div className="mt-1">
+            <span className={cn(
+              "inline-flex rounded-full px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider",
               GENRE_COLORS[event.genre]
-            )}
-          >
-            {GENRE_LABELS[event.genre]}
-          </Badge>
+            )}>
+              {GENRE_LABELS[event.genre]}
+            </span>
+          </div>
         )}
       </div>
-      <div className="flex items-center gap-4 text-xs text-muted-foreground">
-        {!isDateRedundant && (
-          <span className="flex items-center gap-1">
-            <CalendarIcon className="h-3 w-3" />
-            {formatDate(event.date)}
-          </span>
+
+      {/* Right Column: Meta Info */}
+      <div className="flex shrink-0 flex-col items-end justify-between self-stretch text-right">
+        {venueName && (
+          <p className="truncate text-[10px] font-medium text-muted-foreground/70 uppercase tracking-tight">
+            {venueName}
+          </p>
         )}
-        <span className="flex items-center gap-1">
-          <ClockIcon className="h-3 w-3" />
-          {event.time}
-        </span>
+        
+        <div className="flex flex-col items-end gap-0.5">
+          {!isDateRedundant && (
+            <div className="flex items-center justify-end gap-1 text-[10px] text-muted-foreground">
+              <CalendarIcon className="h-2.5 w-2.5" />
+              {formatDate(event.date)}
+            </div>
+          )}
+          <div className="text-sm font-black text-foreground">
+            {formatPrice(event.price, event.priceMax)}
+          </div>
+        </div>
       </div>
-      <div className="flex items-center gap-1 text-sm font-medium text-foreground">
-        <TicketIcon className="h-3.5 w-3.5 text-primary" />
-        {formatPrice(event.price, event.priceMax)}
-      </div>
-      {event.description && (
-        <p className="text-xs text-muted-foreground leading-relaxed">
-          {event.description}
-        </p>
-      )}
     </div>
   )
 }

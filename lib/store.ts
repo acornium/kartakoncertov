@@ -6,7 +6,7 @@ import { SEED_VENUES, SEED_EVENTS } from "./constants"
 
 const VENUES_KEY = "moscow-concerts-venues"
 const EVENTS_KEY = "moscow-concerts-events"
-const SEEDED_KEY = "moscow-concerts-seeded"
+const SEEDED_KEY = "moscow-concerts-seeded-v3"
 
 function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 9)
