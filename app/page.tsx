@@ -125,6 +125,7 @@ export default function HomePage() {
           onMapClick={handleMapClick}
           onVenueClick={handleVenueClick}
           pickingCoords={pickingCoords}
+          showFilters={showFilters}
         />
       </div>
 
