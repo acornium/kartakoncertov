@@ -1,8 +1,8 @@
-﻿"use client"
+"use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { motion, useMotionValue } from "framer-motion"
-import type { Filters, Genre } from "@/lib/types"
+import type { Filters, Genre, ConcertEvent, Venue } from "@/lib/types"
 import {
   ALL_GENRES,
   GENRE_LABELS,
@@ -21,11 +21,14 @@ import {
   Search as SearchIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  MapPinIcon,
+  XIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { addDays, differenceInCalendarDays, format } from "date-fns"
 import { ru } from "date-fns/locale"
+import { EventCard } from "@/components/event-card"
 
 const MAX_DAYS_AHEAD = 14
 
@@ -39,6 +42,9 @@ interface FilterPanelProps {
   filterCount?: number
   filters: Filters
   onFiltersChange: (filters: Filters) => void
+  // Event cards list
+  events?: ConcertEvent[]
+  venues?: Venue[]
 }
 
 export function FilterPanel({
@@ -51,6 +57,8 @@ export function FilterPanel({
   onRequestOpen,
   open = false,
   filterCount = 0,
+  events = [],
+  venues = [],
 }: FilterPanelProps) {
   const todayISO = getTodayISO()
   const todayDate = useMemo(() => new Date(`${todayISO}T00:00:00`), [todayISO])
@@ -103,15 +111,12 @@ export function FilterPanel({
     const lastChip = content.lastElementChild as HTMLElement | null
     if (!lastChip) return
 
-    // Use actual screen right edge, not container right edge.
     const screenRight = window.innerWidth
     const contentRect = content.getBoundingClientRect()
-    // contentRect.left includes current translateX; remove it to get stable "x=0" geometry.
     const contentLeftAtZero = contentRect.left - chipsX.get()
     const lastChipRightAtZero =
       contentLeftAtZero + lastChip.offsetLeft + lastChip.offsetWidth
 
-    // Right rubber starts only after last chip reaches the screen right edge.
     const triggerLeft = Math.min(0, screenRight - lastChipRightAtZero)
     setChipsDragBounds({ left: triggerLeft, right: 0 })
 
@@ -151,13 +156,25 @@ export function FilterPanel({
   const hasActiveFilters =
     filters.genres.length > 0 ||
     (filters.date !== undefined && filters.date !== todayISO) ||
-    (filters.query && filters.query.trim() !== "")
+    (filters.query && filters.query.trim() !== "") ||
+    Boolean(filters.venueId)
+
+  // Selected venue name for chip display
+  const selectedVenueName = filters.venueId
+    ? venues.find((v) => v.id === filters.venueId)?.name
+    : undefined
+
+  // Build list title
+  const listTitle = useMemo(() => {
+    if (selectedVenueName) return selectedVenueName
+    if (filters.date && filters.date !== todayISO) {
+      return format(selectedDate, "d MMMM", { locale: ru })
+    }
+    return "Сегодня"
+  }, [selectedVenueName, filters.date, todayISO, selectedDate])
 
   return (
-    <div
-      className={containerClass}
-    >
-      
+    <div className={containerClass}>
 
       {variant === "bottom" && peek && (
         <div className="flex w-full items-center gap-3 border-b border-border px-4 py-3">
@@ -204,58 +221,104 @@ export function FilterPanel({
         </>
       )}
 
-      <ScrollArea className="flex-1">
-        <div className="flex flex-col gap-6 p-4 w-full min-w-0">
-          {/* Genre filter */}
-          <section className="flex flex-col gap-2 min-w-0">
-            {/* <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-              Жанр
-            </Label> */}
-            <div
-              ref={chipsContainerRef}
-              className="w-full overflow-hidden"
-              role="listbox"
-              aria-label="Выбор жанров"
-              aria-multiselectable="true"
-            >
-              <motion.div
-                ref={chipsContentRef}
-                drag="x"
-                dragConstraints={chipsDragBounds}
-                dragElastic={0.2}
-                dragMomentum={false}
-                style={{ x: chipsX }}
-                className="flex w-max cursor-grab flex-nowrap gap-2 py-1 active:cursor-grabbing"
+      {/* Genre chips — outside ScrollArea so w-max doesn't inflate cards width */}
+      <div className="shrink-0 px-4 pt-3 pb-2 flex flex-col gap-2">
+        <div
+          ref={chipsContainerRef}
+          className="w-full overflow-hidden"
+          role="listbox"
+          aria-label="Выбор жанров"
+          aria-multiselectable="true"
+        >
+          <motion.div
+            ref={chipsContentRef}
+            drag="x"
+            dragConstraints={chipsDragBounds}
+            dragElastic={0.2}
+            dragMomentum={false}
+            style={{ x: chipsX }}
+            className="flex w-max cursor-grab flex-nowrap gap-2 py-1 active:cursor-grabbing"
+          >
+            {ALL_GENRES.map((genre) => {
+              const isActive = filters.genres.includes(genre)
+              return (
+                <button
+                  key={genre}
+                  role="option"
+                  aria-selected={isActive}
+                  onClick={() => toggleGenre(genre)}
+                  className={cn(
+                    "flex h-7 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium transition-all pointer-events-auto",
+                    isActive
+                      ? GENRE_COLORS[genre]
+                      : "bg-secondary text-secondary-foreground hover:bg-accent"
+                  )}
+                  draggable={false}
+                >
+                  {isActive && <CheckIcon className="h-3 w-3" />}
+                  {GENRE_LABELS[genre]}
+                </button>
+              )
+            })}
+          </motion.div>
+        </div>
+
+        {/* Selected venue chip */}
+        {selectedVenueName && (
+          <div className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1 rounded-full bg-primary/15 px-2.5 py-1 text-xs font-medium text-primary">
+              <MapPinIcon className="h-3 w-3" />
+              {selectedVenueName}
+              <button
+                onClick={() => updateFilters({ venueId: undefined })}
+                className="ml-0.5 rounded-full hover:text-primary/70 transition-colors"
+                aria-label="Снять фильтр по площадке"
               >
-                {ALL_GENRES.map((genre) => {
-                  const isActive = filters.genres.includes(genre)
-                  return (
-                    <button
-                      key={genre}
-                      role="option"
-                      aria-selected={isActive}
-                      onClick={() => toggleGenre(genre)}
-                      className={cn(
-                        "flex h-7 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium transition-all pointer-events-auto",
-                        isActive
-                          ? GENRE_COLORS[genre]
-                          : "bg-secondary text-secondary-foreground hover:bg-accent"
-                      )}
-                      draggable={false}
-                    >
-                      {isActive && <CheckIcon className="h-3 w-3" />}
-                      {GENRE_LABELS[genre]}
-                    </button>
-                  )
-                })}
-              </motion.div>
+                <XIcon className="h-3 w-3" />
+              </button>
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Event cards — ScrollArea isolated from chips width */}
+      <ScrollArea className="flex-1 min-h-0">
+        <div className="flex flex-col gap-3 px-4 pb-4">
+
+          {/* List header */}
+          <div className="flex items-center justify-between pt-1" suppressHydrationWarning>
+            <span className="text-xs font-semibold text-foreground">
+              {listTitle}
+            </span>
+            {events.length > 0 && (
+              <span className="text-[10px] text-muted-foreground" suppressHydrationWarning>
+                {events.length} {events.length === 1 ? "концерт" : events.length < 5 ? "концерта" : "концертов"}
+              </span>
+            )}
+          </div>
+
+          {events.length === 0 ? (
+            <div className="flex flex-col items-center gap-1.5 rounded-lg border border-dashed border-border py-6">
+              <p className="text-xs text-muted-foreground">Концертов не найдено</p>
             </div>
-          </section>
+          ) : (
+            events.map((event) => {
+              const venue = venues.find((v) => v.id === event.venueId)
+              return (
+                <EventCard
+                  key={event.id}
+                  event={event}
+                  venueName={venue?.name}
+                />
+              )
+            })
+          )}
 
         </div>
       </ScrollArea>
 
-      {/* Date range (fixed, outside scroll) */}
+
+      {/* Date picker (fixed, outside scroll) */}
       <section className="border-t border-border bg-background/95 px-4 py-2">
         <div className="flex items-center justify-between gap-3">
           <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">

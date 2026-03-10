@@ -3,7 +3,6 @@
 import { useRef, useCallback, useState } from "react"
 import Map, {
   Marker,
-  Popup,
   NavigationControl,
   type MapRef,
   type MapLayerMouseEvent,
@@ -11,7 +10,6 @@ import Map, {
 import "maplibre-gl/dist/maplibre-gl.css"
 import type { Venue, ConcertEvent } from "@/lib/types"
 import { MAP_CONFIG } from "@/lib/constants"
-import { VenuePopup } from "./venue-popup"
 import { MapPinIcon } from "lucide-react"
 
 interface MoscowMapProps {
@@ -19,7 +17,9 @@ interface MoscowMapProps {
   events: ConcertEvent[]
   filteredEvents: ConcertEvent[]
   dateFilterActive?: boolean
+  selectedVenueId?: string
   onMapClick?: (e: { lng: number; lat: number }) => void
+  onVenueClick?: (venueId: string | null) => void
   pickingCoords?: boolean
 }
 
@@ -28,11 +28,12 @@ export function MoscowMap({
   events,
   filteredEvents,
   dateFilterActive = false,
+  selectedVenueId,
   onMapClick,
+  onVenueClick,
   pickingCoords,
 }: MoscowMapProps) {
   const mapRef = useRef<MapRef>(null)
-  const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null)
 
   const handleMapClick = useCallback(
     (e: MapLayerMouseEvent) => {
@@ -52,7 +53,6 @@ export function MoscowMap({
     {} as Record<string, number>
   )
 
-  // Determine which venues have any filtered events
   const venueHasEvents = (venueId: string) => eventCountByVenue[venueId] > 0
 
   return (
@@ -74,11 +74,15 @@ export function MoscowMap({
       {venues.map((venue) => {
         const count = eventCountByVenue[venue.id] || 0
         const hasEvents = venueHasEvents(venue.id)
-        const dimmed = dateFilterActive
+        const dimmed = selectedVenueId
+          ? venue.id !== selectedVenueId
+          : dateFilterActive
           ? !hasEvents
           : filteredEvents.length > 0
-            ? !hasEvents
-            : false
+          ? !hasEvents
+          : false
+
+        const isSelected = venue.id === selectedVenueId
 
         return (
           <Marker
@@ -88,7 +92,10 @@ export function MoscowMap({
             anchor="center"
             onClick={(e) => {
               e.originalEvent.stopPropagation()
-              setSelectedVenue(venue)
+              if (!pickingCoords && onVenueClick) {
+                // toggle: click same venue again → deselect
+                onVenueClick(isSelected ? null : venue.id)
+              }
             }}
           >
             <button
@@ -102,7 +109,13 @@ export function MoscowMap({
                   {count}
                 </span>
               )}
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-transform group-hover:scale-110">
+              <span
+                className={`flex h-9 w-9 items-center justify-center rounded-full shadow-lg transition-all group-hover:scale-110 ${
+                  isSelected
+                    ? "bg-primary text-primary-foreground ring-2 ring-white ring-offset-1 ring-offset-primary scale-110"
+                    : "bg-primary text-primary-foreground shadow-primary/30"
+                }`}
+              >
                 <MapPinIcon className="h-4 w-4" />
               </span>
               <span className="pointer-events-none absolute top-full mt-1 w-max max-w-28 truncate rounded bg-background/80 px-1.5 py-0.5 text-center text-[10px] font-medium text-foreground backdrop-blur-sm">
@@ -112,31 +125,6 @@ export function MoscowMap({
           </Marker>
         )
       })}
-
-      {selectedVenue && (
-        <Popup
-          longitude={selectedVenue.longitude}
-          latitude={selectedVenue.latitude}
-          anchor="bottom"
-          offset={25}
-          onClose={() => setSelectedVenue(null)}
-          closeButton={true}
-          closeOnClick={false}
-          className="moscow-map-popup"
-          maxWidth="320px"
-        >
-          <VenuePopup
-            venue={selectedVenue}
-            events={
-              dateFilterActive
-                ? filteredEvents.filter((e) => e.venueId === selectedVenue.id)
-                : filteredEvents.length > 0
-                  ? filteredEvents.filter((e) => e.venueId === selectedVenue.id)
-                  : events.filter((e) => e.venueId === selectedVenue.id)
-            }
-          />
-        </Popup>
-      )}
     </Map>
   )
 }

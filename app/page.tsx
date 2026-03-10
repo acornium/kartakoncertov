@@ -57,7 +57,8 @@ export default function HomePage() {
   const filterCount =
     (filters.genres.length > 0 ? 1 : 0) +
     (filters.date && filters.date !== todayISO ? 1 : 0) +
-    (filters.query && filters.query.trim() !== "" ? 1 : 0)
+    (filters.query && filters.query.trim() !== "" ? 1 : 0) +
+    (filters.venueId ? 1 : 0)
 
   const adminEnabled =
     process.env.NEXT_PUBLIC_ENABLE_ADMIN === "true"
@@ -85,6 +86,18 @@ export default function HomePage() {
     [pickingCoords]
   )
 
+  // Venue click on map → toggle venueId filter
+  const handleVenueClick = useCallback((venueId: string | null) => {
+    setFilters((prev) => ({ ...prev, venueId: venueId ?? undefined }))
+  }, [])
+
+  const filterPanelProps = {
+    filters,
+    onFiltersChange: setFilters,
+    events: filteredEvents,
+    venues,
+  }
+
   return (
     <div className="relative h-screen w-screen overflow-hidden">
       {/* Map layer */}
@@ -94,7 +107,9 @@ export default function HomePage() {
           events={events}
           filteredEvents={filteredEvents}
           dateFilterActive={dateFilterActive}
+          selectedVenueId={filters.venueId}
           onMapClick={handleMapClick}
+          onVenueClick={handleVenueClick}
           pickingCoords={pickingCoords}
         />
       </div>
@@ -127,8 +142,7 @@ export default function HomePage() {
       >
         <div className="h-full pt-14">
           <FilterPanel
-            filters={filters}
-            onFiltersChange={setFilters}
+            {...filterPanelProps}
             variant="side"
           />
         </div>
@@ -140,10 +154,9 @@ export default function HomePage() {
           showFilters ? "translate-y-0" : "translate-y-[calc(100%-3.5rem)]"
         }`}
       >
-        <div className="pb-3 pointer-events-auto">
+        <div className="pointer-events-auto">
           <FilterPanel
-            filters={filters}
-            onFiltersChange={setFilters}
+            {...filterPanelProps}
             variant="bottom"
             open={showFilters}
             peek

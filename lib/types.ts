@@ -38,4 +38,7 @@ export interface Filters {
 
   // text query to match artist or venue name
   query?: string
+
+  // filter by a specific venue (set when user clicks a map marker)
+  venueId?: string
 }

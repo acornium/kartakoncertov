@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 
 interface EventCardProps {
   event: ConcertEvent
+  venueName?: string
   compact?: boolean
 }
 
@@ -27,7 +28,7 @@ function formatPrice(price: number, priceMax?: number): string {
   return `${fmt(price)} ₽`
 }
 
-export function EventCard({ event, compact }: EventCardProps) {
+export function EventCard({ event, venueName, compact }: EventCardProps) {
   if (compact) {
     return (
       <div className="flex flex-col gap-1 rounded-md border border-border bg-card/50 p-2">
@@ -70,6 +71,9 @@ export function EventCard({ event, compact }: EventCardProps) {
             {event.title}
           </h4>
           <p className="text-xs text-muted-foreground">{event.artist}</p>
+          {venueName && (
+            <p className="text-xs text-muted-foreground/70">{venueName}</p>
+          )}
         </div>
         <Badge
           variant="secondary"

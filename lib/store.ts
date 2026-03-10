@@ -133,6 +133,9 @@ export function useFilteredEvents(
       if (filters.genres.length > 0 && !filters.genres.includes(event.genre))
         return false
 
+      // Venue filter (set by clicking a map marker)
+      if (filters.venueId && event.venueId !== filters.venueId) return false
+
       // Text query (artist or venue name)
       if (text) {
         const artistMatch = event.artist.toLowerCase().includes(text)
