@@ -123,6 +123,8 @@ export default function HomePage() {
         onToggleFilters={() => setShowFilters((prev) => !prev)}
         onToggleAdmin={handleToggleAdmin}
         filterCount={filterCount}
+        query={filters.query || ""}
+        onQueryChange={(q) => setFilters((prev) => ({ ...prev, query: q }))}
       />
 
       {/* Picking coords banner */}

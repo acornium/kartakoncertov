@@ -1,7 +1,9 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { FilterIcon, ShieldIcon, MusicIcon, XIcon } from "lucide-react"
+import { FilterIcon, ShieldIcon, MusicIcon, XIcon, Search as SearchIcon } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { useState, useRef, useEffect } from "react"
 import { cn } from "@/lib/utils"
 
 interface HeaderProps {
@@ -12,6 +14,8 @@ interface HeaderProps {
   onToggleFilters: () => void
   onToggleAdmin: () => void
   filterCount: number
+  query: string
+  onQueryChange: (query: string) => void
 }
 
 export function Header({
@@ -22,17 +26,103 @@ export function Header({
   onToggleFilters,
   onToggleAdmin,
   filterCount,
+  query,
+  onQueryChange,
 }: HeaderProps) {
+  const [isSearchActive, setIsSearchActive] = useState(false)
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (isSearchActive && searchInputRef.current) {
+      searchInputRef.current.focus()
+    }
+  }, [isSearchActive])
+
+  // Fix: Close search when clicking outside if query is empty
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isSearchActive && 
+        !query && 
+        headerRef.current && 
+        !headerRef.current.contains(event.target as Node)
+      ) {
+        setIsSearchActive(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [isSearchActive, query])
+
   return (
-    <header className="pointer-events-none fixed top-0 right-0 left-0 z-20 flex items-center justify-between gap-4 px-4 py-3">
-      <div className="pointer-events-auto flex items-center gap-2 rounded-lg bg-background/80 px-3 py-2 shadow-lg backdrop-blur-md">
-        <MusicIcon className="h-5 w-5 text-primary" />
-        <h1 className="text-sm font-bold tracking-tight text-foreground">
-          Moscow Concerts
-        </h1>
+    <header 
+      ref={headerRef}
+      className="pointer-events-none fixed top-0 right-0 left-0 z-20 flex items-center justify-between gap-2 px-4 py-3"
+    >
+      <div className="pointer-events-auto flex flex-1 items-center gap-2 overflow-hidden">
+        <AnimatePresence mode="wait">
+          {!isSearchActive && !query ? (
+            <motion.div
+              key="logo"
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -20, opacity: 0 }}
+              className="flex items-center justify-center pointer-events-auto"
+            >
+              <img 
+                src="/logo.png" 
+                alt="Logo" 
+                className="h-9 w-9 object-contain brightness-100" 
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="search"
+              initial={{ width: 40, opacity: 0 }}
+              animate={{ width: "100%", opacity: 1 }}
+              exit={{ width: 40, opacity: 0 }}
+              className="flex items-center gap-2 rounded-lg bg-background/80 px-3 py-1.5 shadow-lg backdrop-blur-md"
+            >
+              <SearchIcon className="h-4 w-4 text-primary shrink-0" />
+              <input
+                ref={searchInputRef}
+                autoFocus
+                type="text"
+                value={query}
+                onChange={(e) => onQueryChange(e.target.value)}
+                onBlur={() => !query && setIsSearchActive(false)}
+                placeholder="Артист или площадка"
+                className="flex-1 bg-transparent border-none outline-none text-[13px] text-foreground placeholder:text-muted-foreground py-1"
+              />
+              {query && (
+                <button
+                  onClick={() => {
+                    onQueryChange("")
+                    setIsSearchActive(false)
+                  }}
+                  className="text-muted-foreground hover:text-foreground p-0.5"
+                >
+                  <XIcon className="h-4 w-4" />
+                </button>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      <div className="pointer-events-auto flex items-center gap-2">
+      <div className="pointer-events-auto flex items-center gap-2 shrink-0">
+        {!isSearchActive && !query && (
+          <Button
+            variant="secondary"
+            size="icon"
+            onClick={() => setIsSearchActive(true)}
+            className="rounded-lg bg-background/80 text-foreground shadow-lg backdrop-blur-md"
+          >
+            <SearchIcon className="h-4 w-4" />
+          </Button>
+        )}
         <Button
           variant={showFilters ? "default" : "secondary"}
           size="sm"

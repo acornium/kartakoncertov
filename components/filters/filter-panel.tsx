@@ -189,68 +189,39 @@ export function FilterPanel({
 
   return (
     <div className={containerClass}>
-
-      {variant === "bottom" && peek && (
-        <div className="flex w-full items-center gap-3 border-b border-border px-4 py-3">
-          <div className="flex w-full items-center gap-3 bg-background/80 rounded-md px-3 py-2">
-            <SearchIcon className="h-5 w-5 text-primary" />
-            <input
-              type="text"
-              value={filters.query || ""}
-              onChange={(e) => updateFilters({ query: e.target.value })}
-              placeholder="Артист или площадка"
-              className="flex-1 bg-transparent outline-none text-sm text-foreground placeholder:text-muted-foreground"
-            />
-          </div>
-        </div>
-      )}
-
-      {!(variant === "bottom" && peek) && (
-        <>
-          <div className="flex items-center justify-between border-b border-border px-4 py-3">
-            <h2 className="text-sm font-semibold text-foreground">Фильтры</h2>
-            <div className="flex items-center gap-1">
+      {/* Compact Layout: Month, Search & Reset in one line */}
+      <div className="shrink-0 px-4 pt-4 pb-2 flex flex-col gap-4 border-b border-border/10">
+        
+        {/* Top Row: Month label + Actions (Reset) */}
+        <div className="flex items-center justify-between min-h-[32px]">
+          <div className="flex items-center justify-between w-full">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/40">
+              {monthsLabel}
+            </span>
+            
+            <div className="flex items-center gap-2">
               {hasActiveFilters && (
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={resetFilters}
-                  className="h-7 gap-1 px-2 text-xs text-muted-foreground"
+                  className="h-7 gap-1.5 px-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground/60 hover:text-primary transition-colors"
                 >
                   <RotateCcwIcon className="h-3 w-3" />
-                  Сбросить
+                  Сброс
                 </Button>
               )}
             </div>
           </div>
-          <div className="px-4 py-2">
-            <input
-              type="text"
-              value={filters.query || ""}
-              onChange={(e) => updateFilters({ query: e.target.value })}
-              placeholder="Артист или площадка"
-              className="w-full bg-background/80 text-sm text-foreground placeholder:text-muted-foreground rounded-md px-2 py-1"
-            />
-          </div>
-        </>
-      )}
+        </div>
 
-      {/* Scrollable Filters (Dates & Genres) */}
-      <div className="shrink-0 px-4 pt-3 pb-2 flex flex-col gap-4 border-b border-border/10">
-        
         {/* Date chips */}
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center justify-between px-0.5">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/40">
-              {monthsLabel}
-            </span>
-          </div>
-          <div
-            ref={datesScroller.containerRef}
-            className="w-full overflow-hidden"
-            role="listbox"
-            aria-label="Выбор даты"
-          >
+        <div
+          ref={datesScroller.containerRef}
+          className="w-full overflow-hidden"
+          role="listbox"
+          aria-label="Выбор даты"
+        >
           <motion.div
             ref={datesScroller.contentRef}
             drag="x"
@@ -258,7 +229,7 @@ export function FilterPanel({
             dragElastic={0.2}
             dragMomentum={false}
             style={{ x: datesScroller.x }}
-            className="flex w-max cursor-grab flex-nowrap gap-2 py-1 active:cursor-grabbing"
+            className="flex w-max cursor-grab flex-nowrap gap-2 py-0.5 active:cursor-grabbing"
           >
             {datesList.map((date) => {
               const dateStr = format(date, "yyyy-MM-dd")
@@ -271,10 +242,10 @@ export function FilterPanel({
                   aria-selected={isActive}
                   onClick={() => updateFilters({ date: dateStr })}
                   className={cn(
-                    "flex flex-row h-9 gap-1.5 shrink-0 items-center justify-center rounded-xl px-3.5 transition-all pointer-events-auto",
+                    "flex flex-row h-9 gap-1.5 shrink-0 items-center justify-center rounded-xl px-3.5 transition-all pointer-events-auto border border-transparent",
                     isActive
                       ? "bg-foreground text-background shadow-md font-semibold"
-                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium"
+                      : "bg-secondary/30 text-secondary-foreground hover:bg-secondary/50 font-medium"
                   )}
                   draggable={false}
                 >
@@ -292,7 +263,6 @@ export function FilterPanel({
             })}
           </motion.div>
         </div>
-      </div>
 
         {/* Genre chips */}
         <div
@@ -320,10 +290,10 @@ export function FilterPanel({
                   aria-selected={isActive}
                   onClick={() => toggleGenre(genre)}
                   className={cn(
-                    "flex h-7 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium transition-all pointer-events-auto",
+                    "flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-all pointer-events-auto border border-transparent",
                     isActive
                       ? GENRE_COLORS[genre]
-                      : "bg-secondary text-secondary-foreground hover:bg-accent"
+                      : "bg-secondary/30 text-secondary-foreground hover:bg-accent/50"
                   )}
                   draggable={false}
                 >
@@ -338,7 +308,7 @@ export function FilterPanel({
         {/* Selected venue chip */}
         {selectedVenueName && (
           <div className="flex items-center gap-1.5 mt-[-4px]">
-            <span className="flex items-center gap-1 rounded-full bg-primary/15 px-2.5 py-1 text-xs font-medium text-primary">
+            <span className="flex items-center gap-1 rounded-full bg-primary/10 border border-primary/20 px-2.5 py-1 text-[11px] font-medium text-primary shadow-sm shadow-primary/5">
               <MapPinIcon className="h-3 w-3" />
               {selectedVenueName}
               <button
@@ -356,9 +326,6 @@ export function FilterPanel({
       {/* Event cards — ScrollArea isolated from chips width */}
       <ScrollArea className="flex-1 min-h-0">
         <div className="flex flex-col gap-3 px-4 pb-4">
-
-
-
           {(!mounted || events.length === 0) ? (
             <div className="flex flex-col items-center gap-1.5 rounded-lg border border-dashed border-border py-6">
               <p className="text-xs text-muted-foreground">Концертов не найдено</p>
@@ -375,12 +342,8 @@ export function FilterPanel({
               )
             })
           )}
-
         </div>
       </ScrollArea>
-
-
-
     </div>
   )
 }
