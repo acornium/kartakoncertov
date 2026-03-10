@@ -48,6 +48,7 @@ export default function HomePage() {
     date: todayISO,
   }))
   const [pickingCoords, setPickingCoords] = useState(false)
+  const [isSearchActive, setIsSearchActive] = useState(false)
 
   // Filtered events
   const filteredEvents = useFilteredEvents(events, filters, venues)
@@ -126,6 +127,7 @@ export default function HomePage() {
           onVenueClick={handleVenueClick}
           pickingCoords={pickingCoords}
           showFilters={showFilters}
+          isSearchActive={isSearchActive}
         />
       </div>
 
@@ -141,6 +143,8 @@ export default function HomePage() {
         query={filters.query || ""}
         onQueryChange={(q) => setFilters((prev) => ({ ...prev, query: q }))}
         monthsLabel={monthsLabel}
+        isSearchActive={isSearchActive}
+        onSearchActiveChange={setIsSearchActive}
       />
 
       {/* Picking coords banner */}

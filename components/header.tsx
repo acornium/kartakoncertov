@@ -17,6 +17,8 @@ interface HeaderProps {
   query: string
   onQueryChange: (query: string) => void
   monthsLabel?: string
+  isSearchActive: boolean
+  onSearchActiveChange: (active: boolean) => void
 }
 
 export function Header({
@@ -30,8 +32,9 @@ export function Header({
   query,
   onQueryChange,
   monthsLabel,
+  isSearchActive,
+  onSearchActiveChange,
 }: HeaderProps) {
-  const [isSearchActive, setIsSearchActive] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
 
@@ -50,7 +53,7 @@ export function Header({
         headerRef.current && 
         !headerRef.current.contains(event.target as Node)
       ) {
-        setIsSearchActive(false)
+        onSearchActiveChange(false)
       }
     }
 
@@ -96,7 +99,7 @@ export function Header({
                 type="text"
                 value={query}
                 onChange={(e) => onQueryChange(e.target.value)}
-                onBlur={() => !query && setIsSearchActive(false)}
+                onBlur={() => !query && onSearchActiveChange(false)}
                 placeholder="Артист или площадка"
                 className="flex-1 bg-transparent border-none outline-none text-[13px] text-foreground placeholder:text-muted-foreground py-1"
               />
@@ -104,7 +107,7 @@ export function Header({
                 <button
                   onClick={() => {
                     onQueryChange("")
-                    setIsSearchActive(false)
+                    onSearchActiveChange(false)
                   }}
                   className="text-muted-foreground hover:text-foreground p-0.5"
                 >
@@ -140,7 +143,7 @@ export function Header({
           <Button
             variant="secondary"
             size="icon"
-            onClick={() => setIsSearchActive(true)}
+            onClick={() => onSearchActiveChange(true)}
             className="rounded-lg bg-background/80 text-foreground shadow-lg backdrop-blur-md"
           >
             <SearchIcon className="h-4 w-4" />

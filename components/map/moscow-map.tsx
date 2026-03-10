@@ -24,6 +24,7 @@ interface MoscowMapProps {
   onVenueClick?: (venueId: string | null) => void
   pickingCoords?: boolean
   showFilters?: boolean
+  isSearchActive?: boolean
 }
 
 export function MoscowMap({
@@ -36,6 +37,7 @@ export function MoscowMap({
   onVenueClick,
   pickingCoords,
   showFilters = false,
+  isSearchActive = false,
 }: MoscowMapProps) {
   const mapRef = useRef<MapRef>(null)
   const [userLocation, setUserLocation] = useState<{ lng: number; lat: number } | null>(null)
@@ -125,16 +127,10 @@ export function MoscowMap({
 
         {venues.map((venue) => {
           const count = eventCountByVenue[venue.id] || 0
-          const hasEvents = venueHasEvents(venue.id)
-          const dimmed = selectedVenueId
-            ? venue.id !== selectedVenueId
-            : dateFilterActive
-            ? !hasEvents
-            : filteredEvents.length > 0
-            ? !hasEvents
-            : false
-
           const isSelected = venue.id === selectedVenueId
+
+          // Если нет событий и клуб не выбран — скрываем его совсем
+          if (count === 0 && !isSelected) return null
 
           return (
             <Marker
@@ -151,9 +147,7 @@ export function MoscowMap({
               }}
             >
               <button
-                className={`group relative flex h-9 w-9 items-center justify-center transition-all duration-200 ${
-                  dimmed ? "opacity-30" : "opacity-100"
-                }`}
+                className="group relative flex h-9 w-9 items-center justify-center transition-all duration-200"
                 aria-label={`${venue.name}: ${count} events`}
               >
                 {count > 0 && (
@@ -162,15 +156,16 @@ export function MoscowMap({
                   </span>
                 )}
                 <span
-                  className={`flex h-9 w-9 items-center justify-center rounded-full shadow-lg transition-all group-hover:scale-110 ${
+                  className={cn(
+                    "flex h-9 w-9 items-center justify-center rounded-full shadow-lg transition-all group-hover:scale-110",
                     isSelected
                       ? "bg-primary text-primary-foreground ring-2 ring-white ring-offset-1 ring-offset-primary scale-110"
                       : "bg-primary text-primary-foreground shadow-primary/30"
-                  }`}
+                  )}
                 >
                   <MapPinIcon className="h-4 w-4" />
                 </span>
-                <span className="pointer-events-none absolute top-full mt-1 w-max max-w-28 truncate rounded bg-background/80 px-1.5 py-0.5 text-center text-[10px] font-medium text-foreground backdrop-blur-sm">
+                <span className="pointer-events-none absolute top-full mt-1 w-max max-w-28 truncate rounded bg-background/80 px-1.5 py-0.5 text-center text-[10px] font-medium text-foreground backdrop-blur-sm shadow-sm ring-1 ring-black/5">
                   {venue.name}
                 </span>
               </button>
@@ -184,6 +179,8 @@ export function MoscowMap({
         className={cn(
           "fixed flex flex-col gap-2 pointer-events-auto transition-all duration-300 z-40",
           "right-4",
+          // Прячем, если активен поиск
+          isSearchActive ? "opacity-0 pointer-events-none scale-95" : "opacity-100",
           // Мобилки: ровно над шторкой (50vh открытая, 3.5rem "хвостик")
           showFilters 
             ? "bottom-[calc(50vh+12px)]" 

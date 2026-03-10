@@ -11,6 +11,7 @@ interface EventCardProps {
   venueName?: string
   compact?: boolean
   selectedDate?: string
+  selectedGenres?: string[]
 }
 
 function formatDate(dateStr: string): string {
@@ -29,24 +30,27 @@ function formatPrice(price: number, priceMax?: number): string {
   return `${fmt(price)} ₽`
 }
 
-export function EventCard({ event, venueName, compact, selectedDate }: EventCardProps) {
+export function EventCard({ event, venueName, compact, selectedDate, selectedGenres = [] }: EventCardProps) {
   const isDateRedundant = selectedDate === event.date;
+  const isGenreRedundant = selectedGenres.length > 0 && selectedGenres.includes(event.genre);
 
   if (compact) {
     return (
-      <div className="flex flex-col gap-1 rounded-md border border-border bg-card/50 p-2">
+      <div className="flex flex-col gap-1 rounded-md border border-border/20 bg-background/40 p-2 backdrop-blur-sm">
         <div className="flex items-center justify-between gap-2">
           <span className="truncate text-xs font-medium text-foreground">
             {event.artist}
           </span>
-          <span
-            className={cn(
-              "shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-medium",
-              GENRE_COLORS[event.genre]
-            )}
-          >
-            {GENRE_LABELS[event.genre]}
-          </span>
+          {!isGenreRedundant && (
+            <span
+              className={cn(
+                "shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-medium",
+                GENRE_COLORS[event.genre]
+              )}
+            >
+              {GENRE_LABELS[event.genre]}
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
           {!isDateRedundant && (
@@ -69,7 +73,7 @@ export function EventCard({ event, venueName, compact, selectedDate }: EventCard
   }
 
   return (
-    <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-3 shadow-sm">
+    <div className="flex flex-col gap-2 rounded-xl border border-border/20 bg-background/60 p-3 shadow-sm backdrop-blur-sm transition-all hover:bg-background/70">
       <div className="flex items-start justify-between gap-2">
         <div className="flex flex-col gap-1">
           <h4 className="text-sm font-semibold text-foreground">
@@ -80,15 +84,17 @@ export function EventCard({ event, venueName, compact, selectedDate }: EventCard
             <p className="text-xs text-muted-foreground/70">{venueName}</p>
           )}
         </div>
-        <Badge
-          variant="secondary"
-          className={cn(
-            "shrink-0 text-[10px]",
-            GENRE_COLORS[event.genre]
-          )}
-        >
-          {GENRE_LABELS[event.genre]}
-        </Badge>
+        {!isGenreRedundant && (
+          <Badge
+            variant="secondary"
+            className={cn(
+              "shrink-0 text-[10px]",
+              GENRE_COLORS[event.genre]
+            )}
+          >
+            {GENRE_LABELS[event.genre]}
+          </Badge>
+        )}
       </div>
       <div className="flex items-center gap-4 text-xs text-muted-foreground">
         {!isDateRedundant && (

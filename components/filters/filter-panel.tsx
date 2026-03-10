@@ -153,10 +153,10 @@ export function FilterPanel({
   const genresScroller = useDragScroller()
 
   const containerClass = cn(
-    "pointer-events-auto flex flex-col bg-background/90 shadow-2xl backdrop-blur-xl",
+    "pointer-events-auto flex flex-col bg-background/80 shadow-2xl backdrop-blur-md border-border/10",
     variant === "side"
-      ? "h-full w-80"
-      : "h-[50vh] w-full rounded-t-2xl border-t border-border"
+      ? "h-full w-80 border-l"
+      : "h-[50vh] w-full rounded-t-2xl border-t"
   )
 
   const hasActiveFilters =
@@ -293,7 +293,7 @@ export function FilterPanel({
       <ScrollArea className="flex-1 min-h-0">
         <div className="flex flex-col gap-3 px-4 pb-4">
           {(!mounted || events.length === 0) ? (
-            <div className="flex flex-col items-center gap-1.5 rounded-lg border border-dashed border-border py-6">
+            <div className="flex flex-col items-center gap-1.5 rounded-xl border border-dashed border-border/40 bg-background/40 py-8 backdrop-blur-sm">
               <p className="text-xs text-muted-foreground">Концертов не найдено</p>
             </div>
           ) : (
@@ -305,6 +305,7 @@ export function FilterPanel({
                   event={event}
                   venueName={venue?.name}
                   selectedDate={filters.date}
+                  selectedGenres={filters.genres}
                 />
               )
             })
