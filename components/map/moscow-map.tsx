@@ -19,6 +19,7 @@ interface MoscowMapProps {
   events: ConcertEvent[]
   filteredEvents: ConcertEvent[]
   markerEvents?: ConcertEvent[]
+  bottomOverlayPx?: number
   dateFilterActive?: boolean
   selectedVenueId?: string
   onMapClick?: (e: { lng: number; lat: number }) => void
@@ -33,6 +34,7 @@ export function MoscowMap({
   events,
   filteredEvents,
   markerEvents,
+  bottomOverlayPx = 0,
   dateFilterActive = false,
   selectedVenueId,
   onMapClick,
@@ -121,7 +123,7 @@ export function MoscowMap({
         // Реактивный офсет: карта сама передвинет центр
         padding={
           typeof window !== 'undefined' && window.innerWidth < 768 
-            ? { top: 0, bottom: showFilters ? Math.round(window.innerHeight * 0.42) : 60, left: 0, right: 0 } 
+            ? { top: 0, bottom: bottomOverlayPx || 60, left: 0, right: 0 }
             : { top: 0, bottom: 0, left: 0, right: showFilters ? 350 : 0 }
         }
         style={{ width: "100%", height: "100%" }}

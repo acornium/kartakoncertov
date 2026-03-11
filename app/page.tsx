@@ -49,6 +49,7 @@ export default function HomePage() {
   }))
   const [pickingCoords, setPickingCoords] = useState(false)
   const [isSearchActive, setIsSearchActive] = useState(false)
+  const [filterPanelHeight, setFilterPanelHeight] = useState(0)
 
   // Filtered events
   const filteredEvents = useFilteredEvents(events, filters, venues)
@@ -119,7 +120,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden">
+    <div className="relative h-[100dvh] w-screen overflow-hidden">
       {/* Map layer */}
       <div className="absolute inset-0">
         <MoscowMap
@@ -134,6 +135,7 @@ export default function HomePage() {
           pickingCoords={pickingCoords}
           showFilters={showFilters}
           isSearchActive={isSearchActive}
+          bottomOverlayPx={filterPanelHeight}
         />
       </div>
 
@@ -192,6 +194,7 @@ export default function HomePage() {
             onRequestOpen={() => setShowFilters(true)}
             onRequestClose={() => setShowFilters(false)}
             filterCount={filterCount}
+            onPanelHeightChange={(h) => setFilterPanelHeight(h)}
           />
         </div>
       </div>

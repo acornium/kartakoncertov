@@ -53,6 +53,7 @@ interface FilterPanelProps {
   // Event cards list
   events?: ConcertEvent[]
   venues?: Venue[]
+  onPanelHeightChange?: (height: number) => void
 }
 
 export function FilterPanel({
@@ -67,7 +68,20 @@ export function FilterPanel({
   filterCount = 0,
   events = [],
   venues = [],
+  onPanelHeightChange,
 }: FilterPanelProps) {
+  const localPanelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const node = localPanelRef.current
+    if (!node || !onPanelHeightChange) return
+
+    const emit = () => onPanelHeightChange(node.getBoundingClientRect().height)
+    emit()
+    const observer = new ResizeObserver(() => emit())
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [onPanelHeightChange])
   const isClient = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -216,7 +230,7 @@ export function FilterPanel({
   }, [selectedVenueName, filters.date, todayISO, selectedDate])
 
   return (
-    <div className={containerClass}>
+    <div ref={localPanelRef} className={containerClass}>
       <div className="shrink-0 px-4 pt-3 pb-3 flex flex-col gap-2 border-b border-border/10">
         {/* Date chips */}
         <div
