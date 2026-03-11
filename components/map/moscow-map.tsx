@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useCallback, useState } from "react"
+import { useRef, useCallback, useState, useEffect } from "react"
 import Map, {
   Marker,
   NavigationControl,
@@ -18,6 +18,7 @@ interface MoscowMapProps {
   venues: Venue[]
   events: ConcertEvent[]
   filteredEvents: ConcertEvent[]
+  markerEvents?: ConcertEvent[]
   dateFilterActive?: boolean
   selectedVenueId?: string
   onMapClick?: (e: { lng: number; lat: number }) => void
@@ -31,6 +32,7 @@ export function MoscowMap({
   venues,
   events,
   filteredEvents,
+  markerEvents,
   dateFilterActive = false,
   selectedVenueId,
   onMapClick,
@@ -47,13 +49,18 @@ export function MoscowMap({
     (e: MapLayerMouseEvent) => {
       if (pickingCoords && onMapClick) {
         onMapClick({ lng: e.lngLat.lng, lat: e.lngLat.lat })
+        return
+      }
+      if (!pickingCoords && onVenueClick) {
+        onVenueClick(null)
       }
     },
-    [pickingCoords, onMapClick]
+    [pickingCoords, onMapClick, onVenueClick]
   )
 
-  // Get event count per venue from filtered events
-  const eventCountByVenue = filteredEvents.reduce(
+  const eventsForMarkers = markerEvents ?? filteredEvents
+  // Get event count per venue from marker events
+  const eventCountByVenue = eventsForMarkers.reduce(
     (acc, event) => {
       acc[event.venueId] = (acc[event.venueId] || 0) + 1
       return acc
@@ -89,6 +96,18 @@ export function MoscowMap({
   const handleZoomOut = useCallback(() => mapRef.current?.zoomOut(), [])
 
   const venueHasEvents = (venueId: string) => eventCountByVenue[venueId] > 0
+
+  useEffect(() => {
+    if (!selectedVenueId) return
+    const venue = venues.find((v) => v.id === selectedVenueId)
+    if (!venue) return
+    mapRef.current?.flyTo({
+      center: [venue.longitude, venue.latitude],
+      zoom: mapRef.current?.getZoom() ?? MAP_CONFIG.zoom,
+      duration: 600,
+      essential: true,
+    })
+  }, [selectedVenueId, venues])
 
   return (
     <div className="relative w-full h-full">
@@ -129,7 +148,7 @@ export function MoscowMap({
           const count = eventCountByVenue[venue.id] || 0
           const isSelected = venue.id === selectedVenueId
 
-          // Если нет событий и клуб не выбран — скрываем его совсем
+          // Если нет событий и клуб не выбран — скрываем, только когда нет активного выбора
           if (count === 0 && !isSelected) return null
 
           return (
@@ -147,19 +166,28 @@ export function MoscowMap({
               }}
             >
               <button
-                className="group relative flex h-10 w-10 items-center justify-center transition-all duration-300"
+                className={cn(
+                  "group relative flex h-10 w-10 items-center justify-center transition-all duration-300",
+                  selectedVenueId && !isSelected && "opacity-35"
+                )}
                 aria-label={`${venue.name}: ${count} events`}
               >
-                {/* Glass Disk */}
+                {/* Circle marker */}
                 <span
                   className={cn(
-                    "flex h-9 w-9 items-center justify-center rounded-full transition-all duration-300 backdrop-blur-md border shadow-xl group-hover:scale-110 group-active:scale-90",
+                    "relative flex h-6 w-6 items-center justify-center rounded-full transition-all duration-300 backdrop-blur-md border shadow-xl group-hover:scale-110 group-active:scale-90",
                     isSelected
                       ? "bg-primary text-primary-foreground border-primary/50 shadow-primary/40 scale-110 ring-4 ring-primary/10"
-                      : "bg-background/80 text-primary border-white/40 shadow-black/10"
+                      : "bg-cyan-400/80 border-cyan-200/70 shadow-cyan-400/40"
                   )}
                 >
-                  <MapPinIcon className={cn("h-4 w-4 transition-colors", isSelected ? "text-white" : "text-primary")} />
+                  {isSelected && (
+                    <span className="absolute inset-0 rounded-full animate-[pulseGlow_3.2s_ease-in-out_infinite] shadow-[0_0_0_2px_rgba(255,255,255,0.25),0_0_20px_rgba(0,190,255,0.6)]" />
+                  )}
+                  <span className={cn(
+                    "h-2 w-2 rounded-full",
+                    isSelected ? "bg-white" : "bg-white"
+                  )} />
                 </span>
 
                 {/* Name Label - Floating underneath */}

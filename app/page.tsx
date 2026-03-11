@@ -52,6 +52,11 @@ export default function HomePage() {
 
   // Filtered events
   const filteredEvents = useFilteredEvents(events, filters, venues)
+  const markerEvents = useFilteredEvents(
+    events,
+    { ...filters, venueId: undefined },
+    venues
+  )
   const dateFilterActive = Boolean(filters.date)
 
   // Calculate month label globally
@@ -121,6 +126,7 @@ export default function HomePage() {
           venues={venues}
           events={events}
           filteredEvents={filteredEvents}
+          markerEvents={markerEvents}
           dateFilterActive={dateFilterActive}
           selectedVenueId={filters.venueId}
           onMapClick={handleMapClick}

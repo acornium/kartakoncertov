@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { FilterIcon, ShieldIcon, MusicIcon, XIcon, Search as SearchIcon } from "lucide-react"
+import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, useRef, useEffect } from "react"
 import { cn } from "@/lib/utils"
@@ -59,7 +60,7 @@ export function Header({
 
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [isSearchActive, query])
+  }, [isSearchActive, query, onSearchActiveChange])
 
   return (
     <header 
@@ -77,10 +78,13 @@ export function Header({
               transition={{ duration: 0.1, ease: "linear" }}
               className="flex items-center pointer-events-auto shrink-0"
             >
-              <img 
-                src="/logo.png" 
-                alt="Logo" 
-                className="h-9 w-9 object-contain brightness-100" 
+              <Image
+                src="/logo.png"
+                alt="Logo"
+                width={28}
+                height={28}
+                className="h-7 w-7 object-contain brightness-100"
+                priority
               />
             </motion.div>
           ) : (

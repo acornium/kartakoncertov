@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
 import { motion, useMotionValue } from "framer-motion"
 import type { Filters, Genre, ConcertEvent, Venue } from "@/lib/types"
 import {
@@ -40,49 +40,6 @@ function formatDatePill(date: Date) {
   return { label, weekday: capitalizedWeekday }
 }
 
-function useDragScroller() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-  const x = useMotionValue(0)
-  const [bounds, setBounds] = useState({ left: 0, right: 0 })
-
-  const recalc = useCallback(() => {
-    const container = containerRef.current
-    const content = contentRef.current
-    if (!container || !content) return
-
-    const lastChild = content.lastElementChild as HTMLElement | null
-    if (!lastChild) return
-
-    const screenRight = window.innerWidth
-    const contentRect = content.getBoundingClientRect()
-    const contentLeftAtZero = contentRect.left - x.get()
-    const lastChildRightAtZero = contentLeftAtZero + lastChild.offsetLeft + lastChild.offsetWidth
-
-    const triggerLeft = Math.min(0, screenRight - lastChildRightAtZero)
-    setBounds({ left: triggerLeft, right: 0 })
-
-    const clamped = Math.min(0, Math.max(triggerLeft, x.get()))
-    x.set(clamped)
-  }, [x])
-
-  useEffect(() => { recalc() }, [recalc])
-  useEffect(() => {
-    const onResize = () => recalc()
-    window.addEventListener("resize", onResize)
-    return () => window.removeEventListener("resize", onResize)
-  }, [recalc])
-  useEffect(() => {
-    if (!containerRef.current || !contentRef.current) return
-    const observer = new ResizeObserver(() => recalc())
-    observer.observe(containerRef.current)
-    observer.observe(contentRef.current)
-    return () => observer.disconnect()
-  }, [recalc])
-
-  return { containerRef, contentRef, x, bounds }
-}
-
 interface FilterPanelProps {
   variant?: "side" | "bottom"
   peek?: boolean
@@ -111,8 +68,11 @@ export function FilterPanel({
   events = [],
   venues = [],
 }: FilterPanelProps) {
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
+  const isClient = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  )
 
   const todayISO = getTodayISO()
   const todayDate = useMemo(() => new Date(`${todayISO}T00:00:00`), [todayISO])
@@ -149,8 +109,84 @@ export function FilterPanel({
     updateFilters({ genres })
   }
 
-  const datesScroller = useDragScroller()
-  const genresScroller = useDragScroller()
+  const datesContainerRef = useRef<HTMLDivElement>(null)
+  const datesContentRef = useRef<HTMLDivElement>(null)
+  const datesX = useMotionValue(0)
+  const [datesBounds, setDatesBounds] = useState({ left: 0, right: 0 })
+
+  const genresContainerRef = useRef<HTMLDivElement>(null)
+  const genresContentRef = useRef<HTMLDivElement>(null)
+  const genresX = useMotionValue(0)
+  const [genresBounds, setGenresBounds] = useState({ left: 0, right: 0 })
+
+  const recalcDates = useCallback(() => {
+    const container = datesContainerRef.current
+    const content = datesContentRef.current
+    if (!container || !content) return
+
+    const lastChild = content.lastElementChild as HTMLElement | null
+    if (!lastChild) return
+
+    const screenRight = window.innerWidth
+    const contentRect = content.getBoundingClientRect()
+    const contentLeftAtZero = contentRect.left - datesX.get()
+    const lastChildRightAtZero = contentLeftAtZero + lastChild.offsetLeft + lastChild.offsetWidth
+
+    const triggerLeft = Math.min(0, screenRight - lastChildRightAtZero)
+    setDatesBounds({ left: triggerLeft, right: 0 })
+
+    const clamped = Math.min(0, Math.max(triggerLeft, datesX.get()))
+    datesX.set(clamped)
+  }, [datesX])
+
+  const recalcGenres = useCallback(() => {
+    const container = genresContainerRef.current
+    const content = genresContentRef.current
+    if (!container || !content) return
+
+    const lastChild = content.lastElementChild as HTMLElement | null
+    if (!lastChild) return
+
+    const screenRight = window.innerWidth
+    const contentRect = content.getBoundingClientRect()
+    const contentLeftAtZero = contentRect.left - genresX.get()
+    const lastChildRightAtZero = contentLeftAtZero + lastChild.offsetLeft + lastChild.offsetWidth
+
+    const triggerLeft = Math.min(0, screenRight - lastChildRightAtZero)
+    setGenresBounds({ left: triggerLeft, right: 0 })
+
+    const clamped = Math.min(0, Math.max(triggerLeft, genresX.get()))
+    genresX.set(clamped)
+  }, [genresX])
+
+  useEffect(() => { recalcDates() }, [recalcDates])
+  useEffect(() => { recalcGenres() }, [recalcGenres])
+  useEffect(() => {
+    const onResize = () => {
+      recalcDates()
+      recalcGenres()
+    }
+    window.addEventListener("resize", onResize)
+    return () => window.removeEventListener("resize", onResize)
+  }, [recalcDates, recalcGenres])
+  useEffect(() => {
+    const datesContainer = datesContainerRef.current
+    const datesContent = datesContentRef.current
+    if (!datesContainer || !datesContent) return
+    const observer = new ResizeObserver(() => recalcDates())
+    observer.observe(datesContainer)
+    observer.observe(datesContent)
+    return () => observer.disconnect()
+  }, [recalcDates])
+  useEffect(() => {
+    const genresContainer = genresContainerRef.current
+    const genresContent = genresContentRef.current
+    if (!genresContainer || !genresContent) return
+    const observer = new ResizeObserver(() => recalcGenres())
+    observer.observe(genresContainer)
+    observer.observe(genresContent)
+    return () => observer.disconnect()
+  }, [recalcGenres])
 
   const containerClass = cn(
     "pointer-events-auto flex flex-col bg-background/80 shadow-2xl backdrop-blur-md border-border/10",
@@ -184,18 +220,18 @@ export function FilterPanel({
       <div className="shrink-0 px-4 pt-3 pb-3 flex flex-col gap-2 border-b border-border/10">
         {/* Date chips */}
         <div
-          ref={datesScroller.containerRef}
+          ref={datesContainerRef}
           className="w-full overflow-hidden"
           role="listbox"
           aria-label="Выбор даты"
         >
           <motion.div
-            ref={datesScroller.contentRef}
+            ref={datesContentRef}
             drag="x"
-            dragConstraints={datesScroller.bounds}
+            dragConstraints={datesBounds}
             dragElastic={0.2}
             dragMomentum={false}
-            style={{ x: datesScroller.x }}
+            style={{ x: datesX }}
             className="flex w-max cursor-grab flex-nowrap gap-2 py-0.5 active:cursor-grabbing"
           >
             {datesList.map((date) => {
@@ -233,19 +269,19 @@ export function FilterPanel({
 
         {/* Genre chips */}
         <div
-          ref={genresScroller.containerRef}
+          ref={genresContainerRef}
           className="w-full overflow-hidden"
           role="listbox"
           aria-label="Выбор жанров"
           aria-multiselectable="true"
         >
           <motion.div
-            ref={genresScroller.contentRef}
+            ref={genresContentRef}
             drag="x"
-            dragConstraints={genresScroller.bounds}
+            dragConstraints={genresBounds}
             dragElastic={0.2}
             dragMomentum={false}
-            style={{ x: genresScroller.x }}
+            style={{ x: genresX }}
             className="flex w-max cursor-grab flex-nowrap gap-2 py-1 active:cursor-grabbing"
           >
             {ALL_GENRES.map((genre) => {
@@ -292,7 +328,7 @@ export function FilterPanel({
 
       <ScrollArea className="flex-1 min-h-0">
         <div className="flex flex-col gap-3 px-4 pb-4">
-          {(!mounted || events.length === 0) ? (
+          {(!isClient || events.length === 0) ? (
             <div className="flex flex-col items-center gap-1.5 rounded-xl border border-dashed border-border/40 bg-background/40 py-8 backdrop-blur-sm">
               <p className="text-xs text-muted-foreground">Концертов не найдено</p>
             </div>
