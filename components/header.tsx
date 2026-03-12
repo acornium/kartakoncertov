@@ -18,6 +18,7 @@ interface HeaderProps {
   query: string
   onQueryChange: (query: string) => void
   monthsLabel?: string
+  selectedVenueName?: string
   isSearchActive: boolean
   onSearchActiveChange: (active: boolean) => void
 }
@@ -33,6 +34,7 @@ export function Header({
   query,
   onQueryChange,
   monthsLabel,
+  selectedVenueName,
   isSearchActive,
   onSearchActiveChange,
 }: HeaderProps) {
@@ -72,7 +74,7 @@ export function Header({
           <motion.div
             className="flex items-center pointer-events-auto shrink-0"
             animate={
-              !isSearchActive && !query
+              !isSearchActive && !query && !selectedVenueName
                 ? { opacity: 1, x: 0, pointerEvents: "auto" }
                 : { opacity: 0, x: -20, pointerEvents: "none" }
             }
@@ -91,11 +93,11 @@ export function Header({
           <motion.div
             className={cn(
               "glass-slab absolute inset-0 flex items-center gap-2 rounded-lg px-3 py-1.5",
-              !(isSearchActive || query) && "opacity-0"
+              (!(isSearchActive || query) || selectedVenueName) && "opacity-0"
             )}
             initial={false}
             animate={
-              isSearchActive || query
+              (isSearchActive || query) && !selectedVenueName
                 ? { opacity: 1, pointerEvents: "auto" }
                 : { opacity: 0, pointerEvents: "none" }
             }
@@ -104,7 +106,6 @@ export function Header({
             <SearchIcon className="h-4 w-4 text-primary/80 opacity-70 shrink-0" />
             <input
               ref={searchInputRef}
-              autoFocus
               type="text"
               value={query}
               onChange={(e) => onQueryChange(e.target.value)}
@@ -131,30 +132,39 @@ export function Header({
       <div className="absolute left-1/2 top-0 -translate-x-1/2 pointer-events-none">
         <AnimatePresence>
           {!isSearchActive && monthsLabel && (
-            <motion.div
-              initial={{ y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -20, opacity: 0 }}
-              transition={{ duration: 0.1, ease: "linear" }}
-              className="glass-slab px-6 py-1.5 rounded-b-[20px] flex items-center justify-center"
+            <div
+              className={cn(
+                "glass-slab relative rounded-b-2xl flex items-center justify-center whitespace-nowrap",
+                selectedVenueName ? "px-9 py-3" : "px-6 py-1.5"
+              )}
             >
-              <span className="text-xs font-medium tracking-wide text-foreground/80">
+              <span
+                className={cn(
+                  "text-[13px] font-semibold tracking-wide text-foreground/85 truncate max-w-[60vw] transition-opacity",
+                  selectedVenueName ? "absolute opacity-0 duration-0" : "opacity-100 duration-1000"
+                )}
+              >
                 {monthsLabel}
               </span>
-            </motion.div>
+              {selectedVenueName && (
+                <span className="text-[17px] font-semibold tracking-wide text-foreground/85 truncate max-w-[78vw]">
+                  {selectedVenueName}
+                </span>
+              )}
+            </div>
           )}
         </AnimatePresence>
       </div>
 
       <div className="pointer-events-auto flex items-center gap-2 shrink-0">
-        <div className="relative h-9 w-9">
+        <div className="relative h-10 w-10">
           <motion.button
             type="button"
             onClick={() => onSearchActiveChange(true)}
             aria-label="Поиск"
             className="glass-slab absolute inset-0 flex items-center justify-center rounded-lg"
             animate={
-              !isSearchActive && !query
+              !isSearchActive && !query && !selectedVenueName
                 ? { opacity: 1, pointerEvents: "auto" }
                 : { opacity: 0, pointerEvents: "none" }
             }

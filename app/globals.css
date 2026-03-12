@@ -101,6 +101,13 @@ body {
   100% { opacity: 0.35; transform: scale(1); }
 }
 
+@keyframes flameFloat {
+  0% { transform: translateY(6px) scaleX(1.05); opacity: 0.2; }
+  40% { opacity: 0.6; }
+  50% { transform: translateY(-4px) scaleX(1); opacity: 0.75; }
+  100% { transform: translateY(6px) scaleX(1.05); opacity: 0.2; }
+}
+
 /* MapLibre: ensure touch gestures are handled by the map, not the browser */
 .maplibregl-map,
 .maplibregl-canvas-container,

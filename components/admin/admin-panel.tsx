@@ -52,7 +52,7 @@ export function AdminPanel({
   const [editingEvent, setEditingEvent] = useState<ConcertEvent | null>(null)
 
   return (
-    <div className="glass-slab pointer-events-auto flex h-full w-80 flex-col">
+    <div className="glass-slab pointer-events-auto flex h-full w-80 flex-col rounded-xl">
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <h2 className="text-sm font-semibold text-foreground">
           Админ-панель

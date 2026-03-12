@@ -36,7 +36,7 @@ export function EventCard({ event, venueName, compact, selectedDate, selectedGen
 
   if (compact) {
     return (
-      <div className="glass-slab flex flex-col gap-1 rounded-md p-2">
+      <div className="glass-slab flex flex-col gap-1 rounded-lg p-2">
         <div className="flex items-center justify-between gap-2">
           <span className="truncate text-xs font-medium text-foreground">
             {event.artist}
@@ -93,7 +93,7 @@ export function EventCard({ event, venueName, compact, selectedDate, selectedGen
       {/* Right Column: Meta Info */}
       <div className="flex shrink-0 flex-col items-end justify-between self-stretch text-right">
         {venueName && (
-          <p className="truncate text-[10px] font-medium text-muted-foreground/70 uppercase tracking-tight">
+          <p className="truncate text-[12px] font-medium text-muted-foreground/70">
             {venueName}
           </p>
         )}

@@ -156,6 +156,7 @@ export default function HomePage() {
         query={filters.query || ""}
         onQueryChange={(q) => setFilters((prev) => ({ ...prev, query: q }))}
         monthsLabel={monthsLabel}
+        selectedVenueName={selectedVenueName}
         isSearchActive={isSearchActive}
         onSearchActiveChange={setIsSearchActive}
       />
@@ -204,27 +205,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {selectedVenueName && showFilters && (
-        <div
-          className={cn(
-            "pointer-events-none fixed right-0 left-0 z-20 flex justify-center md:hidden",
-            showFilters
-              ? "bottom-[calc(42vh+12px)]"
-              : "bottom-[calc(3.5rem+12px)]"
-          )}
-        >
-          <div className="pointer-events-auto glass-slab flex h-10 items-center gap-3 px-4 text-sm font-semibold text-foreground rounded-md">
-            <span className="truncate max-w-[70vw]">{selectedVenueName}</span>
-            <button
-              onClick={() => setFilters((prev) => ({ ...prev, venueId: undefined }))}
-              className="text-muted-foreground hover:text-foreground text-base leading-none"
-              aria-label="Снять фильтр по площадке"
-            >
-              ×
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Admin panel (right) */}
       {adminEnabled && (
@@ -253,7 +233,7 @@ export default function HomePage() {
               pickingCoords={pickingCoords}
             />
           ) : (
-            <div className="glass-slab pointer-events-auto w-80">
+            <div className="glass-slab pointer-events-auto w-80 rounded-xl">
               <AdminGate
                 onAuthenticated={() => setIsAdmin(true)}
                 onCancel={() => setShowAdmin(false)}

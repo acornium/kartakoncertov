@@ -253,7 +253,7 @@ export function FilterPanel({
                   aria-selected={isActive}
                   onClick={() => updateFilters({ date: dateStr })}
                   className={cn(
-                    "flex flex-row h-9 gap-1.5 shrink-0 items-center justify-center rounded-xl px-3.5 transition-all pointer-events-auto border border-transparent",
+                    "flex flex-row h-9 gap-1.5 shrink-0 items-center justify-center rounded-lg px-3.5 transition-all pointer-events-auto border border-transparent",
                     isActive
                       ? "bg-foreground text-background shadow-md font-semibold"
                       : "bg-secondary/70 text-secondary-foreground hover:bg-secondary/85 font-medium"

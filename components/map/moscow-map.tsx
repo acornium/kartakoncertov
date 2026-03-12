@@ -190,10 +190,7 @@ export function MoscowMap({
                   {isSelected && (
                     <span className="absolute inset-0 rounded-full animate-[pulseGlow_3.2s_ease-in-out_infinite] shadow-[0_0_0_2px_rgba(255,255,255,0.25),0_0_20px_rgba(0,190,255,0.6)]" />
                   )}
-                  <span className={cn(
-                    "h-2 w-2 rounded-full",
-                    isSelected ? "bg-white" : "bg-white"
-                  )} />
+                  <span className="h-2 w-2 rounded-full bg-white" />
                 </span>
 
               </button>
@@ -201,6 +198,7 @@ export function MoscowMap({
           )
         })}
       </Map>
+
 
       {/* Custom UI Controls: Follows the filter panel top edge */}
       <div 
