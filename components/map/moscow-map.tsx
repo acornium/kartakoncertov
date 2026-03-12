@@ -180,9 +180,12 @@ export function MoscowMap({
                     "relative flex h-6 w-6 items-center justify-center rounded-full transition-all duration-300 backdrop-blur-md border shadow-xl group-hover:scale-110 group-active:scale-90",
                     isSelected
                       ? "bg-primary text-primary-foreground border-primary/50 shadow-primary/40 scale-110 ring-4 ring-primary/10"
-                      : "bg-cyan-400/80 border-cyan-200/70 shadow-cyan-400/40"
+                      : "bg-cyan-400/75 border-cyan-100/80 shadow-cyan-400/45 overflow-hidden"
                   )}
                 >
+                  {!isSelected && (
+                    <span className="absolute inset-0 bg-gradient-to-br from-white/45 via-white/15 to-transparent" />
+                  )}
                   {isSelected && (
                     <span className="absolute inset-0 rounded-full animate-[pulseGlow_3.2s_ease-in-out_infinite] shadow-[0_0_0_2px_rgba(255,255,255,0.25),0_0_20px_rgba(0,190,255,0.6)]" />
                   )}
