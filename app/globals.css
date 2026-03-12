@@ -89,6 +89,12 @@ body {
 }
 }
 
+@layer components {
+  .glass-slab {
+    @apply bg-gradient-to-r from-background/95 via-background/40 to-transparent backdrop-blur-md border border-border/20 shadow-lg;
+  }
+}
+
 @keyframes pulseGlow {
   0% { opacity: 0.35; transform: scale(1); }
   50% { opacity: 0.8; transform: scale(1.1); }

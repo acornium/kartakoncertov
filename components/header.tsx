@@ -65,62 +65,66 @@ export function Header({
   return (
     <header 
       ref={headerRef}
-      className="pointer-events-none fixed top-0 right-0 left-0 z-20 flex items-center justify-between gap-2 px-4 py-3"
+      className="pointer-events-none fixed top-0 right-0 left-0 z-20 flex min-h-[56px] items-center justify-between gap-2 px-4 py-3"
     >
       <div className="pointer-events-auto flex flex-1 items-center gap-2 overflow-hidden">
-        <AnimatePresence mode="wait">
-          {!isSearchActive && !query ? (
-            <motion.div
-              key="logo"
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -20, opacity: 0 }}
-              transition={{ duration: 0.1, ease: "linear" }}
-              className="flex items-center pointer-events-auto shrink-0"
-            >
-              <Image
-                src="/logo.png"
-                alt="Logo"
-                width={28}
-                height={28}
-                className="h-7 w-7 object-contain brightness-100"
-                priority
-              />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="search"
-              initial={{ width: 40, opacity: 0 }}
-              animate={{ width: "100%", opacity: 1 }}
-              exit={{ width: 40, opacity: 0 }}
-              transition={{ duration: 0.1, ease: "linear" }}
-              className="flex items-center gap-2 rounded-lg bg-background/80 px-3 py-1.5 shadow-lg backdrop-blur-md"
-            >
-              <SearchIcon className="h-4 w-4 text-primary shrink-0" />
-              <input
-                ref={searchInputRef}
-                autoFocus
-                type="text"
-                value={query}
-                onChange={(e) => onQueryChange(e.target.value)}
-                onBlur={() => !query && onSearchActiveChange(false)}
-                placeholder="Артист или площадка"
-                className="flex-1 bg-transparent border-none outline-none text-[13px] text-foreground placeholder:text-muted-foreground py-1"
-              />
-              {query && (
-                <button
-                  onClick={() => {
-                    onQueryChange("")
-                    onSearchActiveChange(false)
-                  }}
-                  className="text-muted-foreground hover:text-foreground p-0.5"
-                >
-                  <XIcon className="h-4 w-4" />
-                </button>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <div className="relative flex-1 min-w-0">
+          <motion.div
+            className="flex items-center pointer-events-auto shrink-0"
+            animate={
+              !isSearchActive && !query
+                ? { opacity: 1, x: 0, pointerEvents: "auto" }
+                : { opacity: 0, x: -20, pointerEvents: "none" }
+            }
+            transition={{ duration: 0.1, ease: "linear" }}
+          >
+            <Image
+              src="/logo.png"
+              alt="Logo"
+              width={28}
+              height={28}
+              className="h-7 w-7 object-contain brightness-100"
+              priority
+            />
+          </motion.div>
+
+          <motion.div
+            className={cn(
+              "glass-slab absolute inset-0 flex items-center gap-2 rounded-lg px-3 py-1.5",
+              !(isSearchActive || query) && "opacity-0"
+            )}
+            initial={false}
+            animate={
+              isSearchActive || query
+                ? { opacity: 1, pointerEvents: "auto" }
+                : { opacity: 0, pointerEvents: "none" }
+            }
+            transition={{ duration: 0.1, ease: "linear" }}
+          >
+            <SearchIcon className="h-4 w-4 text-primary/80 opacity-70 shrink-0" />
+            <input
+              ref={searchInputRef}
+              autoFocus
+              type="text"
+              value={query}
+              onChange={(e) => onQueryChange(e.target.value)}
+              onBlur={() => !query && onSearchActiveChange(false)}
+              placeholder="Артист или площадка"
+              className="flex-1 bg-transparent border-none outline-none text-[13px] text-foreground placeholder:text-muted-foreground py-1"
+            />
+            {query && (
+              <button
+                onClick={() => {
+                  onQueryChange("")
+                  onSearchActiveChange(false)
+                }}
+                className="text-muted-foreground hover:text-foreground p-0.5"
+              >
+                <XIcon className="h-4 w-4" />
+              </button>
+            )}
+          </motion.div>
+        </div>
       </div>
 
       {/* Notch Month Label - Centered */}
@@ -132,7 +136,7 @@ export function Header({
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -20, opacity: 0 }}
               transition={{ duration: 0.1, ease: "linear" }}
-              className="px-6 py-1.5 rounded-b-[20px] bg-background shadow-2xl flex items-center justify-center border-x border-b border-border/5"
+              className="glass-slab px-6 py-1.5 rounded-b-[20px] flex items-center justify-center"
             >
               <span className="text-xs font-medium tracking-wide text-foreground/80">
                 {monthsLabel}
@@ -143,25 +147,31 @@ export function Header({
       </div>
 
       <div className="pointer-events-auto flex items-center gap-2 shrink-0">
-        {!isSearchActive && !query && (
-          <Button
-            variant="secondary"
-            size="icon"
+        <div className="relative h-9 w-9">
+          <motion.button
+            type="button"
             onClick={() => onSearchActiveChange(true)}
-            className="rounded-lg bg-background/80 text-foreground shadow-lg backdrop-blur-md"
+            aria-label="Поиск"
+            className="glass-slab absolute inset-0 flex items-center justify-center rounded-lg"
+            animate={
+              !isSearchActive && !query
+                ? { opacity: 1, pointerEvents: "auto" }
+                : { opacity: 0, pointerEvents: "none" }
+            }
+            transition={{ duration: 0.18, ease: [0.2, 0.7, 0, 1] }}
           >
-            <SearchIcon className="h-4 w-4" />
-          </Button>
-        )}
+            <SearchIcon className="h-4 w-4 text-foreground opacity-70" />
+          </motion.button>
+        </div>
         <Button
           variant={showFilters ? "default" : "secondary"}
           size="sm"
           onClick={onToggleFilters}
           className={cn(
-            "relative gap-1.5 rounded-lg shadow-lg hidden sm:inline-flex",
+            "relative gap-1.5 rounded-lg hidden sm:inline-flex",
             showFilters
               ? "bg-primary text-primary-foreground"
-              : "bg-background/80 text-foreground backdrop-blur-md"
+              : "glass-slab text-foreground"
           )}
         >
           {showFilters ? (
@@ -182,15 +192,15 @@ export function Header({
             variant={showAdmin ? "default" : "secondary"}
             size="sm"
             onClick={onToggleAdmin}
-            className={cn(
-              "gap-1.5 rounded-lg shadow-lg",
-              showAdmin
-                ? "bg-primary text-primary-foreground"
-                : isAdmin
-                  ? "bg-primary/20 text-primary backdrop-blur-md"
-                  : "bg-background/80 text-foreground backdrop-blur-md"
-            )}
-          >
+          className={cn(
+            "gap-1.5 rounded-lg",
+            showAdmin
+              ? "bg-primary text-primary-foreground"
+              : isAdmin
+                ? "glass-slab text-primary"
+                : "glass-slab text-foreground"
+          )}
+        >
             <ShieldIcon className="h-4 w-4" />
             <span className="hidden sm:inline">
               {isAdmin ? "Админ" : "Войти"}

@@ -203,7 +203,7 @@ export function FilterPanel({
   }, [recalcGenres])
 
   const containerClass = cn(
-    "pointer-events-auto flex flex-col bg-background/80 shadow-2xl backdrop-blur-md border-border/10",
+    "glass-slab pointer-events-auto flex flex-col",
     variant === "side"
       ? "h-full w-80 border-l"
       : "h-[42vh] w-full rounded-t-2xl border-t"
@@ -215,19 +215,13 @@ export function FilterPanel({
     (filters.query && filters.query.trim() !== "") ||
     Boolean(filters.venueId)
 
-  // Selected venue name for chip display
-  const selectedVenueName = filters.venueId
-    ? venues.find((v) => v.id === filters.venueId)?.name
-    : undefined
-
   // Build list title
   const listTitle = useMemo(() => {
-    if (selectedVenueName) return selectedVenueName
     if (filters.date && filters.date !== todayISO) {
       return format(selectedDate, "d MMMM", { locale: ru })
     }
     return "Сегодня"
-  }, [selectedVenueName, filters.date, todayISO, selectedDate])
+  }, [filters.date, todayISO, selectedDate])
 
   return (
     <div ref={localPanelRef} className={containerClass}>
@@ -310,7 +304,7 @@ export function FilterPanel({
                     "flex h-8 shrink-0 items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-all pointer-events-auto border border-transparent",
                     isActive
                       ? GENRE_COLORS[genre]
-                      : "bg-secondary/70 text-secondary-foreground hover:bg-accent/80"
+                      : "bg-secondary/40 text-secondary-foreground/70 hover:bg-secondary/55"
                   )}
                   draggable={false}
                 >
@@ -322,28 +316,12 @@ export function FilterPanel({
           </motion.div>
         </div>
 
-        {/* Selected venue chip */}
-        {selectedVenueName && (
-          <div className="flex items-center gap-1.5 mt-[-4px]">
-            <span className="flex items-center gap-1 rounded-full bg-primary/10 border border-primary/20 px-2.5 py-1 text-[11px] font-medium text-primary shadow-sm shadow-primary/5">
-              <MapPinIcon className="h-3 w-3" />
-              {selectedVenueName}
-              <button
-                onClick={() => updateFilters({ venueId: undefined })}
-                className="ml-0.5 rounded-full hover:text-primary/70 transition-colors"
-                aria-label="Снять фильтр по площадке"
-              >
-                <XIcon className="h-3 w-3" />
-              </button>
-            </span>
-          </div>
-        )}
       </div>
 
       <ScrollArea className="flex-1 min-h-0">
         <div className="flex flex-col gap-3 px-4 pb-4">
           {(!isClient || events.length === 0) ? (
-            <div className="flex flex-col items-center gap-1.5 rounded-xl border border-dashed border-border/40 bg-background/40 py-8 backdrop-blur-sm">
+            <div className="glass-slab flex flex-col items-center gap-1.5 rounded-xl py-8">
               <p className="text-xs text-muted-foreground">Концертов не найдено</p>
             </div>
           ) : (

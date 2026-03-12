@@ -36,7 +36,7 @@ export function EventCard({ event, venueName, compact, selectedDate, selectedGen
 
   if (compact) {
     return (
-      <div className="flex flex-col gap-1 rounded-md border border-border/20 bg-background/40 p-2 backdrop-blur-sm">
+      <div className="glass-slab flex flex-col gap-1 rounded-md p-2">
         <div className="flex items-center justify-between gap-2">
           <span className="truncate text-xs font-medium text-foreground">
             {event.artist}
@@ -69,7 +69,7 @@ export function EventCard({ event, venueName, compact, selectedDate, selectedGen
   }
 
   return (
-    <div className="flex flex-row items-start justify-between gap-3 rounded-xl border border-border/20 bg-background/60 p-3 shadow-sm backdrop-blur-sm transition-all hover:bg-background/70">
+    <div className="glass-slab flex flex-row items-start justify-between gap-3 rounded-xl p-3 transition-all hover:bg-background/70">
       {/* Left Column: Main Info */}
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <h4 className="truncate text-sm font-semibold text-foreground leading-tight">

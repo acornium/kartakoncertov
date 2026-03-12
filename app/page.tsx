@@ -112,6 +112,10 @@ export default function HomePage() {
     setFilters((prev) => ({ ...prev, venueId: venueId ?? undefined }))
   }, [])
 
+  const selectedVenueName = filters.venueId
+    ? venues.find((v) => v.id === filters.venueId)?.name
+    : undefined
+
   const filterPanelProps = {
     filters,
     onFiltersChange: setFilters,
@@ -184,7 +188,21 @@ export default function HomePage() {
           showFilters ? "translate-y-0" : "translate-y-[calc(100%-3.5rem)]"
         }`}
       >
-        <div className="pointer-events-auto">
+        <div className="pointer-events-auto flex flex-col">
+          {selectedVenueName && showFilters && (
+            <div className="flex">
+              <div className="glass-slab flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-foreground rounded-md">
+                <span className="truncate max-w-[70vw]">{selectedVenueName}</span>
+                <button
+                  onClick={() => setFilters((prev) => ({ ...prev, venueId: undefined }))}
+                  className="text-muted-foreground hover:text-foreground text-base leading-none"
+                  aria-label="Снять фильтр по площадке"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+          )}
           <FilterPanel
             {...filterPanelProps}
             variant="bottom"
@@ -226,7 +244,7 @@ export default function HomePage() {
               pickingCoords={pickingCoords}
             />
           ) : (
-            <div className="pointer-events-auto w-80 bg-background/90 shadow-2xl backdrop-blur-xl">
+            <div className="glass-slab pointer-events-auto w-80">
               <AdminGate
                 onAuthenticated={() => setIsAdmin(true)}
                 onCancel={() => setShowAdmin(false)}

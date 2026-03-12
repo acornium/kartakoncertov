@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef, useCallback, useState, useEffect } from "react"
+import { AnimatePresence, motion } from "framer-motion"
 import Map, {
   Marker,
   NavigationControl,
@@ -195,13 +196,6 @@ export function MoscowMap({
                   )} />
                 </span>
 
-                {/* Name Label - Floating underneath */}
-                <span className={cn(
-                  "pointer-events-none absolute top-full mt-2 w-max max-w-28 truncate rounded-lg bg-background/60 px-2 py-0.5 text-center text-[10px] font-semibold text-foreground backdrop-blur-sm shadow-sm border border-white/10 transition-opacity",
-                  isSelected ? "opacity-100 ring-1 ring-primary/20" : "opacity-0 group-hover:opacity-100"
-                )}>
-                  {venue.name}
-                </span>
               </button>
             </Marker>
           )
@@ -213,8 +207,6 @@ export function MoscowMap({
         className={cn(
           "fixed flex flex-col gap-2 pointer-events-auto transition-all duration-300 z-40",
           "right-4",
-          // Прячем, если активен поиск
-          isSearchActive ? "opacity-0 pointer-events-none scale-95" : "opacity-100",
           // Мобилки: ровно над шторкой (42vh открытая, 3.5rem "хвостик")
           showFilters 
             ? "bottom-[calc(42vh+12px)]" 
@@ -225,13 +217,19 @@ export function MoscowMap({
           showFilters && "md:right-[calc(320px+24px)]"
         )}
       >
-        <button
+        <motion.button
           onClick={handleGeolocate}
-          className="flex h-10 w-10 items-center justify-center rounded-lg bg-background/80 text-foreground shadow-lg backdrop-blur-md border border-border/10 transition-all hover:bg-background active:scale-95"
+          className="glass-slab flex h-10 w-10 items-center justify-center rounded-lg text-foreground transition-all hover:bg-background active:scale-95"
           title="Где я?"
+          animate={
+            !isSearchActive
+              ? { opacity: 1, pointerEvents: "auto" }
+              : { opacity: 0, pointerEvents: "none" }
+          }
+          transition={{ duration: 0.18, ease: [0.2, 0.7, 0, 1] }}
         >
           <MapPinIcon className="h-4 w-4" />
-        </button>
+        </motion.button>
       </div>
     </div>
   )
