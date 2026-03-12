@@ -5,6 +5,7 @@ import dynamic from "next/dynamic"
 import type { Filters } from "@/lib/types"
 import { useVenues, useEvents, useFilteredEvents } from "@/lib/store"
 import { DEFAULT_FILTERS, getTodayISO } from "@/lib/constants"
+import { cn } from "@/lib/utils"
 import { Header } from "@/components/header"
 import { FilterPanel } from "@/components/filters/filter-panel"
 import { AdminGate } from "@/components/admin/admin-gate"
@@ -189,20 +190,6 @@ export default function HomePage() {
         }`}
       >
         <div className="pointer-events-auto flex flex-col">
-          {selectedVenueName && showFilters && (
-            <div className="flex">
-              <div className="glass-slab flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-foreground rounded-md">
-                <span className="truncate max-w-[70vw]">{selectedVenueName}</span>
-                <button
-                  onClick={() => setFilters((prev) => ({ ...prev, venueId: undefined }))}
-                  className="text-muted-foreground hover:text-foreground text-base leading-none"
-                  aria-label="Снять фильтр по площадке"
-                >
-                  ×
-                </button>
-              </div>
-            </div>
-          )}
           <FilterPanel
             {...filterPanelProps}
             variant="bottom"
@@ -216,6 +203,28 @@ export default function HomePage() {
           />
         </div>
       </div>
+
+      {selectedVenueName && showFilters && (
+        <div
+          className={cn(
+            "pointer-events-none fixed right-0 left-0 z-20 flex justify-center md:hidden",
+            showFilters
+              ? "bottom-[calc(42vh+12px)]"
+              : "bottom-[calc(3.5rem+12px)]"
+          )}
+        >
+          <div className="pointer-events-auto glass-slab flex h-10 items-center gap-3 px-4 text-sm font-semibold text-foreground rounded-md">
+            <span className="truncate max-w-[70vw]">{selectedVenueName}</span>
+            <button
+              onClick={() => setFilters((prev) => ({ ...prev, venueId: undefined }))}
+              className="text-muted-foreground hover:text-foreground text-base leading-none"
+              aria-label="Снять фильтр по площадке"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Admin panel (right) */}
       {adminEnabled && (
