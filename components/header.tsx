@@ -196,7 +196,7 @@ export function Header({
             >
               <span
                 className={cn(
-                  "text-[12px] font-semibold tracking-wide text-foreground/85 truncate max-w-[60vw] transition-opacity leading-tight",
+                  "text-[13px] font-semibold tracking-wide text-foreground/85 truncate max-w-[60vw] transition-opacity leading-tight",
                   selectedVenueName ? "absolute opacity-0 duration-0" : "opacity-100 duration-1000"
                 )}
               >
@@ -247,7 +247,7 @@ export function Header({
           )}
           <span className="hidden sm:inline">Фильтры</span>
           {filterCount > 0 && !showFilters && (
-            <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+            <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[11px] font-bold text-primary-foreground">
               {filterCount}
             </span>
           )}

@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
+import { createPortal } from "react-dom"
 import { motion, useMotionValue } from "framer-motion"
 import type { Filters, Genre, ConcertEvent, Venue } from "@/lib/types"
 import {
@@ -11,11 +12,13 @@ import {
   getTodayISO,
 } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 import { Calendar } from "@/components/ui/calendar"
 import { Label } from "@/components/ui/label"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import {
   CalendarIcon,
+  ClockIcon,
   RotateCcwIcon,
   CheckIcon,
   Search as SearchIcon,
@@ -71,6 +74,8 @@ export function FilterPanel({
   onPanelHeightChange,
 }: FilterPanelProps) {
   const localPanelRef = useRef<HTMLDivElement>(null)
+  const [activeEventId, setActiveEventId] = useState<string | null>(null)
+  const [portalEl, setPortalEl] = useState<HTMLElement | null>(null)
 
   useEffect(() => {
     const node = localPanelRef.current
@@ -82,6 +87,12 @@ export function FilterPanel({
     observer.observe(node)
     return () => observer.disconnect()
   }, [onPanelHeightChange])
+
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      setPortalEl(document.body)
+    }
+  }, [])
   const isClient = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -223,6 +234,13 @@ export function FilterPanel({
     return "Сегодня"
   }, [filters.date, todayISO, selectedDate])
 
+  const activeEvent = useMemo(
+    () => events.find((event) => event.id === activeEventId) ?? null,
+    [events, activeEventId]
+  )
+
+
+
   return (
     <div ref={localPanelRef} className={containerClass}>
       <div className="shrink-0 px-4 pt-3 pb-3 flex flex-col gap-2 border-b border-border/10">
@@ -264,7 +282,7 @@ export function FilterPanel({
                     {label}
                   </span>
                   <span className={cn(
-                    "text-[11px] tracking-tight opacity-50 font-medium leading-none",
+                    "text-[12px] tracking-tight opacity-50 font-medium leading-none",
                     isActive && "opacity-80 font-semibold"
                   )}>
                     {weekday}
@@ -322,7 +340,7 @@ export function FilterPanel({
         <div className="flex flex-col gap-3 px-4 pb-4">
           {(!isClient || events.length === 0) ? (
             <div className="glass-slab flex flex-col items-center gap-1.5 rounded-xl py-8">
-              <p className="text-xs text-muted-foreground">Концертов не найдено</p>
+              <p className="text-[12px] text-muted-foreground">Концертов не найдено</p>
             </div>
           ) : (
             events.map((event) => {
@@ -334,12 +352,105 @@ export function FilterPanel({
                   venueName={venue?.name}
                   selectedDate={filters.date}
                   selectedGenres={filters.genres}
+                  onClick={() => setActiveEventId(event.id)}
                 />
               )
             })
           )}
         </div>
       </ScrollArea>
+
+      {portalEl &&
+        activeEvent &&
+        createPortal(
+          <div className="fixed inset-0 z-[999] md:items-center md:justify-center">
+            <div
+              className="absolute inset-0 bg-white/30"
+              onClick={() => setActiveEventId(null)}
+            />
+            <div
+              className="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-xl rounded-t-3xl border border-border/20 bg-background/95 p-5 shadow-xl md:relative md:bottom-auto md:rounded-3xl max-h-[80vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+                  <button
+                    type="button"
+                    onClick={() => setActiveEventId(null)}
+                    className="absolute right-4 top-4 z-10 rounded-full p-2 text-muted-foreground hover:text-foreground"
+                    aria-label="Закрыть"
+                  >
+                    <XIcon className="h-4 w-4" />
+                  </button>
+                  <div className="relative mb-4 h-32 w-full overflow-hidden rounded-2xl border border-border/20 bg-muted/60 md:h-40">
+                    <Image
+                      src="/mock-event.jpg"
+                      alt="Фото события"
+                      fill
+                      className="object-cover object-center"
+                      priority
+                    />
+                  </div>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <h3 className="text-lg font-semibold text-foreground">
+                        {activeEvent.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground truncate">
+                        {activeEvent.artist}
+                      </p>
+                    </div>
+                  </div>
+
+              <div className="mt-3 flex flex-wrap items-center gap-2 text-[12px] text-muted-foreground">
+                <span
+                  className={cn(
+                    "inline-flex rounded-full px-2 py-0.5 text-[12px] font-medium tracking-wide",
+                    GENRE_COLORS[activeEvent.genre]
+                  )}
+                >
+                  {GENRE_LABELS[activeEvent.genre]}
+                </span>
+                <span className="flex items-center gap-1">
+                  <CalendarIcon className="h-3 w-3" />
+                  {format(new Date(`${activeEvent.date}T00:00:00`), "d MMMM", {
+                    locale: ru,
+                  })}
+                </span>
+                <span className="flex items-center gap-1">
+                  <ClockIcon className="h-3 w-3" />
+                  {activeEvent.time}
+                </span>
+              </div>
+
+              <div className="mt-3 rounded-xl border border-border/20 bg-muted/40 p-3">
+                <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
+                  <MapPinIcon className="h-3.5 w-3.5" />
+                  <span className="font-medium text-foreground">
+                    {venues.find((v) => v.id === activeEvent.venueId)?.name}
+                  </span>
+                </div>
+                <p className="mt-1 text-[12px] text-muted-foreground">
+                  {venues.find((v) => v.id === activeEvent.venueId)?.address}
+                </p>
+              </div>
+
+              <div className="mt-3">
+                <p className="text-sm text-muted-foreground">
+                  {activeEvent.description ?? "Описание появится позже."}
+                </p>
+              </div>
+
+              <div className="mt-4 flex items-center justify-between">
+                <div className="text-base font-semibold text-foreground">
+                  {activeEvent.price.toLocaleString("ru-RU")} ₽
+                </div>
+                <Button type="button" className="rounded-full px-6">
+                  Купить билет
+                </Button>
+              </div>
+            </div>
+          </div>,
+          portalEl
+        )}
     </div>
   )
 }

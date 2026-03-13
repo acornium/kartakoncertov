@@ -1,6 +1,7 @@
 "use client"
 
 import type { ConcertEvent } from "@/lib/types"
+import type { ElementType } from "react"
 import { GENRE_LABELS, GENRE_COLORS } from "@/lib/constants"
 import { Badge } from "@/components/ui/badge"
 import { CalendarIcon, ClockIcon, TicketIcon } from "lucide-react"
@@ -12,6 +13,7 @@ interface EventCardProps {
   compact?: boolean
   selectedDate?: string
   selectedGenres?: string[]
+  onClick?: () => void
 }
 
 function formatDate(dateStr: string): string {
@@ -30,21 +32,22 @@ function formatPrice(price: number, priceMax?: number): string {
   return `${fmt(price)} ₽`
 }
 
-export function EventCard({ event, venueName, compact, selectedDate, selectedGenres = [] }: EventCardProps) {
+export function EventCard({ event, venueName, compact, selectedDate, selectedGenres = [], onClick }: EventCardProps) {
   const isDateRedundant = selectedDate === event.date;
   const isGenreRedundant = selectedGenres.length > 0 && selectedGenres.includes(event.genre);
+  const Container: ElementType = onClick ? "button" : "div"
 
   if (compact) {
     return (
       <div className="glass-slab flex flex-col gap-1 rounded-lg p-2">
         <div className="flex items-center justify-between gap-2">
-          <span className="truncate text-xs font-medium text-foreground">
+          <span className="truncate text-[12px] font-medium text-foreground">
             {event.artist}
           </span>
           {!isGenreRedundant && (
             <span
               className={cn(
-                "shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-medium",
+                "shrink-0 rounded-full px-1.5 py-0.5 text-[12px] font-medium",
                 GENRE_COLORS[event.genre]
               )}
             >
@@ -52,7 +55,7 @@ export function EventCard({ event, venueName, compact, selectedDate, selectedGen
             </span>
           )}
         </div>
-        <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+        <div className="flex items-center gap-3 text-[12px] text-muted-foreground">
           {!isDateRedundant && (
             <span className="flex items-center gap-0.5">
               <CalendarIcon className="h-2.5 w-2.5" />
@@ -69,19 +72,27 @@ export function EventCard({ event, venueName, compact, selectedDate, selectedGen
   }
 
   return (
-    <div className="glass-slab flex flex-row items-start justify-between gap-3 rounded-xl p-3 transition-all hover:bg-background/70">
+    <Container
+      type={onClick ? "button" : undefined}
+      onClick={onClick}
+      className={cn(
+        "glass-slab flex w-full flex-row items-start justify-between gap-3 rounded-xl p-3 text-left transition-all hover:bg-background/70",
+        onClick && "hover:shadow-md active:scale-[0.99]"
+      )}
+      aria-label={onClick ? `${event.title} — ${event.artist}` : undefined}
+    >
       {/* Left Column: Main Info */}
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <h4 className="truncate text-sm font-semibold text-foreground leading-tight">
           {event.title}
         </h4>
-        <p className="truncate text-xs text-muted-foreground">{event.artist}</p>
+        <p className="truncate text-[12px] text-muted-foreground">{event.artist}</p>
         
         {/* Genre Badge - Compact below info if not redundant */}
         {!isGenreRedundant && (
           <div className="mt-1">
             <span className={cn(
-              "inline-flex rounded-full px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider",
+              "inline-flex rounded-full px-2 py-0.5 text-[12px] font-medium tracking-wide",
               GENRE_COLORS[event.genre]
             )}>
               {GENRE_LABELS[event.genre]}
@@ -100,7 +111,7 @@ export function EventCard({ event, venueName, compact, selectedDate, selectedGen
         
         <div className="flex flex-col items-end gap-0.5">
           {!isDateRedundant && (
-            <div className="flex items-center justify-end gap-1 text-[10px] text-muted-foreground">
+            <div className="flex items-center justify-end gap-1 text-[12px] text-muted-foreground">
               <CalendarIcon className="h-2.5 w-2.5" />
               {formatDate(event.date)}
             </div>
@@ -110,6 +121,6 @@ export function EventCard({ event, venueName, compact, selectedDate, selectedGen
           </div>
         </div>
       </div>
-    </div>
+    </Container>
   )
 }

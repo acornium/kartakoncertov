@@ -143,6 +143,11 @@ body {
   100% { transform: translateY(6px) scaleX(1.05); opacity: 0.2; }
 }
 
+@keyframes sheet-pop {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
 /* MapLibre: ensure touch gestures are handled by the map, not the browser */
 .maplibregl-map,
 .maplibregl-canvas-container,
