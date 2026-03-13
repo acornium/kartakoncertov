@@ -15,15 +15,15 @@ export const GENRE_LABELS: Record<Genre, string> = {
 export const ALL_GENRES: Genre[] = Object.keys(GENRE_LABELS) as Genre[]
 
 export const GENRE_COLORS: Record<Genre, string> = {
-  rock: "bg-red-500/80 text-white",
-  pop: "bg-pink-500/80 text-white",
-  electronic: "bg-cyan-500/80 text-white",
-  jazz: "bg-amber-500/80 text-white",
-  classical: "bg-emerald-500/80 text-white",
-  "hip-hop": "bg-orange-500/80 text-white",
-  metal: "bg-zinc-500/80 text-white",
-  folk: "bg-lime-600/80 text-white",
-  other: "bg-slate-500/80 text-white",
+  rock: "bg-red-400/60 text-foreground",
+  pop: "bg-pink-400/60 text-foreground",
+  electronic: "bg-cyan-400/60 text-foreground",
+  jazz: "bg-amber-400/60 text-foreground",
+  classical: "bg-emerald-400/60 text-foreground",
+  "hip-hop": "bg-orange-400/60 text-foreground",
+  metal: "bg-zinc-400/60 text-foreground",
+  folk: "bg-lime-500/60 text-foreground",
+  other: "bg-slate-400/60 text-foreground",
 }
 
 export const MAP_CONFIG = {

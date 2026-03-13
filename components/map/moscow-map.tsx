@@ -191,8 +191,8 @@ export function MoscowMap({
                 <span
                   className={cn(
                     "relative flex h-6 w-6 items-center justify-center rounded-full transition-all duration-300 backdrop-blur-md border shadow-xl group-hover:scale-110 group-active:scale-90 overflow-hidden",
-                    "bg-cyan-400/75 border-cyan-100/80 shadow-cyan-400/45",
-                    isSelected && "scale-110 ring-2 ring-red-400/60"
+                    "bg-cyan-500/80 border-cyan-300/90 shadow-cyan-500/50",
+                    isSelected && "scale-110 ring-2 ring-cyan-900/40"
                   )}
                 >
                   <span className="absolute inset-0 bg-gradient-to-br from-white/45 via-white/15 to-transparent" />
