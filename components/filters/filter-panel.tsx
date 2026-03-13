@@ -435,7 +435,7 @@ export function FilterPanel({
             />
             <div
               className={cn(
-                "absolute bottom-0 left-0 right-0 mx-auto w-full max-w-xl rounded-t-3xl border border-border/20 bg-background/95 p-5 shadow-xl md:relative md:bottom-auto md:rounded-3xl max-h-[80vh] overflow-y-auto transform-gpu will-change-transform",
+                "absolute bottom-0 left-0 right-0 mx-auto w-full max-w-xl rounded-t-3xl border border-border/20 bg-background p-5 shadow-xl md:relative md:bottom-auto md:rounded-3xl max-h-[80vh] overflow-y-auto transform-gpu will-change-transform",
                 !isDragging && "transition-transform duration-240 ease-linear"
               )}
               style={{
@@ -452,7 +452,7 @@ export function FilterPanel({
                     onPointerMove={handleSheetPointerMove}
                     onPointerUp={handleSheetPointerEnd}
                     onPointerCancel={handleSheetPointerEnd}
-                    className="absolute left-1/2 top-2 z-10 h-1.5 w-12 -translate-x-1/2 rounded-full bg-black/30 touch-none select-none"
+                    className="absolute left-1/2 top-2 z-10 h-1 w-14 -translate-x-1/2 rounded-full bg-black/35 shadow-[0_1px_0_rgba(255,255,255,0.5)] touch-none select-none"
                     aria-label="Закрыть"
                   />
                   <div className="relative mb-4 h-32 w-full overflow-hidden rounded-2xl border border-border/20 bg-muted/60 md:h-40">
