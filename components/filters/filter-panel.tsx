@@ -76,6 +76,13 @@ export function FilterPanel({
   const localPanelRef = useRef<HTMLDivElement>(null)
   const [activeEventId, setActiveEventId] = useState<string | null>(null)
   const [portalEl, setPortalEl] = useState<HTMLElement | null>(null)
+  const [sheetVisible, setSheetVisible] = useState(false)
+  const [renderedEvent, setRenderedEvent] = useState<ConcertEvent | null>(null)
+  const closeTimerRef = useRef<number | null>(null)
+  const dragStartYRef = useRef<number | null>(null)
+  const draggingRef = useRef(false)
+  const [dragOffset, setDragOffset] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
 
   useEffect(() => {
     const node = localPanelRef.current
@@ -239,6 +246,61 @@ export function FilterPanel({
     [events, activeEventId]
   )
 
+  const closeSheet = useCallback(() => {
+    setSheetVisible(false)
+    setDragOffset(0)
+    setIsDragging(false)
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current)
+    }
+    closeTimerRef.current = window.setTimeout(() => {
+      setActiveEventId(null)
+      setRenderedEvent(null)
+      closeTimerRef.current = null
+    }, 240)
+  }, [])
+
+  useEffect(() => {
+    if (!activeEvent) return
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current)
+      closeTimerRef.current = null
+    }
+    setRenderedEvent(activeEvent)
+    setSheetVisible(false)
+    setDragOffset(0)
+    setIsDragging(false)
+    const id = window.requestAnimationFrame(() => setSheetVisible(true))
+    return () => window.cancelAnimationFrame(id)
+  }, [activeEvent])
+
+  const handleSheetPointerDown = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
+    dragStartYRef.current = e.clientY
+    draggingRef.current = true
+    setIsDragging(true)
+    setDragOffset(0)
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }, [])
+
+  const handleSheetPointerMove = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
+    if (!draggingRef.current || dragStartYRef.current === null) return
+    const dy = e.clientY - dragStartYRef.current
+    setDragOffset(dy > 0 ? dy : 0)
+  }, [])
+
+  const handleSheetPointerEnd = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
+    if (!draggingRef.current) return
+    draggingRef.current = false
+    dragStartYRef.current = null
+    setIsDragging(false)
+    e.currentTarget.releasePointerCapture(e.pointerId)
+    if (dragOffset > 80) {
+      closeSheet()
+      return
+    }
+    setDragOffset(0)
+  }, [closeSheet, dragOffset])
+
 
 
   return (
@@ -361,25 +423,38 @@ export function FilterPanel({
       </ScrollArea>
 
       {portalEl &&
-        activeEvent &&
+        renderedEvent &&
         createPortal(
           <div className="fixed inset-0 z-[999] md:items-center md:justify-center">
             <div
-              className="absolute inset-0 bg-white/30"
-              onClick={() => setActiveEventId(null)}
+              className={cn(
+                "absolute inset-0 bg-white/30 transition-opacity duration-240 ease-linear",
+                sheetVisible ? "opacity-100" : "opacity-0"
+              )}
+              onClick={closeSheet}
             />
             <div
-              className="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-xl rounded-t-3xl border border-border/20 bg-background/95 p-5 shadow-xl md:relative md:bottom-auto md:rounded-3xl max-h-[80vh] overflow-y-auto"
+              className={cn(
+                "absolute bottom-0 left-0 right-0 mx-auto w-full max-w-xl rounded-t-3xl border border-border/20 bg-background/95 p-5 shadow-xl md:relative md:bottom-auto md:rounded-3xl max-h-[80vh] overflow-y-auto transform-gpu will-change-transform",
+                !isDragging && "transition-transform duration-240 ease-linear"
+              )}
+              style={{
+                transform: sheetVisible
+                  ? `translateY(${dragOffset}px)`
+                  : "translateY(100%)",
+              }}
               onClick={(e) => e.stopPropagation()}
             >
                   <button
                     type="button"
-                    onClick={() => setActiveEventId(null)}
-                    className="absolute right-4 top-4 z-10 rounded-full p-2 text-muted-foreground hover:text-foreground"
+                    onClick={closeSheet}
+                    onPointerDown={handleSheetPointerDown}
+                    onPointerMove={handleSheetPointerMove}
+                    onPointerUp={handleSheetPointerEnd}
+                    onPointerCancel={handleSheetPointerEnd}
+                    className="absolute left-1/2 top-2 z-10 h-1.5 w-12 -translate-x-1/2 rounded-full bg-black/30 touch-none select-none"
                     aria-label="Закрыть"
-                  >
-                    <XIcon className="h-4 w-4" />
-                  </button>
+                  />
                   <div className="relative mb-4 h-32 w-full overflow-hidden rounded-2xl border border-border/20 bg-muted/60 md:h-40">
                     <Image
                       src="/mock-event.jpg"
@@ -392,10 +467,10 @@ export function FilterPanel({
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <h3 className="text-lg font-semibold text-foreground">
-                        {activeEvent.title}
+                  {renderedEvent.title}
                       </h3>
                       <p className="text-sm text-muted-foreground truncate">
-                        {activeEvent.artist}
+                  {renderedEvent.artist}
                       </p>
                     </div>
                   </div>
@@ -404,20 +479,20 @@ export function FilterPanel({
                 <span
                   className={cn(
                     "inline-flex rounded-full px-2 py-0.5 text-[12px] font-medium tracking-wide",
-                    GENRE_COLORS[activeEvent.genre]
+                    GENRE_COLORS[renderedEvent.genre]
                   )}
                 >
-                  {GENRE_LABELS[activeEvent.genre]}
+                  {GENRE_LABELS[renderedEvent.genre]}
                 </span>
                 <span className="flex items-center gap-1">
                   <CalendarIcon className="h-3 w-3" />
-                  {format(new Date(`${activeEvent.date}T00:00:00`), "d MMMM", {
+                  {format(new Date(`${renderedEvent.date}T00:00:00`), "d MMMM", {
                     locale: ru,
                   })}
                 </span>
                 <span className="flex items-center gap-1">
                   <ClockIcon className="h-3 w-3" />
-                  {activeEvent.time}
+                  {renderedEvent.time}
                 </span>
               </div>
 
@@ -425,23 +500,23 @@ export function FilterPanel({
                 <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
                   <MapPinIcon className="h-3.5 w-3.5" />
                   <span className="font-medium text-foreground">
-                    {venues.find((v) => v.id === activeEvent.venueId)?.name}
+                    {venues.find((v) => v.id === renderedEvent.venueId)?.name}
                   </span>
                 </div>
                 <p className="mt-1 text-[12px] text-muted-foreground">
-                  {venues.find((v) => v.id === activeEvent.venueId)?.address}
+                  {venues.find((v) => v.id === renderedEvent.venueId)?.address}
                 </p>
               </div>
 
               <div className="mt-3">
                 <p className="text-sm text-muted-foreground">
-                  {activeEvent.description ?? "Описание появится позже."}
+                  {renderedEvent.description ?? "Описание появится позже."}
                 </p>
               </div>
 
               <div className="mt-4 flex items-center justify-between">
                 <div className="text-base font-semibold text-foreground">
-                  {activeEvent.price.toLocaleString("ru-RU")} ₽
+                  {renderedEvent.price.toLocaleString("ru-RU")} ₽
                 </div>
                 <Button type="button" className="rounded-full px-6">
                   Купить билет
