@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useCallback, useState, useEffect } from "react"
+import { useRef, useCallback, useState, useEffect, useMemo } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import Map, {
   Marker,
@@ -21,6 +21,7 @@ interface MoscowMapProps {
   filteredEvents: ConcertEvent[]
   markerEvents?: ConcertEvent[]
   bottomOverlayPx?: number
+  topOverlayPx?: number
   resetSeq?: number
   dateFilterActive?: boolean
   selectedVenueId?: string
@@ -37,6 +38,7 @@ export function MoscowMap({
   filteredEvents,
   markerEvents,
   bottomOverlayPx = 0,
+  topOverlayPx = 0,
   resetSeq = 0,
   dateFilterActive = false,
   selectedVenueId,
@@ -48,6 +50,12 @@ export function MoscowMap({
 }: MoscowMapProps) {
   const mapRef = useRef<MapRef>(null)
   const [userLocation, setUserLocation] = useState<{ lng: number; lat: number } | null>(null)
+  const mapPadding = useMemo(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      return { top: topOverlayPx || 0, bottom: bottomOverlayPx || 60, left: 0, right: 0 }
+    }
+    return { top: 0, bottom: 0, left: 0, right: showFilters ? 350 : 0 }
+  }, [topOverlayPx, bottomOverlayPx, showFilters])
 
 
   const handleMapClick = useCallback(
@@ -134,11 +142,7 @@ export function MoscowMap({
           zoom: MAP_CONFIG.zoom,
         }}
         // Реактивный офсет: карта сама передвинет центр
-        padding={
-          typeof window !== 'undefined' && window.innerWidth < 768 
-            ? { top: 0, bottom: bottomOverlayPx || 60, left: 0, right: 0 }
-            : { top: 0, bottom: 0, left: 0, right: showFilters ? 350 : 0 }
-        }
+        padding={mapPadding}
         style={{ width: "100%", height: "100%" }}
         mapStyle={MAP_CONFIG.style}
         attributionControl={false}

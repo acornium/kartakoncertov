@@ -51,6 +51,7 @@ export default function HomePage() {
   const [pickingCoords, setPickingCoords] = useState(false)
   const [isSearchActive, setIsSearchActive] = useState(false)
   const [filterPanelHeight, setFilterPanelHeight] = useState(0)
+  const [topOverlayPx, setTopOverlayPx] = useState(0)
   const [mapResetSeq, setMapResetSeq] = useState(0)
 
   // Filtered events
@@ -142,6 +143,7 @@ export default function HomePage() {
           showFilters={showFilters}
           isSearchActive={isSearchActive}
           bottomOverlayPx={filterPanelHeight}
+          topOverlayPx={topOverlayPx}
           resetSeq={mapResetSeq}
         />
       </div>
@@ -162,6 +164,9 @@ export default function HomePage() {
         isSearchActive={isSearchActive}
         onSearchActiveChange={setIsSearchActive}
         onLogoClick={() => setMapResetSeq((v) => v + 1)}
+        onNotchBottomChange={(px) =>
+          setTopOverlayPx((prev) => (Math.abs(prev - px) >= 2 ? px : prev))
+        }
       />
 
       {/* Picking coords banner */}
@@ -203,7 +208,9 @@ export default function HomePage() {
             onRequestOpen={() => setShowFilters(true)}
             onRequestClose={() => setShowFilters(false)}
             filterCount={filterCount}
-            onPanelHeightChange={(h) => setFilterPanelHeight(h)}
+            onPanelHeightChange={(h) =>
+              setFilterPanelHeight((prev) => (Math.abs(prev - h) >= 2 ? h : prev))
+            }
           />
         </div>
       </div>

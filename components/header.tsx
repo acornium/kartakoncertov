@@ -22,6 +22,7 @@ interface HeaderProps {
   isSearchActive: boolean
   onSearchActiveChange: (active: boolean) => void
   onLogoClick?: () => void
+  onNotchBottomChange?: (px: number) => void
 }
 
 export function Header({
@@ -39,9 +40,14 @@ export function Header({
   isSearchActive,
   onSearchActiveChange,
   onLogoClick,
+  onNotchBottomChange,
 }: HeaderProps) {
   const searchInputRef = useRef<HTMLInputElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
+  const notchRef = useRef<HTMLDivElement>(null)
+  const lastNotchBottomRef = useRef<number>(-1)
+  const rafRef = useRef<number | null>(null)
+  const resizeTimerRef = useRef<number | null>(null)
 
   useEffect(() => {
     if (isSearchActive && searchInputRef.current) {
@@ -65,6 +71,51 @@ export function Header({
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [isSearchActive, query, onSearchActiveChange])
+
+  useEffect(() => {
+    if (!onNotchBottomChange) return
+
+    const measure = () => {
+      const notchBottom = notchRef.current?.getBoundingClientRect().bottom
+      const headerBottom = headerRef.current?.getBoundingClientRect().bottom
+      const next = Math.round(notchBottom ?? headerBottom ?? 0)
+      if (Math.abs(next - lastNotchBottomRef.current) < 2) return
+      lastNotchBottomRef.current = next
+      onNotchBottomChange(next)
+    }
+
+    const scheduleMeasure = () => {
+      if (rafRef.current !== null) return
+      rafRef.current = window.requestAnimationFrame(() => {
+        rafRef.current = null
+        measure()
+      })
+    }
+
+    const scheduleOnResize = () => {
+      if (resizeTimerRef.current !== null) {
+        window.clearTimeout(resizeTimerRef.current)
+      }
+      resizeTimerRef.current = window.setTimeout(() => {
+        resizeTimerRef.current = null
+        scheduleMeasure()
+      }, 150)
+    }
+
+    scheduleMeasure()
+    window.addEventListener("resize", scheduleOnResize)
+    return () => {
+      window.removeEventListener("resize", scheduleOnResize)
+      if (resizeTimerRef.current !== null) {
+        window.clearTimeout(resizeTimerRef.current)
+        resizeTimerRef.current = null
+      }
+      if (rafRef.current !== null) {
+        window.cancelAnimationFrame(rafRef.current)
+        rafRef.current = null
+      }
+    }
+  }, [onNotchBottomChange, isSearchActive, monthsLabel, selectedVenueName])
 
   return (
     <header 
@@ -138,21 +189,21 @@ export function Header({
         <AnimatePresence>
           {!isSearchActive && monthsLabel && (
             <div
+              ref={notchRef}
               className={cn(
-                "glass-slab relative rounded-b-2xl flex items-center justify-center whitespace-nowrap",
-                selectedVenueName ? "px-9 py-3" : "px-6 py-1.5"
+                "glass-slab relative rounded-b-2xl flex min-h-[40px] items-center justify-center whitespace-nowrap px-7 py-1.5"
               )}
             >
               <span
                 className={cn(
-                  "text-[13px] font-semibold tracking-wide text-foreground/85 truncate max-w-[60vw] transition-opacity",
+                  "text-[12px] font-semibold tracking-wide text-foreground/85 truncate max-w-[60vw] transition-opacity leading-tight",
                   selectedVenueName ? "absolute opacity-0 duration-0" : "opacity-100 duration-1000"
                 )}
               >
                 {monthsLabel}
               </span>
               {selectedVenueName && (
-                <span className="text-[17px] font-semibold tracking-wide text-foreground/85 truncate max-w-[78vw]">
+                <span className="text-[16px] font-semibold tracking-wide text-foreground/85 truncate max-w-[78vw] leading-tight">
                   {selectedVenueName}
                 </span>
               )}

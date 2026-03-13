@@ -126,7 +126,7 @@ body {
 
 @layer components {
   .glass-slab {
-    @apply bg-gradient-to-r from-background/95 via-background/60 to-transparent backdrop-blur-md border border-border/30 shadow-lg;
+    @apply bg-gradient-to-r from-background/85 via-background/35 to-transparent backdrop-blur-md border border-border/25 shadow-lg;
   }
 }
 
