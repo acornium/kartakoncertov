@@ -28,8 +28,8 @@ export const GENRE_COLORS: Record<Genre, string> = {
 
 export const MAP_CONFIG = {
   center: [37.6203, 55.7539] as [number, number], // Moscow center (Red Square area)
-  zoom: 11.5,
-  style: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+  zoom: 9.5,
+  style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
 }
 
 export const ADMIN_PASSWORD = "admin"
@@ -307,5 +307,29 @@ export const SEED_EVENTS: ConcertEvent[] = [
     price: 2000,
     priceMax: 5200,
     description: "Короткий ночной концерт в зале Зарядье",
+  },
+  {
+    id: "e15",
+    venueId: "v6",
+    title: "Центр. Акустика",
+    artist: "Квартет на Тверской",
+    genre: "folk",
+    date: "2026-03-13",
+    time: "19:30",
+    price: 1200,
+    priceMax: 2600,
+    description: "Тёплый акустический сет в центре",
+  },
+  {
+    id: "e16",
+    venueId: "v10",
+    title: "Вечер в Зарядье",
+    artist: "Solo Cello",
+    genre: "classical",
+    date: "2026-03-13",
+    time: "20:00",
+    price: 1800,
+    priceMax: 3600,
+    description: "Камерный вечер в самом центре",
   },
 ]

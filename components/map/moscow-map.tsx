@@ -21,6 +21,7 @@ interface MoscowMapProps {
   filteredEvents: ConcertEvent[]
   markerEvents?: ConcertEvent[]
   bottomOverlayPx?: number
+  resetSeq?: number
   dateFilterActive?: boolean
   selectedVenueId?: string
   onMapClick?: (e: { lng: number; lat: number }) => void
@@ -36,6 +37,7 @@ export function MoscowMap({
   filteredEvents,
   markerEvents,
   bottomOverlayPx = 0,
+  resetSeq = 0,
   dateFilterActive = false,
   selectedVenueId,
   onMapClick,
@@ -112,6 +114,16 @@ export function MoscowMap({
     })
   }, [selectedVenueId, venues])
 
+  useEffect(() => {
+    if (!resetSeq) return
+    mapRef.current?.flyTo({
+      center: MAP_CONFIG.center,
+      zoom: 8.8,
+      duration: 700,
+      essential: true,
+    })
+  }, [resetSeq])
+
   return (
     <div className="relative w-full h-full">
       <Map
@@ -171,25 +183,19 @@ export function MoscowMap({
               <button
                 className={cn(
                   "group relative flex h-10 w-10 items-center justify-center transition-all duration-300",
-                  selectedVenueId && !isSelected && "opacity-35"
+                  selectedVenueId && !isSelected && "opacity-65"
                 )}
                 aria-label={`${venue.name}: ${count} events`}
               >
                 {/* Circle marker */}
                 <span
                   className={cn(
-                    "relative flex h-6 w-6 items-center justify-center rounded-full transition-all duration-300 backdrop-blur-md border shadow-xl group-hover:scale-110 group-active:scale-90",
-                    isSelected
-                      ? "bg-primary text-primary-foreground border-primary/50 shadow-primary/40 scale-110 ring-4 ring-primary/10"
-                      : "bg-cyan-400/75 border-cyan-100/80 shadow-cyan-400/45 overflow-hidden"
+                    "relative flex h-6 w-6 items-center justify-center rounded-full transition-all duration-300 backdrop-blur-md border shadow-xl group-hover:scale-110 group-active:scale-90 overflow-hidden",
+                    "bg-cyan-400/75 border-cyan-100/80 shadow-cyan-400/45",
+                    isSelected && "scale-110 ring-2 ring-red-400/60"
                   )}
                 >
-                  {!isSelected && (
-                    <span className="absolute inset-0 bg-gradient-to-br from-white/45 via-white/15 to-transparent" />
-                  )}
-                  {isSelected && (
-                    <span className="absolute inset-0 rounded-full animate-[pulseGlow_3.2s_ease-in-out_infinite] shadow-[0_0_0_2px_rgba(255,255,255,0.25),0_0_20px_rgba(0,190,255,0.6)]" />
-                  )}
+                  <span className="absolute inset-0 bg-gradient-to-br from-white/45 via-white/15 to-transparent" />
                   <span className="h-2 w-2 rounded-full bg-white" />
                 </span>
 

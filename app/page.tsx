@@ -51,6 +51,7 @@ export default function HomePage() {
   const [pickingCoords, setPickingCoords] = useState(false)
   const [isSearchActive, setIsSearchActive] = useState(false)
   const [filterPanelHeight, setFilterPanelHeight] = useState(0)
+  const [mapResetSeq, setMapResetSeq] = useState(0)
 
   // Filtered events
   const filteredEvents = useFilteredEvents(events, filters, venues)
@@ -141,6 +142,7 @@ export default function HomePage() {
           showFilters={showFilters}
           isSearchActive={isSearchActive}
           bottomOverlayPx={filterPanelHeight}
+          resetSeq={mapResetSeq}
         />
       </div>
 
@@ -159,6 +161,7 @@ export default function HomePage() {
         selectedVenueName={selectedVenueName}
         isSearchActive={isSearchActive}
         onSearchActiveChange={setIsSearchActive}
+        onLogoClick={() => setMapResetSeq((v) => v + 1)}
       />
 
       {/* Picking coords banner */}

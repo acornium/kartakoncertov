@@ -21,6 +21,7 @@ interface HeaderProps {
   selectedVenueName?: string
   isSearchActive: boolean
   onSearchActiveChange: (active: boolean) => void
+  onLogoClick?: () => void
 }
 
 export function Header({
@@ -37,6 +38,7 @@ export function Header({
   selectedVenueName,
   isSearchActive,
   onSearchActiveChange,
+  onLogoClick,
 }: HeaderProps) {
   const searchInputRef = useRef<HTMLInputElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
@@ -71,7 +73,10 @@ export function Header({
     >
       <div className="pointer-events-auto flex flex-1 items-center gap-2 overflow-hidden">
         <div className="relative flex-1 min-w-0">
-          <motion.div
+          <motion.button
+            type="button"
+            onClick={onLogoClick}
+            aria-label="Карта Москвы"
             className="flex items-center pointer-events-auto shrink-0"
             animate={
               !isSearchActive && !query && !selectedVenueName
@@ -88,7 +93,7 @@ export function Header({
               className="h-7 w-7 object-contain brightness-100"
               priority
             />
-          </motion.div>
+          </motion.button>
 
           <motion.div
             className={cn(
