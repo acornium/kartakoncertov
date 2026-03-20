@@ -5,7 +5,7 @@ import { FilterIcon, ShieldIcon, MusicIcon, XIcon, Search as SearchIcon } from "
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, useRef, useEffect } from "react"
-import { cn } from "@/lib/utils"
+import { cn, assetPath } from "@/lib/utils"
 
 interface HeaderProps {
   isAdmin: boolean
@@ -137,7 +137,7 @@ export function Header({
             transition={{ duration: 0.1, ease: "linear" }}
           >
             <Image
-              src="/logo.png"
+              src={assetPath("/logo.png")}
               alt="Logo"
               width={28}
               height={28}

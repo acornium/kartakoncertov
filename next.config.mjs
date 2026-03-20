@@ -1,12 +1,17 @@
 /** @type {import('next').NextConfig} */
+const basePath = '/kartakoncertov'
+
 const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
   output: 'export',
   trailingSlash: true,
-  basePath: '/kartakoncertov',
-  assetPrefix: '/kartakoncertov',
+  basePath,
+  assetPrefix: basePath,
+  env: {
+    NEXT_PUBLIC_BASE_PATH: basePath,
+  },
   images: {
     unoptimized: true,
   },

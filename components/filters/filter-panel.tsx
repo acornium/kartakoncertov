@@ -27,7 +27,7 @@ import {
   MapPinIcon,
   XIcon,
 } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { cn, assetPath } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { addDays, differenceInCalendarDays, format } from "date-fns"
 import { ru } from "date-fns/locale"
@@ -457,7 +457,7 @@ export function FilterPanel({
                   />
                   <div className="relative mb-4 h-32 w-full overflow-hidden rounded-2xl border border-border/20 bg-muted/60 md:h-40">
                     <Image
-                      src="/mock-event.jpg"
+                      src={assetPath("/mock-event.jpg")}
                       alt="Фото события"
                       fill
                       className="object-cover object-center"
