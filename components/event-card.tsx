@@ -104,7 +104,7 @@ export function EventCard({ event, venueName, compact, selectedDate, selectedGen
       {/* Right Column: Meta Info */}
       <div className="flex shrink-0 flex-col items-end justify-between self-stretch text-right">
         {venueName && (
-          <p className="truncate text-[12px] font-medium text-muted-foreground/70">
+          <p className="max-w-[140px] sm:max-w-[180px] whitespace-normal break-words text-balance text-[12px] font-medium leading-tight text-muted-foreground/70 line-clamp-2">
             {venueName}
           </p>
         )}
