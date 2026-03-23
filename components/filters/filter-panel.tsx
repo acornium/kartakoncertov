@@ -80,9 +80,14 @@ export function FilterPanel({
   const [renderedEvent, setRenderedEvent] = useState<ConcertEvent | null>(null)
   const closeTimerRef = useRef<number | null>(null)
   const dragStartYRef = useRef<number | null>(null)
+  const dragStartTimeRef = useRef<number | null>(null)
+  const lastMoveYRef = useRef<number | null>(null)
+  const lastMoveTimeRef = useRef<number | null>(null)
+  const dragArmedRef = useRef(false)
   const draggingRef = useRef(false)
   const [dragOffset, setDragOffset] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
+  const touchActiveRef = useRef(false)
 
   useEffect(() => {
     const node = localPanelRef.current
@@ -100,6 +105,17 @@ export function FilterPanel({
       setPortalEl(document.body)
     }
   }, [])
+
+  useEffect(() => {
+    if (typeof document === "undefined") return
+    if (!renderedEvent) return
+    document.body.classList.add("event-sheet-open")
+    document.documentElement.classList.add("event-sheet-open")
+    return () => {
+      document.body.classList.remove("event-sheet-open")
+      document.documentElement.classList.remove("event-sheet-open")
+    }
+  }, [renderedEvent])
   const isClient = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -250,6 +266,12 @@ export function FilterPanel({
     setSheetVisible(false)
     setDragOffset(0)
     setIsDragging(false)
+    dragStartYRef.current = null
+    dragStartTimeRef.current = null
+    lastMoveYRef.current = null
+    lastMoveTimeRef.current = null
+    dragArmedRef.current = false
+    touchActiveRef.current = false
     if (closeTimerRef.current !== null) {
       window.clearTimeout(closeTimerRef.current)
     }
@@ -274,27 +296,126 @@ export function FilterPanel({
     return () => window.cancelAnimationFrame(id)
   }, [activeEvent])
 
-  const handleSheetPointerDown = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
+  const handleSheetPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (touchActiveRef.current) return
+    const rect = e.currentTarget.getBoundingClientRect()
+    const isTopHalf = e.clientY <= rect.top + rect.height / 2
+    if (!isTopHalf) return
+    dragArmedRef.current = true
     dragStartYRef.current = e.clientY
-    draggingRef.current = true
-    setIsDragging(true)
+    dragStartTimeRef.current = e.timeStamp
+    lastMoveYRef.current = e.clientY
+    lastMoveTimeRef.current = e.timeStamp
+    draggingRef.current = false
+    setIsDragging(false)
     setDragOffset(0)
     e.currentTarget.setPointerCapture(e.pointerId)
   }, [])
 
-  const handleSheetPointerMove = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
-    if (!draggingRef.current || dragStartYRef.current === null) return
+  const handleSheetPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (touchActiveRef.current) return
+    if (!dragArmedRef.current || dragStartYRef.current === null) return
     const dy = e.clientY - dragStartYRef.current
-    setDragOffset(dy > 0 ? dy : 0)
+    if (!draggingRef.current && dy > 4) {
+      draggingRef.current = true
+      setIsDragging(true)
+    }
+    if (draggingRef.current) {
+      setDragOffset(dy > 0 ? dy : 0)
+    }
+    lastMoveYRef.current = e.clientY
+    lastMoveTimeRef.current = e.timeStamp
   }, [])
 
-  const handleSheetPointerEnd = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
-    if (!draggingRef.current) return
-    draggingRef.current = false
+  const handleSheetPointerEnd = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (touchActiveRef.current) return
+    if (!dragArmedRef.current) return
+    dragArmedRef.current = false
     dragStartYRef.current = null
+    dragStartTimeRef.current = null
     setIsDragging(false)
     e.currentTarget.releasePointerCapture(e.pointerId)
-    if (dragOffset > 80) {
+    if (!draggingRef.current) {
+      setDragOffset(0)
+      draggingRef.current = false
+      lastMoveYRef.current = null
+      lastMoveTimeRef.current = null
+      return
+    }
+    const lastY = lastMoveYRef.current ?? e.clientY
+    const lastT = lastMoveTimeRef.current ?? e.timeStamp
+    const dt = Math.max(1, e.timeStamp - lastT)
+    const v = (e.clientY - lastY) / dt // px per ms
+    lastMoveYRef.current = null
+    lastMoveTimeRef.current = null
+    draggingRef.current = false
+
+    if (dragOffset > 40 || v > 0.6) {
+      closeSheet()
+      return
+    }
+    setDragOffset(0)
+  }, [closeSheet, dragOffset])
+
+  const handleSheetTouchStart = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const touch = e.touches[0]
+    if (!touch) return
+    const isTopHalf = touch.clientY <= rect.top + rect.height / 2
+    if (!isTopHalf) return
+    touchActiveRef.current = true
+    dragArmedRef.current = true
+    dragStartYRef.current = touch.clientY
+    dragStartTimeRef.current = e.timeStamp
+    lastMoveYRef.current = touch.clientY
+    lastMoveTimeRef.current = e.timeStamp
+    draggingRef.current = false
+    setIsDragging(false)
+    setDragOffset(0)
+  }, [])
+
+  const handleSheetTouchMove = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    if (!dragArmedRef.current || dragStartYRef.current === null) return
+    const touch = e.touches[0]
+    if (!touch) return
+    const dy = touch.clientY - dragStartYRef.current
+    if (!draggingRef.current && dy > 4) {
+      draggingRef.current = true
+      setIsDragging(true)
+    }
+    if (draggingRef.current) {
+      e.preventDefault()
+      setDragOffset(dy > 0 ? dy : 0)
+    }
+    lastMoveYRef.current = touch.clientY
+    lastMoveTimeRef.current = e.timeStamp
+  }, [])
+
+  const handleSheetTouchEnd = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    if (!dragArmedRef.current) return
+    dragArmedRef.current = false
+    touchActiveRef.current = false
+    dragStartYRef.current = null
+    dragStartTimeRef.current = null
+    setIsDragging(false)
+    if (!draggingRef.current) {
+      setDragOffset(0)
+      draggingRef.current = false
+      lastMoveYRef.current = null
+      lastMoveTimeRef.current = null
+      return
+    }
+    const touch = e.changedTouches[0]
+    const endY = touch ? touch.clientY : 0
+    const lastY = lastMoveYRef.current ?? endY
+    const lastT = lastMoveTimeRef.current ?? e.timeStamp
+    const dt = Math.max(1, e.timeStamp - lastT)
+    const v = (endY - lastY) / dt // px per ms
+    lastMoveYRef.current = null
+    lastMoveTimeRef.current = null
+    draggingRef.current = false
+
+    if (dragOffset > 40 || v > 0.6) {
       closeSheet()
       return
     }
@@ -435,7 +556,7 @@ export function FilterPanel({
             />
             <div
               className={cn(
-                "absolute bottom-0 left-0 right-0 mx-auto w-full max-w-xl rounded-t-3xl border border-border/20 bg-background p-5 shadow-xl md:relative md:bottom-auto md:rounded-3xl max-h-[80vh] overflow-y-auto transform-gpu will-change-transform",
+                "absolute bottom-0 left-0 right-0 mx-auto w-full max-w-xl rounded-t-3xl border border-border/20 bg-background p-5 shadow-xl md:relative md:bottom-auto md:rounded-3xl max-h-[80vh] overflow-y-auto overscroll-contain touch-pan-y transform-gpu will-change-transform",
                 !isDragging && "transition-transform duration-240 ease-linear"
               )}
               style={{
@@ -443,15 +564,19 @@ export function FilterPanel({
                   ? `translateY(${dragOffset}px)`
                   : "translateY(100%)",
               }}
+              onPointerDown={handleSheetPointerDown}
+              onPointerMove={handleSheetPointerMove}
+              onPointerUp={handleSheetPointerEnd}
+              onPointerCancel={handleSheetPointerEnd}
+              onTouchStart={handleSheetTouchStart}
+              onTouchMove={handleSheetTouchMove}
+              onTouchEnd={handleSheetTouchEnd}
+              onTouchCancel={handleSheetTouchEnd}
               onClick={(e) => e.stopPropagation()}
             >
                   <button
                     type="button"
                     onClick={closeSheet}
-                    onPointerDown={handleSheetPointerDown}
-                    onPointerMove={handleSheetPointerMove}
-                    onPointerUp={handleSheetPointerEnd}
-                    onPointerCancel={handleSheetPointerEnd}
                     className="absolute left-1/2 top-2 z-10 h-1 w-14 -translate-x-1/2 rounded-full bg-black/35 shadow-[0_1px_0_rgba(255,255,255,0.5)] touch-none select-none"
                     aria-label="Закрыть"
                   />
@@ -529,3 +654,4 @@ export function FilterPanel({
     </div>
   )
 }
+

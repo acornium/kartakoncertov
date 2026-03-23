@@ -124,6 +124,15 @@ body {
 }
 }
 
+html.event-sheet-open,
+body.event-sheet-open {
+  overscroll-behavior-y: contain;
+}
+
+body.event-sheet-open {
+  overflow: hidden;
+}
+
 @layer components {
   .glass-slab {
     @apply bg-background/3 backdrop-blur-md border border-border/25 shadow-lg;
