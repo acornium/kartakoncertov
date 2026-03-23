@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const basePath = '/kartakoncertov'
+const basePath = process.env.NODE_ENV === "production" ? "/kartakoncertov" : ""
 
 const nextConfig = {
   typescript: {
