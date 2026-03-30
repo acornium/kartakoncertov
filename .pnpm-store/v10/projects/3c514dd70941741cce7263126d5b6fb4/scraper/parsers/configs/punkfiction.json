@@ -1,0 +1,14 @@
+{
+  "site_name": "punkfiction",
+  "venue": "Punk Fiction",
+  "url": "https://punkfiction.ru/shows/api",
+  "type": "json_api",
+  "json_fields": {
+    "title": "title",
+    "date": "date",
+    "link": "link",
+    "image": "image",
+    "description": "description"
+  },
+  "rate_limit_seconds": 1.0
+}

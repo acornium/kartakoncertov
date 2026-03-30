@@ -1,0 +1,20 @@
+packages:
+  "framer-motion": "Smooth entry animations and micro-interactions for cards"
+  "date-fns": "Formatting event dates nicely"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility to merge tailwind classes safely"
+  "@radix-ui/react-dialog": "Accessible modal dialogs for logs"
+  "@radix-ui/react-select": "Accessible select dropdowns for filtering"
+
+images:
+  - path: "artifacts/scraper-ui/public/images/hero-bg.png"
+    description: "Dark, moody concert hall atmosphere with deep purple and electric blue neon laser lights cutting through atmospheric fog, highly cinematic and premium"
+    aspect_ratio: "16:9"
+  - path: "artifacts/scraper-ui/public/images/empty-state.png"
+    description: "Abstract minimal 3d render of a disconnected audio cable or silent speaker cone in dark neon lighting"
+    aspect_ratio: "1:1"
+
+notes:
+  - "Backend is at /scraper-api, directly accessible via proxy."
+  - "No auth required."
+  - "Theme is forced dark mode for a concert/nightclub vibe."

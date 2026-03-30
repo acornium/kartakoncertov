@@ -1,0 +1,89 @@
+2026-03-30 10:02:17 [INFO] site.grafit: Загружаем страницу: https://graphite.moscow/#events
+2026-03-30 10:02:17 [DEBUG] site.grafit: Rate limit: пауза 1.0 сек перед запросом
+2026-03-30 10:02:18 [DEBUG] site.grafit: Попытка 1/3: GET https://graphite.moscow/#events
+2026-03-30 10:02:20 [DEBUG] site.grafit: Успешно загружено (323614 байт)
+2026-03-30 10:02:20 [INFO] site.grafit: Найдено блоков событий: 13
+2026-03-30 10:02:20 [DEBUG] site.grafit: Скачивание изображения (попытка 1/3): https://graphite.moscow/posters-2/xxxmanera.jpg
+2026-03-30 10:02:21 [INFO] site.grafit: Изображение сохранено: /home/runner/workspace/scraper/images/grafit/XXXMANERA_2b12097a.jpg (181678 байт)
+2026-03-30 10:02:21 [DEBUG] site.grafit: Скачивание изображения (попытка 1/3): https://graphite.moscow/posters-2/soundcloud.jpg
+2026-03-30 10:02:22 [INFO] site.grafit: Изображение сохранено: /home/runner/workspace/scraper/images/grafit/Soundcloud_Weekend_3e1ffdae.jpg (232110 байт)
+2026-03-30 10:02:24 [WARNING] site.grafit: Не удалось распознать дату: 'с 3 по 5 апреля'
+2026-03-30 10:02:24 [DEBUG] site.grafit: Скачивание изображения (попытка 1/3): https://graphite.moscow/posters-2/caribe.jpg
+2026-03-30 10:02:25 [INFO] site.grafit: Изображение сохранено: /home/runner/workspace/scraper/images/grafit/CARIBE_FLOW_FEST_b2b3fea2.jpg (227457 байт)
+2026-03-30 10:02:25 [DEBUG] site.grafit: Скачивание изображения (попытка 1/3): https://graphite.moscow/posters-2/karizma.jpg
+2026-03-30 10:02:26 [INFO] site.grafit: Изображение сохранено: /home/runner/workspace/scraper/images/grafit/CALL_ME_KARIZMA_80b27954.jpg (220361 байт)
+2026-03-30 10:02:26 [DEBUG] site.grafit: Скачивание изображения (попытка 1/3): https://graphite.moscow/posters-2/guitarlands.jpg
+2026-03-30 10:02:27 [INFO] site.grafit: Изображение сохранено: /home/runner/workspace/scraper/images/grafit/ELECTRIC_GUITARLANDS_1715ad0a.jpg (325813 байт)
+2026-03-30 10:02:27 [DEBUG] site.grafit: Скачивание изображения (попытка 1/3): https://graphite.moscow/posters-2/pussykiller.jpg
+2026-03-30 10:02:28 [INFO] site.grafit: Изображение сохранено: /home/runner/workspace/scraper/images/grafit/PUSSYKILLER_6647d145.jpg (80162 байт)
+2026-03-30 10:02:28 [DEBUG] site.grafit: Скачивание изображения (попытка 1/3): https://graphite.moscow/posters-2/teppo.jpg
+2026-03-30 10:02:29 [INFO] site.grafit: Изображение сохранено: /home/runner/workspace/scraper/images/grafit/ТЕППО_2ef7000f.jpg (138840 байт)
+2026-03-30 10:02:29 [DEBUG] site.grafit: Скачивание изображения (попытка 1/3): https://graphite.moscow/posters-2/terelya.jpg
+2026-03-30 10:02:30 [INFO] site.grafit: Изображение сохранено: /home/runner/workspace/scraper/images/grafit/TERELYA_Весенний_концерт_e0385c8e.jpg (190337 байт)
+2026-03-30 10:02:30 [DEBUG] site.grafit: Скачивание изображения (попытка 1/3): https://graphite.moscow/posters-2/john.jpg
+2026-03-30 10:02:31 [INFO] site.grafit: Изображение сохранено: /home/runner/workspace/scraper/images/grafit/Джон_Гарик_50ca325e.jpg (70005 байт)
+2026-03-30 10:02:31 [DEBUG] site.grafit: Скачивание изображения (попытка 1/3): https://graphite.moscow/posters-2/horus.jpg
+2026-03-30 10:02:32 [INFO] site.grafit: Изображение сохранено: /home/runner/workspace/scraper/images/grafit/Horus_d49bfdea.jpg (102424 байт)
+2026-03-30 10:02:32 [DEBUG] site.grafit: Скачивание изображения (попытка 1/3): https://graphite.moscow/posters-2/festival-snovidenii.jpg
+2026-03-30 10:02:34 [INFO] site.grafit: Изображение сохранено: /home/runner/workspace/scraper/images/grafit/Фестиваль_сновидений_a3489854.jpg (174324 байт)
+2026-03-30 10:02:34 [DEBUG] site.grafit: Скачивание изображения (попытка 1/3): https://graphite.moscow/posters-2/madstream-fest.jpg
+2026-03-30 10:02:35 [INFO] site.grafit: Изображение сохранено: /home/runner/workspace/scraper/images/grafit/Madstream_Fest_0971650e.jpg (334039 байт)
+2026-03-30 10:02:35 [DEBUG] site.grafit: Скачивание изображения (попытка 1/3): https://graphite.moscow/posters-2/kvartirnik.jpg
+2026-03-30 10:02:36 [INFO] site.grafit: Изображение сохранено: /home/runner/workspace/scraper/images/grafit/Квартирник_в_Москве_6a3454b7.jpg (125134 байт)
+2026-03-30 10:02:36 [INFO] site.grafit: Успешно разобрано событий: 13
+2026-03-30 22:54:10 [INFO] site.grafit: Загружаем страницу: https://graphite.moscow/#events
+2026-03-30 22:54:10 [DEBUG] site.grafit: Rate limit: пауза 1.0 сек перед запросом
+2026-03-30 22:54:11 [DEBUG] site.grafit: Попытка 1/3: GET https://graphite.moscow/#events
+2026-03-30 22:54:13 [DEBUG] site.grafit: Успешно загружено (319510 байт)
+2026-03-30 22:54:13 [INFO] site.grafit: Найдено блоков событий: 12
+2026-03-30 22:54:13 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Soundcloud_Weekend_3e1ffdae.jpg
+2026-03-30 22:54:16 [WARNING] site.grafit: Не удалось распознать дату: 'с 3 по 5 апреля'
+2026-03-30 22:54:16 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\CARIBE_FLOW_FEST_b2b3fea2.jpg
+2026-03-30 22:54:16 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\CALL_ME_KARIZMA_80b27954.jpg
+2026-03-30 22:54:16 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\ELECTRIC_GUITARLANDS_1715ad0a.jpg
+2026-03-30 22:54:16 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\PUSSYKILLER_6647d145.jpg
+2026-03-30 22:54:16 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\ТЕППО_2ef7000f.jpg
+2026-03-30 22:54:16 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\TERELYA_Весенний_концерт_e0385c8e.jpg
+2026-03-30 22:54:16 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Джон_Гарик_50ca325e.jpg
+2026-03-30 22:54:16 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Horus_d49bfdea.jpg
+2026-03-30 22:54:16 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Фестиваль_сновидений_a3489854.jpg
+2026-03-30 22:54:16 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Madstream_Fest_0971650e.jpg
+2026-03-30 22:54:16 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Квартирник_в_Москве_6a3454b7.jpg
+2026-03-30 22:54:16 [INFO] site.grafit: Успешно разобрано событий: 12
+2026-03-30 23:07:32 [WARNING] site.grafit: Не удалось распознать дату: 'с 3 по 5 апреля'
+2026-03-30 23:28:38 [INFO] site.grafit: Загружаем страницу: https://graphite.moscow/#events
+2026-03-30 23:28:38 [DEBUG] site.grafit: Rate limit: пауза 1.0 сек перед запросом
+2026-03-30 23:28:39 [DEBUG] site.grafit: Попытка 1/3: GET https://graphite.moscow/#events
+2026-03-30 23:28:40 [DEBUG] site.grafit: Успешно загружено (319510 байт)
+2026-03-30 23:28:40 [INFO] site.grafit: Найдено блоков событий: 12
+2026-03-30 23:28:40 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Soundcloud_Weekend_3e1ffdae.jpg
+2026-03-30 23:28:40 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\CARIBE_FLOW_FEST_b2b3fea2.jpg
+2026-03-30 23:28:40 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\CALL_ME_KARIZMA_80b27954.jpg
+2026-03-30 23:28:40 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\ELECTRIC_GUITARLANDS_1715ad0a.jpg
+2026-03-30 23:28:40 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\PUSSYKILLER_6647d145.jpg
+2026-03-30 23:28:40 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\ТЕППО_2ef7000f.jpg
+2026-03-30 23:28:40 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\TERELYA_Весенний_концерт_e0385c8e.jpg
+2026-03-30 23:28:40 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Джон_Гарик_50ca325e.jpg
+2026-03-30 23:28:40 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Horus_d49bfdea.jpg
+2026-03-30 23:28:40 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Фестиваль_сновидений_a3489854.jpg
+2026-03-30 23:28:40 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Madstream_Fest_0971650e.jpg
+2026-03-30 23:28:40 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Квартирник_в_Москве_6a3454b7.jpg
+2026-03-30 23:28:40 [INFO] site.grafit: Успешно разобрано событий: 14
+2026-03-30 23:29:41 [INFO] site.grafit: Загружаем страницу: https://graphite.moscow/#events
+2026-03-30 23:29:41 [DEBUG] site.grafit: Rate limit: пауза 1.0 сек перед запросом
+2026-03-30 23:29:42 [DEBUG] site.grafit: Попытка 1/3: GET https://graphite.moscow/#events
+2026-03-30 23:29:43 [DEBUG] site.grafit: Успешно загружено (319510 байт)
+2026-03-30 23:29:43 [INFO] site.grafit: Найдено блоков событий: 12
+2026-03-30 23:29:43 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Soundcloud_Weekend_3e1ffdae.jpg
+2026-03-30 23:29:43 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\CARIBE_FLOW_FEST_b2b3fea2.jpg
+2026-03-30 23:29:43 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\CALL_ME_KARIZMA_80b27954.jpg
+2026-03-30 23:29:43 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\ELECTRIC_GUITARLANDS_1715ad0a.jpg
+2026-03-30 23:29:43 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\PUSSYKILLER_6647d145.jpg
+2026-03-30 23:29:43 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\ТЕППО_2ef7000f.jpg
+2026-03-30 23:29:43 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\TERELYA_Весенний_концерт_e0385c8e.jpg
+2026-03-30 23:29:43 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Джон_Гарик_50ca325e.jpg
+2026-03-30 23:29:43 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Horus_d49bfdea.jpg
+2026-03-30 23:29:43 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Фестиваль_сновидений_a3489854.jpg
+2026-03-30 23:29:43 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Madstream_Fest_0971650e.jpg
+2026-03-30 23:29:43 [DEBUG] site.grafit: Изображение уже существует: C:\Users\acorn\Desktop\kartakoncertovs\Event-Collector\scraper\images\grafit\Квартирник_в_Москве_6a3454b7.jpg
+2026-03-30 23:29:43 [INFO] site.grafit: Успешно разобрано событий: 14

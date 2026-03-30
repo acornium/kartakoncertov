@@ -1,0 +1,14 @@
+{
+  "site_name": "grafit",
+  "venue": "Графит",
+  "url": "https://graphite.moscow/#events",
+  "rate_limit_seconds": 1.0,
+  "list_selector": ".event-article",
+  "fields": {
+    "title": "header",
+    "date": ".date-label",
+    "link": ".nav-link",
+    "image": ".poster",
+    "description": ".article-text"
+  }
+}
