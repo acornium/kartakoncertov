@@ -5,6 +5,10 @@ __v0_jsx-dev-runtime.ts
 
 # Common ignores
 node_modules/
+.pnpm-store/
 .next/
 .env*.local
 .DS_Store
+tsconfig.tsbuildinfo
+Event-Collector/scraper/logs/
+Event-Collector/scraper/images/
