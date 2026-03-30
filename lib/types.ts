@@ -17,6 +17,7 @@ export interface Venue {
   longitude: number
   capacity?: number
   description?: string
+  isPending?: boolean
 }
 
 export interface ConcertEvent {
@@ -30,6 +31,9 @@ export interface ConcertEvent {
   price: number
   priceMax?: number
   description?: string
+  link?: string
+  imageUrl?: string
+  source?: string
 }
 
 export interface Filters {

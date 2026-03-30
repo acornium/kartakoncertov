@@ -24,16 +24,18 @@ export function VenueForm({
 }: VenueFormProps) {
   const [name, setName] = useState(venue?.name || "")
   const [address, setAddress] = useState(venue?.address || "")
-  const [latitude, setLatitude] = useState(venue?.latitude?.toString() || "")
-  const [longitude, setLongitude] = useState(venue?.longitude?.toString() || "")
+  const [coords, setCoords] = useState(
+    venue?.latitude !== undefined && venue?.longitude !== undefined
+      ? `${venue.latitude.toFixed(6)}, ${venue.longitude.toFixed(6)}`
+      : ""
+  )
   const [capacity, setCapacity] = useState(venue?.capacity?.toString() || "")
   const [description, setDescription] = useState(venue?.description || "")
 
   // Listen for coord pick events
   useEffect(() => {
     const handler = (e: CustomEvent<{ lat: number; lng: number }>) => {
-      setLatitude(e.detail.lat.toFixed(6))
-      setLongitude(e.detail.lng.toFixed(6))
+      setCoords(`${e.detail.lat.toFixed(6)}, ${e.detail.lng.toFixed(6)}`)
     }
     window.addEventListener("coord-picked" as string, handler as EventListener)
     return () =>
@@ -45,12 +47,17 @@ export function VenueForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!name || !address || !latitude || !longitude) return
+    if (!name || !address || !coords) return
+    const parts = coords.split(",").map((p) => p.trim()).filter(Boolean)
+    if (parts.length !== 2) return
+    const lat = parseFloat(parts[0])
+    const lng = parseFloat(parts[1])
+    if (Number.isNaN(lat) || Number.isNaN(lng)) return
     onSubmit({
       name,
       address,
-      latitude: parseFloat(latitude),
-      longitude: parseFloat(longitude),
+      latitude: lat,
+      longitude: lng,
       capacity: capacity ? parseInt(capacity) : undefined,
       description: description || undefined,
     })
@@ -104,19 +111,9 @@ export function VenueForm({
         </div>
         <div className="flex gap-2">
           <Input
-            value={latitude}
-            onChange={(e) => setLatitude(e.target.value)}
-            placeholder="Широта"
-            type="number"
-            step="any"
-            required
-          />
-          <Input
-            value={longitude}
-            onChange={(e) => setLongitude(e.target.value)}
-            placeholder="Долгота"
-            type="number"
-            step="any"
+            value={coords}
+            onChange={(e) => setCoords(e.target.value)}
+            placeholder="55.751244, 37.618423"
             required
           />
         </div>

@@ -34,6 +34,12 @@ import { ru } from "date-fns/locale"
 import { EventCard } from "@/components/event-card"
 
 const MAX_DAYS_AHEAD = 14
+const DEFAULT_SCRAPER_BASE =
+  process.env.NEXT_PUBLIC_SCRAPER_API_BASE ?? "http://localhost:8081/scraper-api"
+
+function normalizeText(value?: string | null) {
+  return (value ?? "").trim().toLowerCase()
+}
 
 function formatDatePill(date: Date) {
   const weekday = format(date, "EEEEEE", { locale: ru })
@@ -78,6 +84,7 @@ export function FilterPanel({
   const [portalEl, setPortalEl] = useState<HTMLElement | null>(null)
   const [sheetVisible, setSheetVisible] = useState(false)
   const [renderedEvent, setRenderedEvent] = useState<ConcertEvent | null>(null)
+  const [scraperDescriptions, setScraperDescriptions] = useState<Record<string, string>>({})
   const closeTimerRef = useRef<number | null>(null)
   const dragStartYRef = useRef<number | null>(null)
   const dragStartTimeRef = useRef<number | null>(null)
@@ -261,6 +268,9 @@ export function FilterPanel({
     () => events.find((event) => event.id === activeEventId) ?? null,
     [events, activeEventId]
   )
+  const renderedEventDescription = renderedEvent
+    ? renderedEvent.description?.trim() || scraperDescriptions[renderedEvent.id]
+    : undefined
 
   const closeSheet = useCallback(() => {
     setSheetVisible(false)
@@ -295,6 +305,72 @@ export function FilterPanel({
     const id = window.requestAnimationFrame(() => setSheetVisible(true))
     return () => window.cancelAnimationFrame(id)
   }, [activeEvent])
+
+  useEffect(() => {
+    if (!renderedEvent) return
+    const existingDescription = renderedEvent.description?.trim()
+    if (existingDescription) return
+    if (scraperDescriptions[renderedEvent.id]) return
+
+    const venueName = venues.find((venue) => venue.id === renderedEvent.venueId)?.name
+    if (!venueName) return
+
+    const controller = new AbortController()
+
+    void (async () => {
+      try {
+        const response = await fetch(
+          `${DEFAULT_SCRAPER_BASE}/events?limit=500&offset=0`,
+          { signal: controller.signal }
+        )
+        if (!response.ok) return
+
+        const data = (await response.json()) as {
+          events?: Array<{
+            title?: string | null
+            date?: string | null
+            venue?: string | null
+            description?: string | null
+          }>
+        }
+
+        const matchingEvents =
+          data.events?.filter(
+            (event) =>
+              normalizeText(event.title) === normalizeText(renderedEvent.title) &&
+              Boolean(event.description?.trim())
+          ) ?? []
+
+        const matchByTitleDateVenue = matchingEvents.find((event) => {
+          const eventDate = (event.date ?? "").trim().slice(0, 10)
+          return (
+            eventDate === renderedEvent.date &&
+            normalizeText(event.venue) === normalizeText(venueName)
+          )
+        })
+
+        const matchByTitleDate = matchingEvents.find((event) => {
+          const eventDate = (event.date ?? "").trim().slice(0, 10)
+          return eventDate === renderedEvent.date
+        })
+
+        const match = matchByTitleDateVenue ?? matchByTitleDate ?? matchingEvents[0]
+
+        if (!match?.description?.trim()) return
+
+        setScraperDescriptions((prev) => ({
+          ...prev,
+          [renderedEvent.id]: match.description!.trim(),
+        }))
+      } catch (error) {
+        if ((error as Error).name !== "AbortError") {
+          // Ignore fetch failures and keep the local fallback text.
+        }
+      }
+    })()
+
+    return () => controller.abort()
+  }, [renderedEvent, scraperDescriptions, venues])
 
   const handleSheetPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (touchActiveRef.current) return
@@ -581,13 +657,22 @@ export function FilterPanel({
                     aria-label="Закрыть"
                   />
                   <div className="relative mb-4 h-32 w-full overflow-hidden rounded-2xl border border-border/20 bg-muted/60 md:h-40">
-                    <Image
-                      src={assetPath("/mock-event.jpg")}
-                      alt="Фото события"
-                      fill
-                      className="object-cover object-center"
-                      priority
-                    />
+                    {renderedEvent.imageUrl ? (
+                      <img
+                        src={renderedEvent.imageUrl}
+                        alt={renderedEvent.title}
+                        className="h-full w-full object-cover object-center"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <Image
+                        src={assetPath("/mock-event.jpg")}
+                        alt="???? ???????"
+                        fill
+                        className="object-cover object-center"
+                        priority
+                      />
+                    )}
                   </div>
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
@@ -635,7 +720,7 @@ export function FilterPanel({
 
               <div className="mt-3">
                 <p className="text-sm text-muted-foreground">
-                  {renderedEvent.description ?? "Описание появится позже."}
+                  {renderedEventDescription ?? "Описание появится позже."}
                 </p>
               </div>
 
@@ -643,9 +728,13 @@ export function FilterPanel({
                 <div className="text-base font-semibold text-foreground">
                   {renderedEvent.price.toLocaleString("ru-RU")} ₽
                 </div>
-                <Button type="button" className="rounded-full px-6">
-                  Купить билет
-                </Button>
+                {renderedEvent.link ? (
+                  <Button type="button" className="rounded-full px-6" asChild>
+                    <a href={renderedEvent.link} target="_blank" rel="noreferrer">
+                      Подробнее
+                    </a>
+                  </Button>
+                ) : null}
               </div>
             </div>
           </div>,

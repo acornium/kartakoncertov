@@ -46,6 +46,11 @@ export function VenueList({ venues, events, onEdit, onDelete }: VenueListProps) 
                     ? "мероприятия"
                     : "мероприятий"}
               </p>
+              {venue.isPending && (
+                <p className="mt-0.5 text-[10px] text-amber-500">
+                  Нужны координаты
+                </p>
+              )}
             </div>
             <div className="flex items-center gap-1">
               <Button

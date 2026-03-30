@@ -99,7 +99,7 @@ export function AdminPanel({
                   venue={editingVenue}
                   onSubmit={(data) => {
                     if (editingVenue) {
-                      onUpdateVenue(editingVenue.id, data)
+                      onUpdateVenue(editingVenue.id, { ...data, isPending: false })
                     } else {
                       onAddVenue(data)
                     }

@@ -1,10 +1,16 @@
 "use client"
 
-import { useState, useCallback, useMemo } from "react"
+import { useState, useCallback, useMemo, useEffect, useRef } from "react"
 import dynamic from "next/dynamic"
 import type { Filters } from "@/lib/types"
-import { useVenues, useEvents, useFilteredEvents } from "@/lib/store"
-import { DEFAULT_FILTERS, getTodayISO } from "@/lib/constants"
+import {
+  useVenues,
+  useEvents,
+  useFilteredEvents,
+  useScraperEvents,
+  mergeEvents,
+} from "@/lib/store"
+import { DEFAULT_FILTERS, getTodayISO, MAP_CONFIG } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 import { Header } from "@/components/header"
 import { FilterPanel } from "@/components/filters/filter-panel"
@@ -39,6 +45,39 @@ export default function HomePage() {
     updateEvent,
     deleteEvent,
   } = useEvents()
+  const {
+    events: scraperEvents,
+    unmatchedVenues,
+  } = useScraperEvents(venues)
+
+  const autoCreatedVenues = useRef(new Set<string>())
+
+  const normalizeVenueName = useCallback(
+    (name: string) => name.trim().toLowerCase(),
+    []
+  )
+
+  useEffect(() => {
+    if (unmatchedVenues.length === 0) return
+    const existing = new Set(venues.map((v) => normalizeVenueName(v.name)))
+
+    for (const name of unmatchedVenues) {
+      const key = normalizeVenueName(name)
+      if (!key || existing.has(key) || autoCreatedVenues.current.has(key)) {
+        continue
+      }
+
+      addVenue({
+        name: name.trim(),
+        address: "Нужно уточнить адрес",
+        latitude: MAP_CONFIG.center[1],
+        longitude: MAP_CONFIG.center[0],
+        description: "Автодобавлено из скрапера. Укажите адрес и координаты.",
+        isPending: true,
+      })
+      autoCreatedVenues.current.add(key)
+    }
+  }, [unmatchedVenues, venues, addVenue, normalizeVenueName])
 
   // UI state
   const [showFilters, setShowFilters] = useState(true)
@@ -54,10 +93,14 @@ export default function HomePage() {
   const [topOverlayPx, setTopOverlayPx] = useState(0)
   const [mapResetSeq, setMapResetSeq] = useState(0)
 
+  const mergedEvents = useMemo(
+    () => mergeEvents(events, scraperEvents),
+    [events, scraperEvents]
+  )
   // Filtered events
-  const filteredEvents = useFilteredEvents(events, filters, venues)
+  const filteredEvents = useFilteredEvents(mergedEvents, filters, venues)
   const markerEvents = useFilteredEvents(
-    events,
+    mergedEvents,
     { ...filters, venueId: undefined },
     venues
   )
@@ -74,7 +117,7 @@ export default function HomePage() {
       const m = new Intl.DateTimeFormat('ru', { month: 'long' }).format(d)
       months.add(m.charAt(0).toUpperCase() + m.slice(1))
     }
-    return Array.from(months).join(" — ")
+    return Array.from(months).join(" - ")
   }, [todayISO])
 
   // Count active filters
@@ -110,7 +153,7 @@ export default function HomePage() {
     [pickingCoords]
   )
 
-  // Venue click on map → toggle venueId filter
+  // Venue click on map: toggle venueId filter
   const handleVenueClick = useCallback((venueId: string | null) => {
     setFilters((prev) => ({ ...prev, venueId: venueId ?? undefined }))
   }, [])
@@ -132,7 +175,7 @@ export default function HomePage() {
       <div className="absolute inset-0">
         <MoscowMap
           venues={venues}
-          events={events}
+          events={mergedEvents}
           filteredEvents={filteredEvents}
           markerEvents={markerEvents}
           dateFilterActive={dateFilterActive}

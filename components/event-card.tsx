@@ -4,7 +4,7 @@ import type { ConcertEvent } from "@/lib/types"
 import type { ElementType } from "react"
 import { GENRE_LABELS, GENRE_COLORS } from "@/lib/constants"
 import { Badge } from "@/components/ui/badge"
-import { CalendarIcon, ClockIcon, TicketIcon } from "lucide-react"
+import { CalendarIcon, ClockIcon, TicketIcon, ExternalLinkIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface EventCardProps {
@@ -41,9 +41,19 @@ export function EventCard({ event, venueName, compact, selectedDate, selectedGen
     return (
       <div className="glass-slab flex flex-col gap-1 rounded-lg p-2">
         <div className="flex items-center justify-between gap-2">
-          <span className="truncate text-[12px] font-medium text-foreground">
-            {event.artist}
-          </span>
+          <div className="flex min-w-0 items-center gap-2">
+            {event.imageUrl && (
+              <img
+                src={event.imageUrl}
+                alt={event.title}
+                className="h-7 w-7 shrink-0 rounded-md object-cover"
+                loading="lazy"
+              />
+            )}
+            <span className="truncate text-[12px] font-medium text-foreground">
+              {event.artist}
+            </span>
+          </div>
           {!isGenreRedundant && (
             <span
               className={cn(
@@ -79,14 +89,28 @@ export function EventCard({ event, venueName, compact, selectedDate, selectedGen
         "glass-slab flex w-full flex-row items-start justify-between gap-3 rounded-xl p-3 text-left transition-all hover:bg-background/70",
         onClick && "hover:shadow-md active:scale-[0.99]"
       )}
-      aria-label={onClick ? `${event.title} — ${event.artist}` : undefined}
+      aria-label={onClick ? `${event.title} - ${event.artist}` : undefined}
     >
       {/* Left Column: Main Info */}
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <h4 className="truncate text-sm font-semibold text-foreground leading-tight">
-          {event.title}
-        </h4>
-        <p className="truncate text-[12px] text-muted-foreground">{event.artist}</p>
+      <div className="flex min-w-0 flex-1 items-start gap-3">
+        {event.imageUrl && (
+          <img
+            src={event.imageUrl}
+            alt={event.title}
+            className="h-12 w-12 shrink-0 rounded-lg object-cover"
+            loading="lazy"
+          />
+        )}
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <h4 className="truncate text-sm font-semibold text-foreground leading-tight">
+            {event.title}
+          </h4>
+          <p className="truncate text-[12px] text-muted-foreground">{event.artist}</p>
+          {event.description && (
+            <p className="line-clamp-2 text-[11px] text-muted-foreground/80">
+              {event.description}
+            </p>
+          )}
         
         {/* Genre Badge - Compact below info if not redundant */}
         {!isGenreRedundant && (
@@ -99,6 +123,19 @@ export function EventCard({ event, venueName, compact, selectedDate, selectedGen
             </span>
           </div>
         )}
+        {event.link && (
+          <a
+            href={event.link}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="mt-1 inline-flex items-center gap-1 text-[11px] text-cyan-500 hover:text-cyan-600"
+          >
+            Подробнее
+            <ExternalLinkIcon className="h-3 w-3" />
+          </a>
+        )}
+        </div>
       </div>
 
       {/* Right Column: Meta Info */}

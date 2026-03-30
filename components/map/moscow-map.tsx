@@ -195,7 +195,9 @@ export function MoscowMap({
                 <span
                   className={cn(
                     "relative flex h-6 w-6 items-center justify-center rounded-full transition-all duration-300 backdrop-blur-md border shadow-xl group-hover:scale-110 group-active:scale-90 overflow-hidden",
-                    "bg-cyan-500/80 border-cyan-300/90 shadow-cyan-500/50",
+                    venue.isPending
+                      ? "bg-amber-500/80 border-amber-300/90 shadow-amber-500/50"
+                      : "bg-cyan-500/80 border-cyan-300/90 shadow-cyan-500/50",
                     isSelected && "scale-110 ring-2 ring-cyan-900/40"
                   )}
                 >

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useMemo } from "react"
+import { useState, useCallback, useMemo, useEffect } from "react"
 import type { Venue, ConcertEvent, Filters } from "./types"
 import { SEED_VENUES, SEED_EVENTS } from "./constants"
 
@@ -147,4 +147,194 @@ export function useFilteredEvents(
       return true
     })
   }, [events, filters, venues])
+}
+
+type ScraperApiEvent = {
+  id?: number
+  title?: string | null
+  date?: string | null
+  venue?: string | null
+  link?: string | null
+  source?: string | null
+  image_url?: string | null
+  image_path?: string | null
+  image_local_url?: string | null
+  description?: string | null
+}
+
+type ScraperApiResponse = {
+  events: ScraperApiEvent[]
+}
+
+const DEFAULT_SCRAPER_BASE =
+  process.env.NEXT_PUBLIC_SCRAPER_API_BASE ??
+  "http://localhost:8081/scraper-api"
+
+function resolveScraperUrl(value?: string | null) {
+  const raw = (value ?? "").trim()
+  if (!raw) return undefined
+
+  if (/^https?:\/\//i.test(raw)) return raw
+
+  const base = DEFAULT_SCRAPER_BASE.replace(/\/+$/, "")
+  const baseOrigin = /^https?:\/\//i.test(base) ? new URL(base).origin : ""
+
+  if (raw.startsWith("/")) {
+    return baseOrigin ? `${baseOrigin}${raw}` : raw
+  }
+
+  return `${base}/${raw.replace(/^\/+/, "")}`
+}
+
+function normalizeText(value?: string | null) {
+  return (value ?? "").trim().toLowerCase()
+}
+
+function preferScraperValue(
+  localValue?: string | null,
+  scraperValue?: string | null
+) {
+  const localText = (localValue ?? "").trim()
+  if (localText) return localValue ?? undefined
+
+  const scraperText = (scraperValue ?? "").trim()
+  return scraperText ? scraperValue ?? undefined : undefined
+}
+
+function findVenueId(venues: Venue[], venueName?: string | null) {
+  const needle = normalizeText(venueName)
+  if (!needle) return null
+  const match = venues.find((v) => normalizeText(v.name) === needle)
+  return match?.id ?? null
+}
+
+function makeExternalId(event: ScraperApiEvent, venueId: string) {
+  const key = [
+    normalizeText(event.title),
+    normalizeText(event.date),
+    venueId,
+    normalizeText(event.source),
+  ].join("|")
+  let hash = 0
+  for (let i = 0; i < key.length; i += 1) {
+    hash = (hash << 5) - hash + key.charCodeAt(i)
+    hash |= 0
+  }
+  return `scr_${Math.abs(hash)}`
+}
+
+function mapScraperEvent(
+  event: ScraperApiEvent,
+  venues: Venue[]
+): ConcertEvent | null {
+  const title = (event.title ?? "").trim()
+  if (!title) return null
+
+  const venueId = findVenueId(venues, event.venue)
+  if (!venueId) return null
+
+  const rawDate = (event.date ?? "").trim()
+  const date = rawDate.length >= 10 ? rawDate.slice(0, 10) : ""
+  if (!date) return null
+
+  return {
+    id: makeExternalId(event, venueId),
+    venueId,
+    title,
+    artist: title,
+    genre: "other",
+    date,
+    time: "19:00",
+    price: 0,
+    priceMax: undefined,
+    description: event.description ?? undefined,
+    link: event.link ?? undefined,
+    imageUrl: resolveScraperUrl(event.image_local_url ?? event.image_url),
+    source: event.source ?? undefined,
+  }
+}
+
+export function mergeEvents(
+  localEvents: ConcertEvent[],
+  externalEvents: ConcertEvent[]
+) {
+  const makeKey = (event: ConcertEvent) =>
+    [
+      normalizeText(event.title),
+      event.date,
+      event.venueId,
+    ].join("|")
+
+  const localKeys = new Set(localEvents.map(makeKey))
+  const externalByKey = new Map(
+    externalEvents.map((event) => [
+      makeKey(event),
+      event,
+    ])
+  )
+
+  const merged = localEvents.map((event) => {
+    const key = makeKey(event)
+    const external = externalByKey.get(key)
+    if (!external) return event
+
+    return {
+      ...event,
+      description: preferScraperValue(event.description, external.description),
+      link: preferScraperValue(event.link, external.link),
+      imageUrl: preferScraperValue(event.imageUrl, external.imageUrl),
+      source: preferScraperValue(event.source, external.source),
+    }
+  })
+
+  for (const event of externalEvents) {
+    if (!localKeys.has(makeKey(event))) merged.push(event)
+  }
+
+  return merged
+}
+
+export function useScraperEvents(venues: Venue[]) {
+  const [events, setEvents] = useState<ConcertEvent[]>([])
+  const [unmatchedVenues, setUnmatchedVenues] = useState<string[]>([])
+
+  const load = useCallback(async () => {
+    try {
+      const response = await fetch(
+        `${DEFAULT_SCRAPER_BASE}/events?limit=500&offset=0`
+      )
+      if (!response.ok) return
+      const data = (await response.json()) as ScraperApiResponse
+      const mapped: ConcertEvent[] = []
+      const missingVenues: string[] = []
+
+      for (const item of data.events ?? []) {
+        const venueId = findVenueId(venues, item.venue)
+        if (!venueId) {
+          if (item.venue && !missingVenues.includes(item.venue)) {
+            missingVenues.push(item.venue)
+          }
+          continue
+        }
+        const mappedEvent = mapScraperEvent(item, venues)
+        if (mappedEvent) mapped.push(mappedEvent)
+      }
+
+      setEvents(mapped)
+      setUnmatchedVenues(missingVenues)
+    } catch {
+      // ignore network errors for now
+    }
+  }, [venues])
+
+  useEffect(() => {
+    if (venues.length === 0) return
+    void load()
+  }, [venues, load])
+
+  return {
+    events,
+    unmatchedVenues,
+    refresh: load,
+  }
 }
