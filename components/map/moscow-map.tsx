@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useCallback, useState, useEffect, useMemo } from "react"
+import { useRef, useCallback, useState, useEffect, useMemo, memo } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import Map, {
   Marker,
@@ -32,7 +32,7 @@ interface MoscowMapProps {
   isSearchActive?: boolean
 }
 
-export function MoscowMap({
+export const MoscowMap = memo(function MoscowMap({
   venues,
   events,
   filteredEvents,
@@ -73,12 +73,61 @@ export function MoscowMap({
 
   const eventsForMarkers = markerEvents ?? filteredEvents
   // Get event count per venue from marker events
-  const eventCountByVenue = eventsForMarkers.reduce(
-    (acc, event) => {
-      acc[event.venueId] = (acc[event.venueId] || 0) + 1
-      return acc
-    },
-    {} as Record<string, number>
+  const eventCountByVenue = useMemo(
+    () =>
+      eventsForMarkers.reduce((acc, event) => {
+        acc[event.venueId] = (acc[event.venueId] || 0) + 1
+        return acc
+      }, {} as Record<string, number>),
+    [eventsForMarkers]
+  )
+
+  const venueMarkers = useMemo(
+    () =>
+      venues.map((venue) => {
+        const count = eventCountByVenue[venue.id] || 0
+        const isSelected = venue.id === selectedVenueId
+
+        // If no events and not selected, skip marker (return null)
+        if (count === 0 && !isSelected) return null
+
+        return (
+          <Marker
+            key={venue.id}
+            longitude={venue.longitude}
+            latitude={venue.latitude}
+            anchor="center"
+            onClick={(e) => {
+              e.originalEvent.stopPropagation()
+              if (!pickingCoords && onVenueClick) {
+                onVenueClick(isSelected ? null : venue.id)
+              }
+            }}
+          >
+            <button
+              className={cn(
+                "group relative flex h-10 w-10 items-center justify-center transition-all duration-300",
+                selectedVenueId && !isSelected && "opacity-65"
+              )}
+              aria-label={`${venue.name}: ${count} events`}
+            >
+              <span
+                className={cn(
+                  "relative flex h-6 w-6 items-center justify-center rounded-full transition-all duration-300 backdrop-blur-md border shadow-xl group-hover:scale-110 group-active:scale-90 overflow-hidden",
+                  venue.isPending
+                    ? "bg-amber-500/80 border-amber-300/90 shadow-amber-500/50"
+                    : "bg-cyan-500/80 border-cyan-300/90 shadow-cyan-500/50",
+                  isSelected && "scale-110 ring-2 ring-cyan-900/40"
+                )}
+              >
+                <span className="absolute inset-0 bg-gradient-to-br from-white/45 via-white/15 to-transparent" />
+                <span className="h-2 w-2 rounded-full bg-white" />
+              </span>
+            </button>
+          </Marker>
+        )
+      }),
+    [venues, eventCountByVenue, selectedVenueId, pickingCoords, onVenueClick]
   )
 
   const handleGeolocate = useCallback(() => {
@@ -163,52 +212,7 @@ export function MoscowMap({
           </Marker>
         )}
 
-        {venues.map((venue) => {
-          const count = eventCountByVenue[venue.id] || 0
-          const isSelected = venue.id === selectedVenueId
-
-          // Если нет событий и клуб не выбран — скрываем, только когда нет активного выбора
-          if (count === 0 && !isSelected) return null
-
-          return (
-            <Marker
-              key={venue.id}
-              longitude={venue.longitude}
-              latitude={venue.latitude}
-              anchor="center"
-              onClick={(e) => {
-                e.originalEvent.stopPropagation()
-                if (!pickingCoords && onVenueClick) {
-                  // toggle: click same venue again → deselect
-                  onVenueClick(isSelected ? null : venue.id)
-                }
-              }}
-            >
-              <button
-                className={cn(
-                  "group relative flex h-10 w-10 items-center justify-center transition-all duration-300",
-                  selectedVenueId && !isSelected && "opacity-65"
-                )}
-                aria-label={`${venue.name}: ${count} events`}
-              >
-                {/* Circle marker */}
-                <span
-                  className={cn(
-                    "relative flex h-6 w-6 items-center justify-center rounded-full transition-all duration-300 backdrop-blur-md border shadow-xl group-hover:scale-110 group-active:scale-90 overflow-hidden",
-                    venue.isPending
-                      ? "bg-amber-500/80 border-amber-300/90 shadow-amber-500/50"
-                      : "bg-cyan-500/80 border-cyan-300/90 shadow-cyan-500/50",
-                    isSelected && "scale-110 ring-2 ring-cyan-900/40"
-                  )}
-                >
-                  <span className="absolute inset-0 bg-gradient-to-br from-white/45 via-white/15 to-transparent" />
-                  <span className="h-2 w-2 rounded-full bg-white" />
-                </span>
-
-              </button>
-            </Marker>
-          )
-        })}
+        {venueMarkers}
       </Map>
 
 
@@ -243,4 +247,4 @@ export function MoscowMap({
       </div>
     </div>
   )
-}
+})

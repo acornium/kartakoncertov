@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { FilterIcon, ShieldIcon, MusicIcon, XIcon, Search as SearchIcon } from "lucide-react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, memo } from "react"
 import { cn, assetPath } from "@/lib/utils"
 
 interface HeaderProps {
@@ -25,7 +25,7 @@ interface HeaderProps {
   onNotchBottomChange?: (px: number) => void
 }
 
-export function Header({
+function HeaderComponent({
   isAdmin,
   showFilters,
   showAdmin,
@@ -277,3 +277,5 @@ export function Header({
     </header>
   )
 }
+
+export const Header = memo(HeaderComponent)

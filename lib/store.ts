@@ -124,6 +124,8 @@ export function useFilteredEvents(
 ) {
   return useMemo(() => {
     const text = filters.query?.toLowerCase().trim() || ""
+    const venueNameById = new Map<string, string>()
+    venues.forEach((v) => venueNameById.set(v.id, v.name.toLowerCase()))
 
     return events.filter((event) => {
       // Date filter
@@ -139,8 +141,7 @@ export function useFilteredEvents(
       // Text query (artist or venue name)
       if (text) {
         const artistMatch = event.artist.toLowerCase().includes(text)
-        const venue = venues.find((v) => v.id === event.venueId)
-        const venueMatch = venue?.name.toLowerCase().includes(text)
+        const venueMatch = venueNameById.get(event.venueId)?.includes(text)
         if (!artistMatch && !venueMatch) return false
       }
 

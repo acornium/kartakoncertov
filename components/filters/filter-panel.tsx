@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, memo } from "react"
 import { createPortal } from "react-dom"
 import { motion, useMotionValue } from "framer-motion"
 import type { Filters, Genre, ConcertEvent, Venue } from "@/lib/types"
@@ -65,7 +65,7 @@ interface FilterPanelProps {
   onPanelHeightChange?: (height: number) => void
 }
 
-export function FilterPanel({
+function FilterPanelComponent({
   filters,
   onFiltersChange,
   variant = "side",
@@ -743,4 +743,6 @@ export function FilterPanel({
     </div>
   )
 }
+
+export const FilterPanel = memo(FilterPanelComponent)
 

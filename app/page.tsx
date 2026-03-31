@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useMemo, useEffect, useRef } from "react"
+import { useState, useCallback, useMemo, useEffect, useRef, useDeferredValue } from "react"
 import dynamic from "next/dynamic"
 import type { Filters } from "@/lib/types"
 import {
@@ -87,6 +87,8 @@ export default function HomePage() {
     ...DEFAULT_FILTERS,
     date: todayISO,
   }))
+  const [searchQuery, setSearchQuery] = useState(filters.query || "")
+  const deferredSearchQuery = useDeferredValue(searchQuery)
   const [pickingCoords, setPickingCoords] = useState(false)
   const [isSearchActive, setIsSearchActive] = useState(false)
   const [filterPanelHeight, setFilterPanelHeight] = useState(0)
@@ -106,6 +108,10 @@ export default function HomePage() {
   )
   const dateFilterActive = Boolean(filters.date)
 
+  useEffect(() => {
+    setFilters((prev) => ({ ...prev, query: deferredSearchQuery }))
+  }, [deferredSearchQuery])
+
   // Calculate month label globally
   const monthsLabel = useMemo(() => {
     const months = new Set<string>()
@@ -119,13 +125,6 @@ export default function HomePage() {
     }
     return Array.from(months).join(" - ")
   }, [todayISO])
-
-  // Count active filters
-  const filterCount =
-    (filters.genres.length > 0 ? 1 : 0) +
-    (filters.date && filters.date !== todayISO ? 1 : 0) +
-    (filters.query && filters.query.trim() !== "" ? 1 : 0) +
-    (filters.venueId ? 1 : 0)
 
   const adminEnabled =
     process.env.NEXT_PUBLIC_ENABLE_ADMIN === "true"
@@ -158,16 +157,32 @@ export default function HomePage() {
     setFilters((prev) => ({ ...prev, venueId: venueId ?? undefined }))
   }, [])
 
-  const selectedVenueName = filters.venueId
-    ? venues.find((v) => v.id === filters.venueId)?.name
-    : undefined
+  const selectedVenueName = useMemo(
+    () =>
+      filters.venueId
+        ? venues.find((v) => v.id === filters.venueId)?.name
+        : undefined,
+    [filters.venueId, venues]
+  )
 
-  const filterPanelProps = {
-    filters,
-    onFiltersChange: setFilters,
-    events: filteredEvents,
-    venues,
-  }
+  const filterCount = useMemo(
+    () =>
+      (filters.genres.length > 0 ? 1 : 0) +
+      (filters.date && filters.date !== todayISO ? 1 : 0) +
+      (filters.query && filters.query.trim() !== "" ? 1 : 0) +
+      (filters.venueId ? 1 : 0),
+    [filters, todayISO]
+  )
+
+  const filterPanelProps = useMemo(
+    () => ({
+      filters,
+      onFiltersChange: setFilters,
+      events: filteredEvents,
+      venues,
+    }),
+    [filters, filteredEvents, venues]
+  )
 
   return (
     <div className="relative h-[100dvh] w-screen overflow-hidden">
@@ -200,8 +215,8 @@ export default function HomePage() {
         onToggleFilters={() => setShowFilters((prev) => !prev)}
         onToggleAdmin={handleToggleAdmin}
         filterCount={filterCount}
-        query={filters.query || ""}
-        onQueryChange={(q) => setFilters((prev) => ({ ...prev, query: q }))}
+        query={searchQuery}
+        onQueryChange={(q) => setSearchQuery(q)}
         monthsLabel={monthsLabel}
         selectedVenueName={selectedVenueName}
         isSearchActive={isSearchActive}
